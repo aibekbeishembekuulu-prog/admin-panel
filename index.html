@@ -1,6 +1,7 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ky">
 <head>
+
 <meta charset="UTF-8">
 
 <meta name="viewport"
@@ -11,8 +12,13 @@
 
 <title>Tez Kargo — Admin</title>
 
-<script src="https://unpkg.com/html5-qrcode"
-        type="text/javascript"></script>
+
+<!-- =========================================
+     QR SCANNER LIBRARY
+========================================= -->
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
 
 <style>
 
@@ -68,6 +74,11 @@ body{
 #reader{
   width:100%;
   overflow:hidden;
+  border-radius:16px;
+}
+
+#reader video{
+  width:100% !important;
   border-radius:16px;
 }
 
@@ -168,9 +179,16 @@ button:disabled{
 }
 
 </style>
+
 </head>
 
+
 <body>
+
+
+<!-- =========================================
+     HEADER
+========================================= -->
 
 <div class="header">
 
@@ -198,15 +216,19 @@ button:disabled{
     📷 QR СКАНЕР
   </div>
 
+
   <div id="reader"></div>
+
 
   <button
     class="start"
+    id="startButton"
     onclick="startScanner()">
 
     📷 Камераны ачуу
 
   </button>
+
 
   <button
     class="reset"
@@ -227,22 +249,27 @@ button:disabled{
   class="card client"
   id="clientCard">
 
+
   <div class="status">
     👤 КЛИЕНТ
   </div>
+
 
   <div
     class="client-code"
     id="clientCode">
   </div>
 
+
   <div
     id="parcelStatus">
   </div>
 
+
   <div
     id="parcelList">
   </div>
+
 
   <button
     class="issue"
@@ -252,6 +279,7 @@ button:disabled{
     🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ
 
   </button>
+
 
   <button
     class="reset"
@@ -269,6 +297,7 @@ button:disabled{
 
 <script>
 
+
 /************************************************
 ⚙️ GOOGLE APPS SCRIPT API
 ************************************************/
@@ -278,97 +307,315 @@ const API_URL =
 
 
 /************************************************
-📷 SCANNER
+📷 SCANNER VARIABLES
 ************************************************/
 
 let scanner = null;
 
 let scannerRunning = false;
 
+let isProcessingQR = false;
+
 
 /************************************************
 ▶️ START SCANNER
 ************************************************/
 
-function startScanner(){
+async function startScanner(){
 
   if(scannerRunning){
+
     return;
+
   }
 
-  scanner =
-    new Html5Qrcode("reader");
+
+  const startButton =
+    document.getElementById(
+      "startButton"
+    );
 
 
-  scanner.start(
+  try{
 
-    {
-      facingMode:"environment"
-    },
 
-    {
-      fps:10,
+    startButton.disabled =
+      true;
 
-      qrbox:function(width,height){
 
-        let size =
-          Math.floor(
-            Math.min(
-              width,
-              height
-            ) * 0.75
-          );
+    startButton.textContent =
+      "⏳ Камера ачылууда...";
 
-        return {
-          width:size,
-          height:size
-        };
 
-      }
+    /**********************************************
+    🧹 ЭСКИ SCANNER ТАЗАЛОО
+    **********************************************/
 
-    },
+    if(scanner){
 
-    function(decodedText){
+      try{
 
-      console.log(
-        "QR SCANNED:",
-        decodedText
-      );
+        await scanner.stop();
 
-      handleQR(decodedText);
+      }catch(e){}
 
-    },
 
-    function(errorMessage){
+      try{
 
-      // QR табылганга чейин
-      // бул жердеги каталарды көрсөтпөйбүз.
+        await scanner.clear();
+
+      }catch(e){}
+
+
+      scanner =
+        null;
 
     }
 
-  )
 
-  .then(function(){
+    /**********************************************
+    📷 CAMERA OBJECT
+    **********************************************/
 
-    scannerRunning = true;
+    scanner =
+      new Html5Qrcode(
+        "reader"
+      );
+
+
+    /**********************************************
+    📱 КАМЕРАЛАРДЫ ТАБУУ
+    **********************************************/
+
+    const cameras =
+      await Html5Qrcode.getCameras();
+
 
     console.log(
-      "Scanner started"
+      "AVAILABLE CAMERAS:",
+      cameras
     );
 
-  })
 
-  .catch(function(error){
+    if(
+      !cameras ||
+      cameras.length === 0
+    ){
 
-    console.error(error);
+      throw new Error(
+        "Телефондо камера табылган жок."
+      );
 
-    alert(
-      "❌ Камера ачылган жок.\n\n" +
-      "Телефондун браузеринен камерага уруксат бериңиз.\n\n" +
+    }
+
+
+    /**********************************************
+    📷 АРТКЫ КАМЕРАНЫ ТАНДОО
+    **********************************************/
+
+    let cameraId =
+      cameras[0].id;
+
+
+    for(
+      const camera of cameras
+    ){
+
+      const label =
+        String(
+          camera.label || ""
+        ).toLowerCase();
+
+
+      if(
+        label.includes("back") ||
+        label.includes("rear") ||
+        label.includes("environment") ||
+        label.includes("арт")
+      ){
+
+        cameraId =
+          camera.id;
+
+        break;
+
+      }
+
+    }
+
+
+    console.log(
+      "SELECTED CAMERA:",
+      cameraId
+    );
+
+
+    /**********************************************
+    🚀 START CAMERA
+    **********************************************/
+
+    await scanner.start(
+
+      cameraId,
+
+
+      {
+
+        fps:10,
+
+
+        qrbox:function(
+          width,
+          height
+        ){
+
+          const size =
+            Math.floor(
+              Math.min(
+                width,
+                height
+              ) * 0.70
+            );
+
+
+          return {
+
+            width:size,
+
+            height:size
+
+          };
+
+        },
+
+
+        aspectRatio:1.0
+
+      },
+
+
+      /********************************************
+      ✅ QR FOUND
+      ********************************************/
+
+      function(decodedText){
+
+        console.log(
+          "✅ QR SCANNED:",
+          decodedText
+        );
+
+
+        if(isProcessingQR){
+
+          return;
+
+        }
+
+
+        isProcessingQR =
+          true;
+
+
+        handleQR(
+          decodedText
+        );
+
+
+      },
+
+
+      /********************************************
+      ℹ️ QR ERROR
+      ********************************************/
+
+      function(errorMessage){
+
+        // QR табылганга чейин
+        // чыккан каталарды көрсөтпөйбүз.
+
+      }
+
+    );
+
+
+    scannerRunning =
+      true;
+
+
+    startButton.disabled =
+      false;
+
+
+    startButton.textContent =
+      "📷 Камера иштеп жатат";
+
+
+    console.log(
+      "✅ CAMERA STARTED"
+    );
+
+
+  }
+
+
+  catch(error){
+
+
+    console.error(
+      "❌ CAMERA ERROR:",
       error
     );
 
-  });
+
+    scannerRunning =
+      false;
+
+
+    if(scanner){
+
+      try{
+
+        await scanner.clear();
+
+      }catch(e){}
+
+      scanner =
+        null;
+
+    }
+
+
+    startButton.disabled =
+      false;
+
+
+    startButton.textContent =
+      "📷 Камераны ачуу";
+
+
+    let message =
+      "❌ Камера ачылган жок.\n\n";
+
+
+    message +=
+      "Chrome браузеринде камерага уруксат бериңиз.\n\n";
+
+
+    message +=
+      "Chrome → 🔒 → Камера → Уруксат берүү\n\n";
+
+
+    message +=
+      "Ката: " +
+      error;
+
+
+    alert(
+      message
+    );
+
+  }
 
 }
 
@@ -377,32 +624,76 @@ function startScanner(){
 ⛔ STOP SCANNER
 ************************************************/
 
-function stopScanner(){
+async function stopScanner(){
 
-  if(
-    scanner &&
-    scannerRunning
-  ){
 
-    scanner.stop()
+  const startButton =
+    document.getElementById(
+      "startButton"
+    );
 
-      .then(function(){
 
-        scanner.clear();
+  try{
 
-        scannerRunning = false;
 
-      })
+    if(
+      scanner &&
+      scannerRunning
+    ){
 
-      .catch(function(error){
+      await scanner.stop();
 
-        console.log(error);
+    }
 
-        scannerRunning = false;
 
-      });
+  }catch(error){
+
+    console.log(
+      "STOP ERROR:",
+      error
+    );
 
   }
+
+
+  try{
+
+
+    if(scanner){
+
+      await scanner.clear();
+
+    }
+
+
+  }catch(error){
+
+    console.log(
+      "CLEAR ERROR:",
+      error
+    );
+
+  }
+
+
+  scanner =
+    null;
+
+
+  scannerRunning =
+    false;
+
+
+  isProcessingQR =
+    false;
+
+
+  startButton.disabled =
+    false;
+
+
+  startButton.textContent =
+    "📷 Камераны ачуу";
 
 }
 
@@ -411,25 +702,37 @@ function stopScanner(){
 🔎 QR PROCESS
 ************************************************/
 
-function handleQR(qrText){
-
-  stopScanner();
+async function handleQR(qrText){
 
 
-  let clientCode =
-    String(qrText || "")
-      .trim()
-      .toUpperCase();
+  /**********************************************
+  ⛔ КАМЕРАНЫ ТОКТОТУУ
+  **********************************************/
+
+  await stopScanner();
 
 
-  /*
-    QR ичинде жөн гана:
+  /**********************************************
+  🔤 QR КОДДУ ТАЗАЛОО
+  **********************************************/
 
-    T0232
+  const clientCode =
+    String(
+      qrText || ""
+    )
+    .trim()
+    .toUpperCase();
 
-    болушу мүмкүн.
-  */
 
+  console.log(
+    "CLIENT CODE:",
+    clientCode
+  );
+
+
+  /**********************************************
+  ❌ QR БОШ
+  **********************************************/
 
   if(!clientCode){
 
@@ -437,10 +740,17 @@ function handleQR(qrText){
       "❌ QR код бош."
     );
 
+    isProcessingQR =
+      false;
+
     return;
 
   }
 
+
+  /**********************************************
+  👤 КАРДАРДЫ ЖҮКТӨӨ
+  **********************************************/
 
   loadClient(
     clientCode
@@ -450,72 +760,114 @@ function handleQR(qrText){
 
 
 /************************************************
-👤 CLIENT LOAD — ТЕКШЕРҮҮ ГАНА
+👤 CLIENT LOAD
 ************************************************/
 
-function loadClient(clientCode){
+function loadClient(
+  clientCode
+){
 
   const card =
-    document.getElementById("clientCard");
+    document.getElementById(
+      "clientCard"
+    );
+
 
   const code =
-    document.getElementById("clientCode");
+    document.getElementById(
+      "clientCode"
+    );
+
 
   const list =
-    document.getElementById("parcelList");
+    document.getElementById(
+      "parcelList"
+    );
+
 
   const status =
-    document.getElementById("parcelStatus");
+    document.getElementById(
+      "parcelStatus"
+    );
+
 
   const button =
-    document.getElementById("issueButton");
+    document.getElementById(
+      "issueButton"
+    );
 
 
-  card.style.display = "block";
+  card.style.display =
+    "block";
 
-  code.textContent = clientCode;
 
-  button.disabled = false;
+  code.textContent =
+    clientCode;
+
+
+  button.disabled =
+    true;
+
 
   button.textContent =
-    "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
+    "⏳ Текшерилүүдө...";
 
 
   status.innerHTML = `
+
     <div class="loading">
-      ⏳ Кардардын посылкалары текшерилүүдө...
+
+      ⏳ Кардардын посылкалары
+      текшерилүүдө...
+
     </div>
+
   `;
 
-  list.innerHTML = "";
+
+  list.innerHTML =
+    "";
 
 
-  /************************************************
-  📡 CHECK CLIENT
-  ************************************************/
+  /**********************************************
+  📡 API CHECK CLIENT
+  **********************************************/
 
   fetch(
+
     API_URL +
+
     "?action=check_client" +
+
     "&client_code=" +
-    encodeURIComponent(clientCode)
+
+    encodeURIComponent(
+      clientCode
+    )
+
   )
 
+
   .then(function(response){
+
 
     if(!response.ok){
 
       throw new Error(
-        "HTTP " + response.status
+        "HTTP " +
+        response.status
       );
 
     }
+
 
     return response.json();
 
   })
 
+
   .then(function(data){
+
 
     console.log(
       "CHECK CLIENT:",
@@ -523,59 +875,103 @@ function loadClient(clientCode){
     );
 
 
-    if(data.status !== "ok"){
+    /********************************************
+    ❌ CLIENT ERROR
+    ********************************************/
+
+    if(
+      data.status !==
+      "ok"
+    ){
 
       status.innerHTML = `
+
         <div class="status error">
-          ❌ ${
-            data.message ||
-            "Кардар табылган жок"
+
+          ❌
+          ${
+            escapeHtml(
+              data.message ||
+              "Кардар табылган жок"
+            )
           }
+
         </div>
+
       `;
+
+
+      button.disabled =
+        true;
+
+
+      button.textContent =
+        "❌ КАРДАР ТАБЫЛГАН ЖОК";
+
 
       return;
 
     }
 
 
-    /************************************************
-    📦 ОФИСТЕГИ ПОСЫЛКАЛАР
-    ************************************************/
+    /********************************************
+    📦 PARCELS
+    ********************************************/
 
     const office =
-      data.office_parcels || [];
+      data.office_parcels ||
+      [];
+
 
     const issued =
-      data.issued_parcels || [];
+      data.issued_parcels ||
+      [];
 
 
-    /************************************************
-    🟢 ОФИСТЕГИ ТОВАР БАР
-    ************************************************/
+    /********************************************
+    🟢 OFFICE PARCELS
+    ********************************************/
 
-    if(office.length > 0){
+    if(
+      office.length > 0
+    ){
+
 
       status.innerHTML = `
+
         <div class="status success">
 
           👤 Клиент:
-          <b>${escapeHtml(clientCode)}</b>
+
+          <b>
+            ${escapeHtml(
+              clientCode
+            )}
+          </b>
 
           <br><br>
 
           🏢 Офисте:
-          <b>${office.length}</b>
+
+          <b>
+            ${office.length}
+          </b>
+
           посылка
 
         </div>
+
       `;
+
 
       renderOfficeParcels(
         office
       );
 
-      button.disabled = false;
+
+      button.disabled =
+        false;
+
 
       button.textContent =
         "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
@@ -583,17 +979,24 @@ function loadClient(clientCode){
     }
 
 
-    /************************************************
-    ℹ️ ОФИСТЕ ТОВАР ЖОК
-    ************************************************/
+    /********************************************
+    ℹ️ NO OFFICE PARCELS
+    ********************************************/
 
     else{
 
+
       status.innerHTML = `
+
         <div class="status">
 
           👤 Клиент:
-          <b>${escapeHtml(clientCode)}</b>
+
+          <b>
+            ${escapeHtml(
+              clientCode
+            )}
+          </b>
 
           <br><br>
 
@@ -602,14 +1005,22 @@ function loadClient(clientCode){
           <br>
 
           ✅ Мурун берилген:
+
           ${issued.length}
 
         </div>
+
       `;
 
-      renderOfficeParcels([]);
 
-      button.disabled = true;
+      renderOfficeParcels(
+        []
+      );
+
+
+      button.disabled =
+        true;
+
 
       button.textContent =
         "✅ БЕРҮҮ ҮЧҮН ПОСЫЛКА ЖОК";
@@ -618,14 +1029,18 @@ function loadClient(clientCode){
 
   })
 
+
   .catch(function(error){
+
 
     console.error(
       "CHECK ERROR:",
       error
     );
 
+
     status.innerHTML = `
+
       <div class="status error">
 
         ❌ API менен байланыш жок.
@@ -637,9 +1052,16 @@ function loadClient(clientCode){
         )}
 
       </div>
+
     `;
 
-    button.disabled = true;
+
+    button.disabled =
+      true;
+
+
+    button.textContent =
+      "❌ КАТА";
 
   });
 
@@ -660,12 +1082,18 @@ function renderOfficeParcels(
     );
 
 
-  if(!parcels.length){
+  if(
+    !parcels.length
+  ){
 
     list.innerHTML = `
+
       <div class="empty">
+
         📦 Офисте посылка жок.
+
       </div>
+
     `;
 
     return;
@@ -678,6 +1106,7 @@ function renderOfficeParcels(
     <div class="count">
 
       🏢 ОФИСТЕГИ ПОСЫЛКАЛАР:
+
       ${parcels.length}
 
     </div>
@@ -686,70 +1115,88 @@ function renderOfficeParcels(
 
 
   parcels.forEach(
-    function(parcel){
-
-      html += `
-
-        <div class="parcel">
-
-          <div class="track">
-
-            📦
-            ${escapeHtml(
-              parcel.track
-            )}
-
-          </div>
+    function(parcel)
+  {
 
 
-          <div class="price">
+    html += `
 
-            💰
-            ${
-              parcel.price === "" ||
-              parcel.price == null
-                ? "Баасы көрсөтүлгөн эмес"
-                : escapeHtml(
-                    String(
-                      parcel.price
-                    )
-                  ) + " сом"
-            }
-
-          </div>
+      <div class="parcel">
 
 
-          <div class="price">
+        <div class="track">
 
-            🏢
-            ${escapeHtml(
-              parcel.status
-            )}
+          📦
 
-          </div>
-
-
-          <div class="price">
-
-            📅 Келген:
-            ${escapeHtml(
-              parcel.date_arrived || ""
-            )}
-
-          </div>
+          ${escapeHtml(
+            parcel.track
+          )}
 
         </div>
 
-      `;
 
-    }
-  );
+        <div class="price">
+
+          💰
+
+          ${
+            parcel.price === "" ||
+            parcel.price == null
+
+            ?
+
+            "Баасы көрсөтүлгөн эмес"
+
+            :
+
+            escapeHtml(
+              String(
+                parcel.price
+              )
+            ) +
+            " сом"
+
+          }
+
+        </div>
+
+
+        <div class="price">
+
+          🏢
+
+          ${escapeHtml(
+            parcel.status
+          )}
+
+        </div>
+
+
+        <div class="price">
+
+          📅 Келген:
+
+          ${escapeHtml(
+            parcel.date_arrived ||
+            ""
+          )}
+
+        </div>
+
+
+      </div>
+
+    `;
+
+  });
 
 
   list.innerHTML =
     html;
 
 }
+
+
 /************************************************
 📦 SHOW ISSUED
 ************************************************/
@@ -765,60 +1212,70 @@ function renderIssued(
     );
 
 
-  let html = "";
+  let html =
+    "";
 
 
   if(
     issued.length > 0
   ){
 
-    html +=
-      `
-        <div class="count">
+    html += `
 
-          📦 Жаңы берилген:
-          ${issued.length}
+      <div class="count">
 
-        </div>
-      `;
+        📦 Жаңы берилген:
+
+        ${issued.length}
+
+      </div>
+
+    `;
 
 
     issued.forEach(
-      function(parcel){
+      function(parcel)
+    {
 
-        html +=
-          `
-            <div class="parcel">
+      html += `
 
-              <div class="track">
-                📦
-                ${escapeHtml(
-                  parcel.track
-                )}
-              </div>
+        <div class="parcel">
 
-              <div class="price">
+          <div class="track">
 
-                💰
-                ${escapeHtml(
-                  String(
-                    parcel.price || ""
-                  )
-                )}
+            📦
 
-              </div>
+            ${escapeHtml(
+              parcel.track
+            )}
 
-              <div class="price">
+          </div>
 
-                🟢 Выдано
 
-              </div>
+          <div class="price">
 
-            </div>
-          `;
+            💰
 
-      }
-    );
+            ${escapeHtml(
+              String(
+                parcel.price || ""
+              )
+            )}
+
+          </div>
+
+
+          <div class="price">
+
+            🟢 Выдано
+
+          </div>
+
+        </div>
+
+      `;
+
+    });
 
   }
 
@@ -827,69 +1284,77 @@ function renderIssued(
     already.length > 0
   ){
 
-    html +=
-      `
-        <div class="count">
+    html += `
 
-          ℹ️ Мурун берилген:
-          ${already.length}
+      <div class="count">
 
-        </div>
-      `;
+        ℹ️ Мурун берилген:
+
+        ${already.length}
+
+      </div>
+
+    `;
 
 
     already.forEach(
-      function(parcel){
+      function(parcel)
+    {
 
-        html +=
-          `
-            <div class="parcel">
+      html += `
 
-              <div class="track">
-                📦
-                ${escapeHtml(
-                  parcel.track
-                )}
-              </div>
+        <div class="parcel">
 
-              <div class="price">
+          <div class="track">
 
-                💰
-                ${escapeHtml(
-                  String(
-                    parcel.price || ""
-                  )
-                )}
+            📦
 
-              </div>
+            ${escapeHtml(
+              parcel.track
+            )}
 
-              <div class="price">
+          </div>
 
-                ✅ Уже выдано
 
-              </div>
+          <div class="price">
 
-            </div>
-          `;
+            💰
 
-      }
-    );
+            ${escapeHtml(
+              String(
+                parcel.price || ""
+              )
+            )}
+
+          </div>
+
+
+          <div class="price">
+
+            ✅ Уже выдано
+
+          </div>
+
+        </div>
+
+      `;
+
+    });
 
   }
 
 
-  if(
-    !html
-  ){
+  if(!html){
 
-    html =
-      `
-        <div class="empty">
+    html = `
 
-          📦 Посылка жок.
+      <div class="empty">
 
-        </div>
-      `;
+        📦 Посылка жок.
+
+      </div>
+
+    `;
 
   }
 
@@ -906,89 +1371,156 @@ function renderIssued(
 
 function issueClient(){
 
+
   const clientCode =
     document
-      .getElementById("clientCode")
+      .getElementById(
+        "clientCode"
+      )
       .textContent
       .trim();
 
+
   if(!clientCode){
 
-    alert("❌ Клиент тандалган жок.");
+    alert(
+      "❌ Клиент тандалган жок."
+    );
 
     return;
 
   }
 
+
   if(!confirm(
-    "📦 " + clientCode +
+
+    "📦 " +
+    clientCode +
     " кардардын офистеги бардык посылкаларын беребизби?"
+
   )){
 
     return;
 
   }
 
-  const button =
-    document.getElementById("issueButton");
 
-  button.disabled = true;
+  const button =
+    document.getElementById(
+      "issueButton"
+    );
+
+
+  button.disabled =
+    true;
+
 
   button.textContent =
     "⏳ Посылкалар берилүүдө...";
 
 
+  /**********************************************
+  📡 ISSUE API
+  **********************************************/
+
   fetch(
+
     API_URL +
+
     "?action=issue_client" +
+
     "&client_code=" +
-    encodeURIComponent(clientCode)
+
+    encodeURIComponent(
+      clientCode
+    )
+
   )
 
+
   .then(function(response){
+
+    if(!response.ok){
+
+      throw new Error(
+        "HTTP " +
+        response.status
+      );
+
+    }
+
 
     return response.json();
 
   })
 
+
   .then(function(data){
 
-    console.log("ISSUE API:", data);
 
-    if(data.status === "ok"){
+    console.log(
+      "ISSUE API:",
+      data
+    );
+
+
+    if(
+      data.status ===
+      "ok"
+    ){
+
 
       const count =
-        data.issued_count || 0;
+        data.issued_count ||
+        0;
+
 
       button.textContent =
         "✅ БЕРИЛДИ";
 
+
       alert(
+
         "✅ Даяр!\n\n" +
-        "Кардар: " + clientCode +
-        "\nБерилген посылка: " + count
+
+        "Кардар: " +
+        clientCode +
+
+        "\nБерилген посылка: " +
+        count
+
       );
 
-      /*
-       Google Sheets'те статус
-       "Выдано" болуп өзгөрдү.
 
-       Эми экранды жаңыртабыз.
-      */
+      /******************************************
+      🔄 REFRESH CLIENT
+      ******************************************/
 
-      loadClient(clientCode);
+      loadClient(
+        clientCode
+      );
 
-    }else{
+    }
+
+
+    else{
+
 
       alert(
+
         "❌ " +
+
         (
           data.message ||
           "Посылканы берүүдө ката кетти"
         )
+
       );
 
-      button.disabled = false;
+
+      button.disabled =
+        false;
+
 
       button.textContent =
         "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
@@ -997,15 +1529,24 @@ function issueClient(){
 
   })
 
+
   .catch(function(error){
 
-    console.error(error);
+
+    console.error(
+      "ISSUE ERROR:",
+      error
+    );
+
 
     alert(
       "❌ Сервер менен байланыш жок."
     );
 
-    button.disabled = false;
+
+    button.disabled =
+      false;
+
 
     button.textContent =
       "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
@@ -1014,11 +1555,13 @@ function issueClient(){
 
 }
 
+
 /************************************************
-🔄 RESET
+🔄 RESET CLIENT
 ************************************************/
 
 function resetClient(){
+
 
   stopScanner();
 
@@ -1028,7 +1571,7 @@ function resetClient(){
       "clientCard"
     )
     .style.display =
-      "none";
+    "none";
 
 
   document
@@ -1036,7 +1579,7 @@ function resetClient(){
       "clientCode"
     )
     .textContent =
-      "";
+    "";
 
 
   document
@@ -1044,7 +1587,7 @@ function resetClient(){
       "parcelList"
     )
     .innerHTML =
-      "";
+    "";
 
 
   document
@@ -1052,7 +1595,7 @@ function resetClient(){
       "parcelStatus"
     )
     .innerHTML =
-      "";
+    "";
 
 
   const button =
@@ -1068,6 +1611,10 @@ function resetClient(){
   button.textContent =
     "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
 
+
+  isProcessingQR =
+    false;
+
 }
 
 
@@ -1075,36 +1622,41 @@ function resetClient(){
 🛡️ ESCAPE HTML
 ************************************************/
 
-function escapeHtml(text){
+function escapeHtml(
+  text
+){
 
-  return String(text)
+  return String(
+    text
+  )
 
-    .replace(
-      /&/g,
-      "&amp;"
-    )
+  .replace(
+    /&/g,
+    "&amp;"
+  )
 
-    .replace(
-      /</g,
-      "&lt;"
-    )
+  .replace(
+    /</g,
+    "&lt;"
+  )
 
-    .replace(
-      />/g,
-      "&gt;"
-    )
+  .replace(
+    />/g,
+    "&gt;"
+  )
 
-    .replace(
-      /"/g,
-      "&quot;"
-    )
+  .replace(
+    /"/g,
+    "&quot;"
+  )
 
-    .replace(
-      /'/g,
-      "&#039;"
-    );
+  .replace(
+    /'/g,
+    "&#039;"
+  );
 
 }
+
 
 </script>
 
