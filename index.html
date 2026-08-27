@@ -1,0 +1,1112 @@
+﻿<!DOCTYPE html>
+<html lang="ky">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no">
+
+<title>Tez Kargo — Admin</title>
+
+<script src="https://unpkg.com/html5-qrcode"
+        type="text/javascript"></script>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f6f8;
+  color:#111827;
+}
+
+.header{
+  background:#111827;
+  color:white;
+  padding:20px;
+  text-align:center;
+}
+
+.logo{
+  font-size:26px;
+  font-weight:800;
+}
+
+.subtitle{
+  margin-top:5px;
+  opacity:.7;
+  font-size:13px;
+}
+
+.container{
+  max-width:520px;
+  margin:auto;
+  padding:16px;
+}
+
+.card{
+  background:white;
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:15px;
+  box-shadow:0 5px 20px rgba(0,0,0,.07);
+}
+
+.scan-title{
+  font-size:20px;
+  font-weight:800;
+  margin-bottom:12px;
+}
+
+#reader{
+  width:100%;
+  overflow:hidden;
+  border-radius:16px;
+}
+
+button{
+  width:100%;
+  border:0;
+  border-radius:14px;
+  padding:16px;
+  margin-top:12px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+button:disabled{
+  opacity:.6;
+}
+
+.start{
+  background:#111827;
+  color:white;
+}
+
+.issue{
+  background:#16a34a;
+  color:white;
+}
+
+.reset{
+  background:#e5e7eb;
+  color:#111827;
+}
+
+.client{
+  display:none;
+}
+
+.client-code{
+  font-size:30px;
+  font-weight:900;
+  color:#dc2626;
+  text-align:center;
+  margin:10px 0 18px;
+}
+
+.status{
+  padding:12px;
+  border-radius:12px;
+  text-align:center;
+  margin-bottom:12px;
+  background:#f3f4f6;
+  font-weight:700;
+}
+
+.parcel{
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:14px;
+  margin-top:10px;
+}
+
+.track{
+  font-size:18px;
+  font-weight:800;
+}
+
+.price{
+  margin-top:5px;
+  color:#6b7280;
+}
+
+.empty{
+  text-align:center;
+  padding:20px;
+  color:#6b7280;
+}
+
+.loading{
+  text-align:center;
+  padding:20px;
+}
+
+.success{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.error{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.count{
+  text-align:center;
+  font-size:18px;
+  font-weight:800;
+  margin:10px 0;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+  <div class="logo">
+    📦 TEZ KARGO
+  </div>
+
+  <div class="subtitle">
+    ADMIN PANEL • QR ВЫДАЧА
+  </div>
+
+</div>
+
+
+<div class="container">
+
+
+<!-- =========================================
+     QR SCANNER
+========================================= -->
+
+<div class="card">
+
+  <div class="scan-title">
+    📷 QR СКАНЕР
+  </div>
+
+  <div id="reader"></div>
+
+  <button
+    class="start"
+    onclick="startScanner()">
+
+    📷 Камераны ачуу
+
+  </button>
+
+  <button
+    class="reset"
+    onclick="stopScanner()">
+
+    ✕ Камераны жабуу
+
+  </button>
+
+</div>
+
+
+<!-- =========================================
+     CLIENT
+========================================= -->
+
+<div
+  class="card client"
+  id="clientCard">
+
+  <div class="status">
+    👤 КЛИЕНТ
+  </div>
+
+  <div
+    class="client-code"
+    id="clientCode">
+  </div>
+
+  <div
+    id="parcelStatus">
+  </div>
+
+  <div
+    id="parcelList">
+  </div>
+
+  <button
+    class="issue"
+    id="issueButton"
+    onclick="issueClient()">
+
+    🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ
+
+  </button>
+
+  <button
+    class="reset"
+    onclick="resetClient()">
+
+    🔄 Башка кардарды сканерлөө
+
+  </button>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+/************************************************
+⚙️ GOOGLE APPS SCRIPT API
+************************************************/
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbwVgYyCu8YuPxqhdkOra1F0FfSENe44ys-Ad_wRdQp3CfuR2ISzlWZ4Irt7_IFz3a_2/exec";
+
+
+/************************************************
+📷 SCANNER
+************************************************/
+
+let scanner = null;
+
+let scannerRunning = false;
+
+
+/************************************************
+▶️ START SCANNER
+************************************************/
+
+function startScanner(){
+
+  if(scannerRunning){
+    return;
+  }
+
+  scanner =
+    new Html5Qrcode("reader");
+
+
+  scanner.start(
+
+    {
+      facingMode:"environment"
+    },
+
+    {
+      fps:10,
+
+      qrbox:function(width,height){
+
+        let size =
+          Math.floor(
+            Math.min(
+              width,
+              height
+            ) * 0.75
+          );
+
+        return {
+          width:size,
+          height:size
+        };
+
+      }
+
+    },
+
+    function(decodedText){
+
+      console.log(
+        "QR SCANNED:",
+        decodedText
+      );
+
+      handleQR(decodedText);
+
+    },
+
+    function(errorMessage){
+
+      // QR табылганга чейин
+      // бул жердеги каталарды көрсөтпөйбүз.
+
+    }
+
+  )
+
+  .then(function(){
+
+    scannerRunning = true;
+
+    console.log(
+      "Scanner started"
+    );
+
+  })
+
+  .catch(function(error){
+
+    console.error(error);
+
+    alert(
+      "❌ Камера ачылган жок.\n\n" +
+      "Телефондун браузеринен камерага уруксат бериңиз.\n\n" +
+      error
+    );
+
+  });
+
+}
+
+
+/************************************************
+⛔ STOP SCANNER
+************************************************/
+
+function stopScanner(){
+
+  if(
+    scanner &&
+    scannerRunning
+  ){
+
+    scanner.stop()
+
+      .then(function(){
+
+        scanner.clear();
+
+        scannerRunning = false;
+
+      })
+
+      .catch(function(error){
+
+        console.log(error);
+
+        scannerRunning = false;
+
+      });
+
+  }
+
+}
+
+
+/************************************************
+🔎 QR PROCESS
+************************************************/
+
+function handleQR(qrText){
+
+  stopScanner();
+
+
+  let clientCode =
+    String(qrText || "")
+      .trim()
+      .toUpperCase();
+
+
+  /*
+    QR ичинде жөн гана:
+
+    T0232
+
+    болушу мүмкүн.
+  */
+
+
+  if(!clientCode){
+
+    alert(
+      "❌ QR код бош."
+    );
+
+    return;
+
+  }
+
+
+  loadClient(
+    clientCode
+  );
+
+}
+
+
+/************************************************
+👤 CLIENT LOAD — ТЕКШЕРҮҮ ГАНА
+************************************************/
+
+function loadClient(clientCode){
+
+  const card =
+    document.getElementById("clientCard");
+
+  const code =
+    document.getElementById("clientCode");
+
+  const list =
+    document.getElementById("parcelList");
+
+  const status =
+    document.getElementById("parcelStatus");
+
+  const button =
+    document.getElementById("issueButton");
+
+
+  card.style.display = "block";
+
+  code.textContent = clientCode;
+
+  button.disabled = false;
+
+  button.textContent =
+    "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
+
+
+  status.innerHTML = `
+    <div class="loading">
+      ⏳ Кардардын посылкалары текшерилүүдө...
+    </div>
+  `;
+
+  list.innerHTML = "";
+
+
+  /************************************************
+  📡 CHECK CLIENT
+  ************************************************/
+
+  fetch(
+    API_URL +
+    "?action=check_client" +
+    "&client_code=" +
+    encodeURIComponent(clientCode)
+  )
+
+  .then(function(response){
+
+    if(!response.ok){
+
+      throw new Error(
+        "HTTP " + response.status
+      );
+
+    }
+
+    return response.json();
+
+  })
+
+  .then(function(data){
+
+    console.log(
+      "CHECK CLIENT:",
+      data
+    );
+
+
+    if(data.status !== "ok"){
+
+      status.innerHTML = `
+        <div class="status error">
+          ❌ ${
+            data.message ||
+            "Кардар табылган жок"
+          }
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    /************************************************
+    📦 ОФИСТЕГИ ПОСЫЛКАЛАР
+    ************************************************/
+
+    const office =
+      data.office_parcels || [];
+
+    const issued =
+      data.issued_parcels || [];
+
+
+    /************************************************
+    🟢 ОФИСТЕГИ ТОВАР БАР
+    ************************************************/
+
+    if(office.length > 0){
+
+      status.innerHTML = `
+        <div class="status success">
+
+          👤 Клиент:
+          <b>${escapeHtml(clientCode)}</b>
+
+          <br><br>
+
+          🏢 Офисте:
+          <b>${office.length}</b>
+          посылка
+
+        </div>
+      `;
+
+      renderOfficeParcels(
+        office
+      );
+
+      button.disabled = false;
+
+      button.textContent =
+        "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
+
+    }
+
+
+    /************************************************
+    ℹ️ ОФИСТЕ ТОВАР ЖОК
+    ************************************************/
+
+    else{
+
+      status.innerHTML = `
+        <div class="status">
+
+          👤 Клиент:
+          <b>${escapeHtml(clientCode)}</b>
+
+          <br><br>
+
+          📦 Офисте посылка жок.
+
+          <br>
+
+          ✅ Мурун берилген:
+          ${issued.length}
+
+        </div>
+      `;
+
+      renderOfficeParcels([]);
+
+      button.disabled = true;
+
+      button.textContent =
+        "✅ БЕРҮҮ ҮЧҮН ПОСЫЛКА ЖОК";
+
+    }
+
+  })
+
+  .catch(function(error){
+
+    console.error(
+      "CHECK ERROR:",
+      error
+    );
+
+    status.innerHTML = `
+      <div class="status error">
+
+        ❌ API менен байланыш жок.
+
+        <br><br>
+
+        ${escapeHtml(
+          error.message
+        )}
+
+      </div>
+    `;
+
+    button.disabled = true;
+
+  });
+
+}
+
+
+/************************************************
+📦 SHOW OFFICE PARCELS
+************************************************/
+
+function renderOfficeParcels(
+  parcels
+){
+
+  const list =
+    document.getElementById(
+      "parcelList"
+    );
+
+
+  if(!parcels.length){
+
+    list.innerHTML = `
+      <div class="empty">
+        📦 Офисте посылка жок.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  let html = `
+
+    <div class="count">
+
+      🏢 ОФИСТЕГИ ПОСЫЛКАЛАР:
+      ${parcels.length}
+
+    </div>
+
+  `;
+
+
+  parcels.forEach(
+    function(parcel){
+
+      html += `
+
+        <div class="parcel">
+
+          <div class="track">
+
+            📦
+            ${escapeHtml(
+              parcel.track
+            )}
+
+          </div>
+
+
+          <div class="price">
+
+            💰
+            ${
+              parcel.price === "" ||
+              parcel.price == null
+                ? "Баасы көрсөтүлгөн эмес"
+                : escapeHtml(
+                    String(
+                      parcel.price
+                    )
+                  ) + " сом"
+            }
+
+          </div>
+
+
+          <div class="price">
+
+            🏢
+            ${escapeHtml(
+              parcel.status
+            )}
+
+          </div>
+
+
+          <div class="price">
+
+            📅 Келген:
+            ${escapeHtml(
+              parcel.date_arrived || ""
+            )}
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+  );
+
+
+  list.innerHTML =
+    html;
+
+}
+/************************************************
+📦 SHOW ISSUED
+************************************************/
+
+function renderIssued(
+  issued,
+  already
+){
+
+  const list =
+    document.getElementById(
+      "parcelList"
+    );
+
+
+  let html = "";
+
+
+  if(
+    issued.length > 0
+  ){
+
+    html +=
+      `
+        <div class="count">
+
+          📦 Жаңы берилген:
+          ${issued.length}
+
+        </div>
+      `;
+
+
+    issued.forEach(
+      function(parcel){
+
+        html +=
+          `
+            <div class="parcel">
+
+              <div class="track">
+                📦
+                ${escapeHtml(
+                  parcel.track
+                )}
+              </div>
+
+              <div class="price">
+
+                💰
+                ${escapeHtml(
+                  String(
+                    parcel.price || ""
+                  )
+                )}
+
+              </div>
+
+              <div class="price">
+
+                🟢 Выдано
+
+              </div>
+
+            </div>
+          `;
+
+      }
+    );
+
+  }
+
+
+  if(
+    already.length > 0
+  ){
+
+    html +=
+      `
+        <div class="count">
+
+          ℹ️ Мурун берилген:
+          ${already.length}
+
+        </div>
+      `;
+
+
+    already.forEach(
+      function(parcel){
+
+        html +=
+          `
+            <div class="parcel">
+
+              <div class="track">
+                📦
+                ${escapeHtml(
+                  parcel.track
+                )}
+              </div>
+
+              <div class="price">
+
+                💰
+                ${escapeHtml(
+                  String(
+                    parcel.price || ""
+                  )
+                )}
+
+              </div>
+
+              <div class="price">
+
+                ✅ Уже выдано
+
+              </div>
+
+            </div>
+          `;
+
+      }
+    );
+
+  }
+
+
+  if(
+    !html
+  ){
+
+    html =
+      `
+        <div class="empty">
+
+          📦 Посылка жок.
+
+        </div>
+      `;
+
+  }
+
+
+  list.innerHTML =
+    html;
+
+}
+
+
+/************************************************
+🟢 ISSUE CLIENT
+************************************************/
+
+function issueClient(){
+
+  const clientCode =
+    document
+      .getElementById("clientCode")
+      .textContent
+      .trim();
+
+  if(!clientCode){
+
+    alert("❌ Клиент тандалган жок.");
+
+    return;
+
+  }
+
+  if(!confirm(
+    "📦 " + clientCode +
+    " кардардын офистеги бардык посылкаларын беребизби?"
+  )){
+
+    return;
+
+  }
+
+  const button =
+    document.getElementById("issueButton");
+
+  button.disabled = true;
+
+  button.textContent =
+    "⏳ Посылкалар берилүүдө...";
+
+
+  fetch(
+    API_URL +
+    "?action=issue_client" +
+    "&client_code=" +
+    encodeURIComponent(clientCode)
+  )
+
+  .then(function(response){
+
+    return response.json();
+
+  })
+
+  .then(function(data){
+
+    console.log("ISSUE API:", data);
+
+    if(data.status === "ok"){
+
+      const count =
+        data.issued_count || 0;
+
+      button.textContent =
+        "✅ БЕРИЛДИ";
+
+      alert(
+        "✅ Даяр!\n\n" +
+        "Кардар: " + clientCode +
+        "\nБерилген посылка: " + count
+      );
+
+      /*
+       Google Sheets'те статус
+       "Выдано" болуп өзгөрдү.
+
+       Эми экранды жаңыртабыз.
+      */
+
+      loadClient(clientCode);
+
+    }else{
+
+      alert(
+        "❌ " +
+        (
+          data.message ||
+          "Посылканы берүүдө ката кетти"
+        )
+      );
+
+      button.disabled = false;
+
+      button.textContent =
+        "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
+
+    }
+
+  })
+
+  .catch(function(error){
+
+    console.error(error);
+
+    alert(
+      "❌ Сервер менен байланыш жок."
+    );
+
+    button.disabled = false;
+
+    button.textContent =
+      "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
+
+  });
+
+}
+
+/************************************************
+🔄 RESET
+************************************************/
+
+function resetClient(){
+
+  stopScanner();
+
+
+  document
+    .getElementById(
+      "clientCard"
+    )
+    .style.display =
+      "none";
+
+
+  document
+    .getElementById(
+      "clientCode"
+    )
+    .textContent =
+      "";
+
+
+  document
+    .getElementById(
+      "parcelList"
+    )
+    .innerHTML =
+      "";
+
+
+  document
+    .getElementById(
+      "parcelStatus"
+    )
+    .innerHTML =
+      "";
+
+
+  const button =
+    document.getElementById(
+      "issueButton"
+    );
+
+
+  button.disabled =
+    false;
+
+
+  button.textContent =
+    "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
+
+}
+
+
+/************************************************
+🛡️ ESCAPE HTML
+************************************************/
+
+function escapeHtml(text){
+
+  return String(text)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+</script>
+
+</body>
+</html>
