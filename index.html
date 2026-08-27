@@ -1072,28 +1072,18 @@ function loadClient(
 📦 SHOW OFFICE PARCELS
 ************************************************/
 
-function renderOfficeParcels(
-  parcels
-){
+function renderOfficeParcels(parcels){
 
   const list =
-    document.getElementById(
-      "parcelList"
-    );
+    document.getElementById("parcelList");
 
 
-  if(
-    !parcels.length
-  ){
+  if(!parcels.length){
 
     list.innerHTML = `
-
       <div class="empty">
-
         📦 Офисте посылка жок.
-
       </div>
-
     `;
 
     return;
@@ -1101,33 +1091,63 @@ function renderOfficeParcels(
   }
 
 
+  // 💰 ЖАЛПЫ СУММА
+  let totalPrice = 0;
+
+
+  parcels.forEach(function(parcel){
+
+    let price =
+      Number(
+        String(parcel.price || "")
+          .replace(",", ".")
+          .replace(/[^\d.-]/g, "")
+      ) || 0;
+
+    totalPrice += price;
+
+  });
+
+
   let html = `
 
     <div class="count">
 
       🏢 ОФИСТЕГИ ПОСЫЛКАЛАР:
-
       ${parcels.length}
+
+    </div>
+
+
+    <div class="status success"
+         style="
+           font-size:22px;
+           margin:15px 0;
+           padding:18px;
+         ">
+
+      💰 ЖАЛПЫ СУММА:
+
+      <br>
+
+      <b style="font-size:30px;">
+        ${totalPrice.toLocaleString("ru-RU")} сом
+      </b>
 
     </div>
 
   `;
 
 
-  parcels.forEach(
-    function(parcel)
-  {
-
+  parcels.forEach(function(parcel){
 
     html += `
 
       <div class="parcel">
 
-
         <div class="track">
 
           📦
-
           ${escapeHtml(
             parcel.track
           )}
@@ -1138,24 +1158,13 @@ function renderOfficeParcels(
         <div class="price">
 
           💰
-
           ${
             parcel.price === "" ||
             parcel.price == null
-
-            ?
-
-            "Баасы көрсөтүлгөн эмес"
-
-            :
-
-            escapeHtml(
-              String(
-                parcel.price
-              )
-            ) +
-            " сом"
-
+              ? "Баасы көрсөтүлгөн эмес"
+              : escapeHtml(
+                  String(parcel.price)
+                ) + " сом"
           }
 
         </div>
@@ -1164,7 +1173,6 @@ function renderOfficeParcels(
         <div class="price">
 
           🏢
-
           ${escapeHtml(
             parcel.status
           )}
@@ -1175,14 +1183,11 @@ function renderOfficeParcels(
         <div class="price">
 
           📅 Келген:
-
           ${escapeHtml(
-            parcel.date_arrived ||
-            ""
+            parcel.date_arrived || ""
           )}
 
         </div>
-
 
       </div>
 
@@ -1191,12 +1196,9 @@ function renderOfficeParcels(
   });
 
 
-  list.innerHTML =
-    html;
+  list.innerHTML = html;
 
 }
-
-
 /************************************************
 📦 SHOW ISSUED
 ************************************************/
