@@ -207,6 +207,79 @@ button:disabled{
 
 
 <!-- =========================================
+     🔎 TRACK SEARCH
+========================================= -->
+
+<div class="card">
+
+  <div class="scan-title">
+    🔎 TRACK CODE ИЗДӨӨ
+  </div>
+
+  <input
+    type="text"
+    id="trackSearchInput"
+    placeholder="Track code жазыңыз..."
+    autocomplete="off"
+    style="
+      width:100%;
+      padding:15px;
+      border:1px solid #d1d5db;
+      border-radius:14px;
+      font-size:16px;
+      outline:none;
+    "
+  >
+
+  <button
+    class="start"
+    onclick="searchTrack()">
+
+    🔎 Издөө
+
+  </button>
+
+  <div
+    id="trackSearchResult"
+    style="margin-top:15px;">
+  </div>
+
+</div>
+
+
+<!-- =========================================
+     📷 QR SCANNER
+========================================= -->
+
+<div class="card">
+
+  <div class="scan-title">
+    📷 QR СКАНЕР
+  </div>
+
+  <div id="reader"></div>
+
+  <button
+    class="start"
+    id="startButton"
+    onclick="startScanner()">
+
+    📷 Камераны ачуу
+
+  </button>
+
+  <button
+    class="reset"
+    onclick="stopScanner()">
+
+    ✕ Камераны жабуу
+
+  </button>
+
+</div>
+
+
+<!-- =========================================
      QR SCANNER
 ========================================= -->
 
@@ -1369,7 +1442,582 @@ function renderIssued(
 
 }
 
+/************************************************
+🔎 SEARCH TRACK CODE
+************************************************/
 
+function searchTrack(){
+
+  const input =
+    document.getElementById(
+      "trackSearchInput"
+    );
+
+  const result =
+    document.getElementById(
+      "trackSearchResult"
+    );
+
+  const trackCode =
+    String(
+      input.value || ""
+    )
+    .trim();
+
+  if(!trackCode){
+
+    result.innerHTML = `
+      <div class="status error">
+        ❌ Track code жазыңыз
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  result.innerHTML = `
+    <div class="loading">
+      ⏳ Изделүүдө...
+    </div>
+  `;
+
+
+  fetch(
+
+    API_URL +
+    "?action=search_track" +
+    "&track_code=" +
+    encodeURIComponent(
+      trackCode
+    )
+
+  )
+
+  .then(function(response){
+
+    if(!response.ok){
+
+      throw new Error(
+        "HTTP " +
+        response.status
+      );
+
+    }
+
+    return response.json();
+
+  })
+
+  .then(function(data){
+
+    console.log(
+      "🔎 SEARCH TRACK:",
+      data
+    );
+
+
+    /****************************************
+    ❌ ТАБЫЛГАН ЖОК
+    ****************************************/
+
+    if(
+      data.status !== "ok"
+    ){
+
+      result.innerHTML = `
+
+        <div class="status error">
+
+          ❌ Посылка табылган жок
+
+          <br><br>
+
+          Track:
+          <b>
+            ${escapeHtml(
+              trackCode
+            )}
+          </b>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    /****************************************
+    📦 DATA
+    ****************************************/
+
+    const parcel =
+      data.parcel || {};
+
+    const client =
+      data.client || null;
+
+
+    /****************************************
+    📦 ПОСЫЛКА
+    ****************************************/
+
+    let html = `
+
+      <div class="status success">
+
+        ✅ ПОСЫЛКА ТАБЫЛДЫ
+
+      </div>
+
+
+      <div class="parcel">
+
+        <div class="track">
+
+          📦
+          ${escapeHtml(
+            parcel.track || ""
+          )}
+
+        </div>
+
+
+        <div class="price">
+
+          👤 Клиент:
+
+          <b>
+            ${escapeHtml(
+              parcel.client_code || ""
+            )}
+          </b>
+
+        </div>
+
+
+        <div class="price">
+
+          💰 Баасы:
+
+          ${
+            parcel.price === "" ||
+            parcel.price == null
+
+            ?
+
+            "Көрсөтүлгөн эмес"
+
+            :
+
+            escapeHtml(
+              String(
+                parcel.price
+              )
+            ) +
+            " сом"
+          }
+
+        </div>
+
+
+        <div class="price">
+
+          📌 Статус:
+
+          <b>
+            ${escapeHtml(
+              parcel.status || ""
+            )}
+          </b>
+
+        </div>
+
+
+        <div class="price">
+
+          📅 Жөнөтүлгөн:
+
+          ${escapeHtml(
+            parcel.date_sent || ""
+          )}
+
+        </div>
+
+
+        <div class="price">
+
+          📅 Келген:
+
+          ${escapeHtml(
+            parcel.date_arrived || ""
+          )}
+
+        </div>
+
+      </div>
+
+    `;
+
+
+    /****************************************
+    👤 CLIENT
+    ****************************************/
+
+    if(client){
+
+      html += `
+
+        <div class="parcel">
+
+          <div class="track">
+
+            👤 КЛИЕНТ
+
+          </div>
+
+
+          <div class="price">
+
+            👤 Аты:
+
+            ${escapeHtml(
+              String(
+                client.name || ""
+              )
+            )}
+
+          </div>
+
+
+          <div class="price">
+
+            📞 Телефон:
+
+            ${escapeHtml(
+              String(
+                client.phone || ""
+              )
+            )}
+
+          </div>
+
+
+          <div class="price">
+
+            🏠 Дарек:
+
+            ${escapeHtml(
+              String(
+                client.address || ""
+              )
+            )}
+
+          </div>
+
+
+          <div class="price">
+
+            🔑 Клиенттик код:
+
+            <b>
+              ${escapeHtml(
+                String(
+                  client.client_code || ""
+                )
+              )}
+            </b>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+
+
+    /****************************************
+    🔘 ЭГЕР В ОФИСЕ БОЛСО
+    ****************************************/
+
+    const statusText =
+      String(
+        parcel.status || ""
+      )
+      .toLowerCase()
+      .trim();
+
+
+    if(
+      statusText.includes(
+        "в офис"
+      )
+    ){
+
+      html += `
+
+        <button
+          class="issue"
+          onclick="issueFromSearch(
+            '${escapeHtml(
+              parcel.client_code || ""
+            )}'
+          )">
+
+          🟢 КАРДАРДЫН ПОСЫЛКАЛАРЫН БЕРҮҮ
+
+        </button>
+
+      `;
+
+    }
+
+
+    result.innerHTML =
+      html;
+
+  })
+
+
+  .catch(function(error){
+
+    console.error(
+      "❌ SEARCH ERROR:",
+      error
+    );
+
+
+    result.innerHTML = `
+
+      <div class="status error">
+
+        ❌ Сервер менен байланыш жок.
+
+        <br><br>
+
+        ${escapeHtml(
+          error.message
+        )}
+
+      </div>
+
+    `;
+
+  });
+
+}
+
+
+/************************************************
+📦 ISSUE FROM TRACK SEARCH
+************************************************/
+
+function issueFromSearch(
+  clientCode
+){
+
+  clientCode =
+    String(
+      clientCode || ""
+    )
+    .trim()
+    .toUpperCase();
+
+
+  if(!clientCode){
+
+    alert(
+      "❌ Клиенттик код жок."
+    );
+
+    return;
+
+  }
+      if(!confirm(
+
+    "📦 " +
+    clientCode +
+    " кардардын офистеги бардык посылкаларын беребизби?"
+
+  )){
+
+    return;
+
+  }
+
+
+  const result =
+    document.getElementById(
+      "trackSearchResult"
+    );
+
+
+  result.innerHTML = `
+
+    <div class="loading">
+
+      ⏳ Посылкалар берилүүдө...
+
+    </div>
+
+  `;
+
+
+  fetch(
+
+    API_URL +
+
+    "?action=issue_client" +
+
+    "&client_code=" +
+
+    encodeURIComponent(
+      clientCode
+    )
+
+  )
+
+  .then(function(response){
+
+    if(!response.ok){
+
+      throw new Error(
+        "HTTP " +
+        response.status
+      );
+
+    }
+
+    return response.json();
+
+  })
+
+  .then(function(data){
+
+    console.log(
+      "📦 ISSUE FROM SEARCH:",
+      data
+    );
+
+
+    if(
+      data.status === "ok"
+    ){
+
+      const count =
+        data.issued_count || 0;
+
+
+      result.innerHTML = `
+
+        <div class="status success">
+
+          ✅ ПОСЫЛКАЛАР БЕРИЛДИ
+
+          <br><br>
+
+          👤 Кардар:
+          <b>
+            ${escapeHtml(
+              clientCode
+            )}
+          </b>
+
+          <br>
+
+          📦 Берилди:
+          <b>
+            ${count}
+          </b>
+
+        </div>
+
+      `;
+
+
+      alert(
+
+        "✅ Даяр!\n\n" +
+
+        "Кардар: " +
+        clientCode +
+
+        "\nБерилген посылка: " +
+        count
+
+      );
+
+
+      /****************************************
+      🔄 SEARCH'ТИ ЖАҢЫЛОО
+      ****************************************/
+
+      const input =
+        document.getElementById(
+          "trackSearchInput"
+        );
+
+
+      if(input){
+
+        input.value = "";
+
+      }
+
+    }
+
+    else{
+
+      result.innerHTML = `
+
+        <div class="status error">
+
+          ❌
+
+          ${escapeHtml(
+            data.message ||
+            "Посылканы берүүдө ката кетти"
+          )}
+
+        </div>
+
+      `;
+
+    }
+
+  })
+
+  .catch(function(error){
+
+    console.error(
+      "❌ ISSUE ERROR:",
+      error
+    );
+
+
+    result.innerHTML = `
+
+      <div class="status error">
+
+        ❌ Сервер менен байланыш жок.
+
+        <br><br>
+
+        ${escapeHtml(
+          error.message
+        )}
+
+      </div>
+
+    `;
+
+  });
+
+}
 /************************************************
 🟢 ISSUE CLIENT
 ************************************************/
