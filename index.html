@@ -983,50 +983,53 @@ function loadClient(
     ℹ️ NO OFFICE PARCELS
     ********************************************/
 
-    else{
+  else{
+
+  status.innerHTML = `
+
+    <div class="status">
+
+      👤 Клиент:
+
+      <b>
+        ${escapeHtml(
+          clientCode
+        )}
+      </b>
+
+      <br><br>
+
+      📦 Офисте посылка жок.
+
+      <br>
+
+      ✅ Мурун берилген:
+
+      ${issued.length}
+
+    </div>
+
+  `;
 
 
-      status.innerHTML = `
+  /********************************************
+  ✅ SHOW ISSUED PARCELS
+  ********************************************/
 
-        <div class="status">
-
-          👤 Клиент:
-
-          <b>
-            ${escapeHtml(
-              clientCode
-            )}
-          </b>
-
-          <br><br>
-
-          📦 Офисте посылка жок.
-
-          <br>
-
-          ✅ Мурун берилген:
-
-          ${issued.length}
-
-        </div>
-
-      `;
+  renderIssued(
+    [],
+    issued
+  );
 
 
-      renderOfficeParcels(
-        []
-      );
+  button.disabled =
+    true;
 
 
-      button.disabled =
-        true;
+  button.textContent =
+    "✅ БЕРҮҮ ҮЧҮН ПОСЫЛКА ЖОК";
 
-
-      button.textContent =
-        "✅ БЕРҮҮ ҮЧҮН ПОСЫЛКА ЖОК";
-
-    }
-
+}
   })
 
 
