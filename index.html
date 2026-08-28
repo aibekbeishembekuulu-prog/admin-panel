@@ -10,71 +10,612 @@
       maximum-scale=1.0,
       user-scalable=no">
 
-<title>Tez Kargo — Admin</title>
-
-
-<!-- =========================================
-     QR SCANNER LIBRARY
-========================================= -->
+<title>Tez Kargo — Premium Admin</title>
 
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
-
 <style>
+
+/* =====================================================
+   TEZ KARGO PREMIUM ADMIN 2026
+===================================================== */
 
 *{
   box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+  --red:#dc2626;
+  --red-dark:#991b1b;
+  --red-soft:#fef2f2;
+
+  --green:#16a34a;
+  --green-soft:#f0fdf4;
+
+  --orange:#f59e0b;
+  --orange-soft:#fffbeb;
+
+  --blue:#2563eb;
+  --blue-soft:#eff6ff;
+
+  --purple:#7c3aed;
+  --purple-soft:#f5f3ff;
+
+  --black:#111827;
+  --dark:#1f2937;
+
+  --gray:#6b7280;
+  --gray-light:#9ca3af;
+
+  --border:#e5e7eb;
+  --bg:#f5f6f8;
+
+  --white:#ffffff;
+
+  --radius:22px;
+}
+
+html{
+  scroll-behavior:smooth;
 }
 
 body{
   margin:0;
-  font-family:Arial,sans-serif;
-  background:#f4f6f8;
-  color:#111827;
+  background:var(--bg);
+  color:var(--black);
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
 }
 
+button,
+input{
+  font-family:inherit;
+}
+
+button{
+  border:0;
+  cursor:pointer;
+}
+
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
 .header{
-  background:#111827;
+  position:relative;
+  overflow:hidden;
+
+  background:
+    linear-gradient(
+      145deg,
+      #111827 0%,
+      #1f2937 55%,
+      #7f1d1d 100%
+    );
+
   color:white;
-  padding:20px;
-  text-align:center;
+
+  padding:
+    24px
+    18px
+    28px;
+
+  border-radius:
+    0 0 30px 30px;
+
+  box-shadow:
+    0 12px 35px rgba(17,24,39,.20);
+}
+
+.header::before{
+  content:"";
+  position:absolute;
+
+  width:180px;
+  height:180px;
+
+  right:-80px;
+  top:-80px;
+
+  background:
+    rgba(255,255,255,.08);
+
+  border-radius:50%;
+}
+
+.header::after{
+  content:"";
+  position:absolute;
+
+  width:120px;
+  height:120px;
+
+  left:-60px;
+  bottom:-70px;
+
+  background:
+    rgba(220,38,38,.25);
+
+  border-radius:50%;
+}
+
+.header-top{
+  position:relative;
+  z-index:2;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo-wrap{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo-icon{
+  width:48px;
+  height:48px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:16px;
+
+  background:
+    rgba(255,255,255,.12);
+
+  backdrop-filter:blur(10px);
+
+  font-size:25px;
+
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.12);
 }
 
 .logo{
-  font-size:26px;
-  font-weight:800;
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:-.5px;
 }
 
 .subtitle{
-  margin-top:5px;
-  opacity:.7;
-  font-size:13px;
+  margin-top:3px;
+  font-size:11px;
+  opacity:.65;
+  letter-spacing:.8px;
 }
 
-.container{
-  max-width:520px;
-  margin:auto;
-  padding:16px;
+.live{
+  display:flex;
+  align-items:center;
+  gap:7px;
+
+  padding:8px 11px;
+
+  border-radius:999px;
+
+  background:
+    rgba(255,255,255,.10);
+
+  font-size:11px;
+  font-weight:800;
 }
+
+.live-dot{
+  width:7px;
+  height:7px;
+  background:#4ade80;
+  border-radius:50%;
+
+  box-shadow:
+    0 0 0 4px rgba(74,222,128,.13);
+
+  animation:
+    livePulse 1.7s infinite;
+}
+
+@keyframes livePulse{
+  0%,100%{
+    opacity:1;
+  }
+
+  50%{
+    opacity:.35;
+  }
+}
+
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+.container{
+  width:100%;
+  max-width:620px;
+
+  margin:auto;
+
+  padding:
+    16px
+    16px
+    110px;
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+.dashboard-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  margin:
+    5px
+    2px
+    12px;
+}
+
+.dashboard-title h2{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+}
+
+.dashboard-title span{
+  color:var(--gray);
+  font-size:11px;
+}
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
+
+  margin-bottom:16px;
+}
+
+.stat-card{
+  position:relative;
+  overflow:hidden;
+
+  background:white;
+
+  border:
+    1px solid
+    rgba(229,231,235,.8);
+
+  border-radius:20px;
+
+  padding:16px;
+
+  box-shadow:
+    0 7px 25px rgba(17,24,39,.055);
+}
+
+.stat-card::after{
+  content:"";
+
+  position:absolute;
+
+  width:70px;
+  height:70px;
+
+  right:-30px;
+  bottom:-30px;
+
+  border-radius:50%;
+
+  background:
+    var(--red-soft);
+}
+
+.stat-icon{
+  font-size:21px;
+  margin-bottom:10px;
+}
+
+.stat-label{
+  color:var(--gray);
+  font-size:11px;
+  font-weight:700;
+}
+
+.stat-value{
+  margin-top:4px;
+
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:-.5px;
+}
+
+.stat-value.loading-value{
+  color:#d1d5db;
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+.nav-scroll{
+  display:flex;
+  gap:8px;
+
+  overflow-x:auto;
+
+  padding:
+    2px
+    1px
+    8px;
+
+  margin-bottom:8px;
+
+  scrollbar-width:none;
+}
+
+.nav-scroll::-webkit-scrollbar{
+  display:none;
+}
+
+.nav-btn{
+  flex:0 0 auto;
+
+  padding:11px 14px;
+
+  border-radius:14px;
+
+  background:white;
+
+  color:var(--gray);
+
+  border:1px solid var(--border);
+
+  font-size:12px;
+  font-weight:800;
+
+  transition:.2s;
+}
+
+.nav-btn.active{
+  background:var(--black);
+  color:white;
+  border-color:var(--black);
+
+  box-shadow:
+    0 7px 18px rgba(17,24,39,.16);
+}
+
+
+/* =====================================================
+   SECTIONS
+===================================================== */
+
+.section{
+  display:none;
+}
+
+.section.active{
+  display:block;
+}
+
+
+/* =====================================================
+   CARD
+===================================================== */
 
 .card{
   background:white;
-  border-radius:20px;
+
+  border-radius:var(--radius);
+
   padding:18px;
-  margin-bottom:15px;
-  box-shadow:0 5px 20px rgba(0,0,0,.07);
+
+  margin-bottom:14px;
+
+  border:
+    1px solid
+    rgba(229,231,235,.85);
+
+  box-shadow:
+    0 8px 28px rgba(17,24,39,.055);
 }
 
-.scan-title{
-  font-size:20px;
-  font-weight:800;
-  margin-bottom:12px;
+.card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  margin-bottom:15px;
+}
+
+.card-title{
+  font-size:17px;
+  font-weight:900;
+}
+
+.card-subtitle{
+  margin-top:3px;
+
+  color:var(--gray);
+
+  font-size:11px;
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.search-box{
+  position:relative;
+}
+
+.search-icon{
+  position:absolute;
+
+  left:15px;
+  top:50%;
+
+  transform:translateY(-50%);
+
+  font-size:18px;
+}
+
+.search-input{
+  width:100%;
+
+  padding:
+    16px
+    16px
+    16px
+    45px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:16px;
+
+  background:#fafafa;
+
+  color:var(--black);
+
+  font-size:15px;
+
+  outline:none;
+
+  transition:.2s;
+}
+
+.search-input:focus{
+  background:white;
+
+  border-color:
+    #f87171;
+
+  box-shadow:
+    0 0 0 4px
+    rgba(220,38,38,.08);
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.btn{
+  width:100%;
+
+  min-height:52px;
+
+  margin-top:11px;
+
+  border-radius:16px;
+
+  font-size:14px;
+
+  font-weight:900;
+
+  transition:
+    transform .15s,
+    box-shadow .15s;
+}
+
+.btn:active{
+  transform:scale(.98);
+}
+
+.btn-primary{
+  background:
+    linear-gradient(
+      135deg,
+      #111827,
+      #374151
+    );
+
+  color:white;
+
+  box-shadow:
+    0 8px 20px
+    rgba(17,24,39,.16);
+}
+
+.btn-red{
+  background:
+    linear-gradient(
+      135deg,
+      #dc2626,
+      #b91c1c
+    );
+
+  color:white;
+
+  box-shadow:
+    0 8px 20px
+    rgba(220,38,38,.18);
+}
+
+.btn-green{
+  background:
+    linear-gradient(
+      135deg,
+      #16a34a,
+      #15803d
+    );
+
+  color:white;
+}
+
+.btn-light{
+  background:#f3f4f6;
+  color:var(--black);
+}
+
+
+/* =====================================================
+   QR
+===================================================== */
+
+.qr-box{
+  background:
+    linear-gradient(
+      145deg,
+      #111827,
+      #374151
+    );
+
+  border-radius:20px;
+
+  padding:12px;
+
+  box-shadow:
+    inset 0 1px
+    rgba(255,255,255,.08);
 }
 
 #reader{
   width:100%;
+  min-height:20px;
   overflow:hidden;
   border-radius:16px;
+  background:#111827;
 }
 
 #reader video{
@@ -82,257 +623,2002 @@ body{
   border-radius:16px;
 }
 
-button{
-  width:100%;
-  border:0;
-  border-radius:14px;
-  padding:16px;
-  margin-top:12px;
-  font-size:16px;
-  font-weight:700;
-  cursor:pointer;
-}
-
-button:disabled{
-  opacity:.6;
-}
-
-.start{
-  background:#111827;
-  color:white;
-}
-
-.issue{
-  background:#16a34a;
-  color:white;
-}
-
-.reset{
-  background:#e5e7eb;
-  color:#111827;
-}
-
-.client{
-  display:none;
-}
-
-.client-code{
-  font-size:30px;
-  font-weight:900;
-  color:#dc2626;
+.camera-hint{
   text-align:center;
-  margin:10px 0 18px;
+
+  color:var(--gray);
+
+  font-size:11px;
+
+  margin:
+    10px
+    0
+    0;
 }
+
+
+/* =====================================================
+   STATUS
+===================================================== */
 
 .status{
-  padding:12px;
-  border-radius:12px;
-  text-align:center;
-  margin-bottom:12px;
-  background:#f3f4f6;
-  font-weight:700;
-}
-
-.parcel{
-  border:1px solid #e5e7eb;
-  border-radius:14px;
   padding:14px;
-  margin-top:10px;
-}
 
-.track{
-  font-size:18px;
-  font-weight:800;
-}
+  border-radius:15px;
 
-.price{
-  margin-top:5px;
-  color:#6b7280;
-}
-
-.empty{
   text-align:center;
-  padding:20px;
-  color:#6b7280;
-}
 
-.loading{
-  text-align:center;
-  padding:20px;
+  margin-bottom:12px;
+
+  background:#f3f4f6;
+
+  font-size:13px;
+  font-weight:700;
 }
 
 .success{
-  background:#dcfce7;
+  background:var(--green-soft);
   color:#166534;
 }
 
 .error{
+  background:#fef2f2;
+  color:#991b1b;
+}
+
+.warning{
+  background:var(--orange-soft);
+  color:#92400e;
+}
+
+.info{
+  background:var(--blue-soft);
+  color:#1e40af;
+}
+
+
+/* =====================================================
+   CLIENT
+===================================================== */
+
+.client-code{
+  font-size:32px;
+
+  font-weight:950;
+
+  color:var(--red);
+
+  text-align:center;
+
+  margin:
+    8px
+    0
+    18px;
+
+  letter-spacing:1px;
+}
+
+.client-profile{
+  background:
+    linear-gradient(
+      145deg,
+      #fff,
+      #f9fafb
+    );
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:18px;
+
+  padding:15px;
+
+  margin-bottom:13px;
+}
+
+.profile-row{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+
+  padding:
+    9px
+    0;
+
+  border-bottom:
+    1px solid
+    #f3f4f6;
+
+  font-size:13px;
+}
+
+.profile-row:last-child{
+  border-bottom:0;
+}
+
+.profile-label{
+  color:var(--gray);
+}
+
+.profile-value{
+  text-align:right;
+  font-weight:800;
+}
+
+
+/* =====================================================
+   PARCEL
+===================================================== */
+
+.count{
+  text-align:center;
+
+  font-size:13px;
+  font-weight:900;
+
+  margin:
+    12px
+    0;
+}
+
+.total-box{
+  text-align:center;
+
+  padding:19px;
+
+  border-radius:19px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f0fdf4,
+      #dcfce7
+    );
+
+  color:#166534;
+
+  margin-bottom:13px;
+}
+
+.total-label{
+  font-size:11px;
+  font-weight:800;
+}
+
+.total-value{
+  margin-top:4px;
+
+  font-size:29px;
+  font-weight:950;
+}
+
+.parcel{
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:17px;
+
+  padding:15px;
+
+  margin-top:10px;
+
+  background:white;
+
+  transition:.2s;
+}
+
+.parcel:hover{
+  box-shadow:
+    0 8px 22px
+    rgba(17,24,39,.06);
+}
+
+.parcel-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+
+  align-items:center;
+}
+
+.track{
+  font-size:16px;
+  font-weight:900;
+
+  word-break:break-all;
+}
+
+.price{
+  margin-top:8px;
+
+  color:var(--gray);
+
+  font-size:12px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+
+  padding:6px 9px;
+
+  border-radius:999px;
+
+  font-size:10px;
+
+  font-weight:900;
+
+  white-space:nowrap;
+}
+
+.badge-green{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.badge-gray{
+  background:#f3f4f6;
+  color:#4b5563;
+}
+
+.badge-red{
   background:#fee2e2;
   color:#991b1b;
 }
 
-.count{
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.loading{
   text-align:center;
-  font-size:18px;
+
+  padding:20px;
+
+  color:var(--gray);
+
+  font-size:13px;
+}
+
+.spinner{
+  width:24px;
+  height:24px;
+
+  margin:
+    0
+    auto
+    10px;
+
+  border:
+    3px solid
+    #e5e7eb;
+
+  border-top-color:
+    var(--red);
+
+  border-radius:50%;
+
+  animation:
+    spin .7s linear infinite;
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.empty{
+  text-align:center;
+
+  padding:25px 15px;
+
+  color:var(--gray);
+
+  font-size:13px;
+}
+
+
+/* =====================================================
+   PREMIUM FEATURE CARDS
+===================================================== */
+
+.feature-grid{
+  display:grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:11px;
+}
+
+.feature-card{
+  padding:17px;
+
+  background:white;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:19px;
+
+  min-height:115px;
+
+  box-shadow:
+    0 7px 20px
+    rgba(17,24,39,.045);
+}
+
+.feature-icon{
+  font-size:23px;
+  margin-bottom:10px;
+}
+
+.feature-title{
+  font-size:13px;
+  font-weight:900;
+}
+
+.feature-text{
+  margin-top:5px;
+
+  font-size:10px;
+
+  color:var(--gray);
+
+  line-height:1.4;
+}
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+.period-row{
+  display:flex;
+  gap:8px;
+
+  overflow-x:auto;
+
+  scrollbar-width:none;
+
+  margin-bottom:13px;
+}
+
+.period-row::-webkit-scrollbar{
+  display:none;
+}
+
+.period-btn{
+  flex:0 0 auto;
+
+  padding:9px 13px;
+
+  border-radius:12px;
+
+  background:#f3f4f6;
+
+  color:var(--gray);
+
+  font-size:11px;
   font-weight:800;
-  margin:10px 0;
+}
+
+.period-btn.active{
+  background:var(--black);
+  color:white;
+}
+
+.chart-placeholder{
+  height:190px;
+
+  border-radius:18px;
+
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      #f9fafb 0,
+      #f9fafb 1px,
+      transparent 1px,
+      transparent 47px
+    );
+
+  border:
+    1px solid
+    var(--border);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  color:var(--gray);
+
+  font-size:12px;
+
+  text-align:center;
+
+  padding:20px;
+}
+
+
+/* =====================================================
+   BOTTOM NAV
+===================================================== */
+
+.bottom-nav{
+  position:fixed;
+
+  z-index:100;
+
+  left:50%;
+
+  transform:translateX(-50%);
+
+  bottom:12px;
+
+  width:
+    calc(100% - 24px);
+
+  max-width:590px;
+
+  padding:8px;
+
+  display:flex;
+
+  gap:4px;
+
+  background:
+    rgba(17,24,39,.94);
+
+  backdrop-filter:
+    blur(18px);
+
+  border-radius:21px;
+
+  box-shadow:
+    0 15px 40px
+    rgba(17,24,39,.25);
+}
+
+.bottom-btn{
+  flex:1;
+
+  padding:9px 4px;
+
+  border-radius:15px;
+
+  background:transparent;
+
+  color:#9ca3af;
+
+  font-size:9px;
+
+  font-weight:800;
+}
+
+.bottom-btn span{
+  display:block;
+
+  font-size:19px;
+
+  margin-bottom:3px;
+}
+
+.bottom-btn.active{
+  background:
+    rgba(255,255,255,.10);
+
+  color:white;
+}
+
+
+/* =====================================================
+   DESKTOP
+===================================================== */
+
+@media(min-width:700px){
+
+  .container{
+    padding-top:22px;
+  }
+
+  .stats-grid{
+    grid-template-columns:
+      repeat(4,1fr);
+  }
+
+  .feature-grid{
+    grid-template-columns:
+      repeat(4,1fr);
+  }
+
+  .bottom-nav{
+    display:none;
+  }
+
+}
+
+
+/* =====================================================
+   NO SELECT
+===================================================== */
+
+.no-select{
+  user-select:none;
 }
 
 </style>
 
 </head>
 
-
 <body>
 
 
-<!-- =========================================
+<!-- =====================================================
      HEADER
-========================================= -->
+===================================================== -->
 
-<div class="header">
+<header class="header">
 
-  <div class="logo">
-    📦 TEZ KARGO
+  <div class="header-top">
+
+    <div class="logo-wrap">
+
+      <div class="logo-icon">
+        📦
+      </div>
+
+      <div>
+
+        <div class="logo">
+          TEZ KARGO
+        </div>
+
+        <div class="subtitle">
+          PREMIUM ADMIN PANEL
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="live">
+      <span class="live-dot"></span>
+      LIVE
+    </div>
+
   </div>
 
-  <div class="subtitle">
-    ADMIN PANEL • QR ВЫДАЧА
-  </div>
-
-</div>
+</header>
 
 
 <div class="container">
 
 
-<!-- =========================================
-     🔎 TRACK SEARCH
-========================================= -->
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
 
-<div class="card">
+<section
+  class="section active"
+  id="dashboardSection">
 
-  <div class="scan-title">
-    🔎 TRACK CODE ИЗДӨӨ
+  <div class="dashboard-title">
+
+    <h2>
+      📊 Dashboard
+    </h2>
+
+    <span>
+      Бүгүн
+    </span>
+
   </div>
 
-  <input
-    type="text"
-    id="trackSearchInput"
-    placeholder="Track code жазыңыз..."
-    autocomplete="off"
-    style="
-      width:100%;
-      padding:15px;
-      border:1px solid #d1d5db;
-      border-radius:14px;
-      font-size:16px;
-      outline:none;
-    "
-  >
 
-  <button
-    class="start"
-    onclick="searchTrack()">
+  <div class="stats-grid">
 
-    🔎 Издөө
+    <div class="stat-card">
 
-  </button>
+      <div class="stat-icon">
+        📦
+      </div>
+
+      <div class="stat-label">
+        Жалпы посылка
+      </div>
+
+      <div class="stat-value">
+        —
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        ⚖️
+      </div>
+
+      <div class="stat-label">
+        Жалпы KG
+      </div>
+
+      <div class="stat-value">
+        —
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        🏢
+      </div>
+
+      <div class="stat-label">
+        Офисте
+      </div>
+
+      <div class="stat-value">
+        —
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        ✅
+      </div>
+
+      <div class="stat-label">
+        Берилди
+      </div>
+
+      <div class="stat-value">
+        —
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          ⚡ Тез аракет
+        </div>
+
+        <div class="card-subtitle">
+          Көп колдонулган функциялар
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+      <div
+        class="feature-card"
+        onclick="showSection('scanner')">
+
+        <div class="feature-icon">
+          📷
+        </div>
+
+        <div class="feature-title">
+          QR Сканер
+        </div>
+
+        <div class="feature-text">
+          Кардарды QR аркылуу табуу
+        </div>
+
+      </div>
+
+
+      <div
+        class="feature-card"
+        onclick="focusTrackSearch()">
+
+        <div class="feature-icon">
+          🔎
+        </div>
+
+        <div class="feature-title">
+          Track издөө
+        </div>
+
+        <div class="feature-text">
+          Track code аркылуу издөө
+        </div>
+
+      </div>
+
+
+      <div
+        class="feature-card"
+        onclick="showSection('statistics')">
+
+        <div class="feature-icon">
+          📈
+        </div>
+
+        <div class="feature-title">
+          Статистика
+        </div>
+
+        <div class="feature-text">
+          7 күндүк жана айлык отчет
+        </div>
+
+      </div>
+
+
+      <div
+        class="feature-card"
+        onclick="showSection('finance')">
+
+        <div class="feature-icon">
+          💰
+        </div>
+
+        <div class="feature-title">
+          Финансы
+        </div>
+
+        <div class="feature-text">
+          Киреше жана таза пайда
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- TRACK SEARCH -->
 
   <div
-    id="trackSearchResult"
-    style="margin-top:15px;">
+    class="card"
+    id="trackSearchCard">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          🔎 Track Code издөө
+        </div>
+
+        <div class="card-subtitle">
+          Посылканы тез табыңыз
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="search-box">
+
+      <span class="search-icon">
+        🔎
+      </span>
+
+      <input
+        type="text"
+        id="trackSearchInput"
+        class="search-input"
+        placeholder="Track code жазыңыз..."
+        autocomplete="off"
+        onkeydown="
+          if(event.key==='Enter'){
+            searchTrack();
+          }
+        "
+      >
+
+    </div>
+
+
+    <button
+      class="btn btn-primary"
+      onclick="searchTrack()">
+
+      🔎 ИЗДӨӨ
+
+    </button>
+
+
+    <div
+      id="trackSearchResult"
+      style="margin-top:15px;">
+    </div>
+
   </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     SCANNER SECTION
+===================================================== -->
+
+<section
+  class="section"
+  id="scannerSection">
+
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          📷 QR Сканер
+        </div>
+
+        <div class="card-subtitle">
+          Кардардын QR кодун камерага көрсөтүңүз
+        </div>
+
+      </div>
+
+      <div class="badge badge-green">
+        LIVE
+      </div>
+
+    </div>
+
+
+    <div class="qr-box">
+
+      <div id="reader"></div>
+
+    </div>
+
+
+    <div class="camera-hint">
+
+      📱 QR кодду кадрдын ортосуна
+      туура жайгаштырыңыз
+
+    </div>
+
+
+    <button
+      class="btn btn-primary"
+      id="startButton"
+      onclick="startScanner()">
+
+      📷 КАМЕРАНЫ АЧУУ
+
+    </button>
+
+
+    <button
+      class="btn btn-light"
+      onclick="stopScanner()">
+
+      ✕ КАМЕРАНЫ ЖАБУУ
+
+    </button>
+
+  </div>
+
+
+  <!-- ===================================================
+       CLIENT CARD
+  ==================================================== -->
+
+  <div
+    class="card"
+    id="clientCard"
+    style="display:none;">
+
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          👤 Кардар
+        </div>
+
+        <div class="card-subtitle">
+          QR аркылуу табылган кардар
+        </div>
+
+      </div>
+
+      <div class="badge badge-green">
+        FOUND
+      </div>
+
+    </div>
+
+
+    <div
+      class="client-code"
+      id="clientCode">
+    </div>
+
+
+    <div
+      id="parcelStatus">
+    </div>
+
+
+    <div
+      id="parcelList">
+    </div>
+
+
+    <button
+      class="btn btn-green"
+      id="issueButton"
+      onclick="issueClient()">
+
+      🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ
+
+    </button>
+
+
+    <button
+      class="btn btn-light"
+      onclick="resetClient()">
+
+      🔄 БАШКА КАРДАР
+
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     STATISTICS SECTION
+===================================================== -->
+
+<section
+  class="section"
+  id="statisticsSection">
+
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          📈 Статистика
+        </div>
+
+        <div class="card-subtitle">
+          Cargo ишинин негизги көрсөткүчтөрү
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- PERIOD -->
+
+    <div class="period-row">
+
+      <button
+        class="period-btn active"
+        onclick="selectPeriod(this)">
+
+        7 күн
+
+      </button>
+
+
+      <button
+        class="period-btn"
+        onclick="selectPeriod(this)">
+
+        30 күн
+
+      </button>
+
+
+      <button
+        class="period-btn"
+        onclick="selectPeriod(this)">
+
+        Бул ай
+
+      </button>
+
+
+      <button
+        class="period-btn"
+        onclick="selectPeriod(this)">
+
+        Баары
+
+      </button>
+
+    </div>
+
+
+    <!-- STAT CARDS -->
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          📦
+        </div>
+
+        <div class="stat-label">
+          Посылкалар
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          ⚖️
+        </div>
+
+        <div class="stat-label">
+          KG
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          🚚
+        </div>
+
+        <div class="stat-label">
+          Партия
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          ✅
+        </div>
+
+        <div class="stat-label">
+          Берилди
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- CHART -->
+
+    <div class="chart-placeholder">
+
+      <div>
+
+        📊
+
+        <br><br>
+
+        График Google Sheets статистика
+        API туташтырылгандан кийин
+        автоматтык чыгат.
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- WEEKLY -->
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          📅 1 жумалык отчет
+        </div>
+
+        <div class="card-subtitle">
+          Акыркы 7 күндүн көрсөткүчтөрү
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+      <div class="feature-card">
+
+        <div class="feature-icon">
+          📦
+        </div>
+
+        <div class="feature-title">
+          Посылка
+        </div>
+
+        <div class="feature-text">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">
+          ⚖️
+        </div>
+
+        <div class="feature-title">
+          KG
+        </div>
+
+        <div class="feature-text">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">
+          🚚
+        </div>
+
+        <div class="feature-title">
+          Партия
+        </div>
+
+        <div class="feature-text">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">
+          💰
+        </div>
+
+        <div class="feature-title">
+          Түшүм
+        </div>
+
+        <div class="feature-text">
+          —
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- MONTHLY -->
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          📆 Айлык отчет
+        </div>
+
+        <div class="card-subtitle">
+          Бул айдын жалпы статистикасы
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+      <div class="feature-card">
+
+        <div class="feature-icon">
+          📦
+        </div>
+
+        <div class="feature-title">
+          Посылка
+        </div>
+
+        <div class="feature-text">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">
+          ⚖️
+        </div>
+
+        <div class="feature-title">
+          Жалпы KG
+        </div>
+
+        <div class="feature-text">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">
+          🚚
+        </div>
+
+        <div class="feature-title">
+          Партия
+        </div>
+
+        <div class="feature-text">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">
+          💎
+        </div>
+
+        <div class="feature-title">
+          Таза пайда
+        </div>
+
+        <div class="feature-text">
+          —
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     BATCHES SECTION
+===================================================== -->
+
+<section
+  class="section"
+  id="batchesSection">
+
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          🚚 Партиялар
+        </div>
+
+        <div class="card-subtitle">
+          Жолго чыккан cargo партиялары
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- BATCH SUMMARY -->
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          🚚
+        </div>
+
+        <div class="stat-label">
+          Жалпы партия
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          ⚖️
+        </div>
+
+        <div class="stat-label">
+          Жалпы KG
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          📦
+        </div>
+
+        <div class="stat-label">
+          Посылка
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          🚛
+        </div>
+
+        <div class="stat-label">
+          Жолдо
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- CURRENT BATCH -->
+
+    <div class="parcel">
+
+      <div class="parcel-top">
+
+        <div class="track">
+
+          🚚 Учурдагы партия
+
+        </div>
+
+        <span class="badge badge-gray">
+          API
+        </span>
+
+      </div>
+
+
+      <div class="price">
+
+        📅 Жолго чыккан:
+        —
+
+      </div>
+
+
+      <div class="price">
+
+        📅 Келүү:
+        —
+
+      </div>
+
+
+      <div class="price">
+
+        ⚖️ Салмагы:
+        — KG
+
+      </div>
+
+
+      <div class="price">
+
+        📦 Посылка:
+        —
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="btn btn-primary"
+      onclick="loadBatches()">
+
+      🔄 МААЛЫМАТТЫ ЖАҢЫЛОО
+
+    </button>
+
+  </div>
+
+
+  <!-- BATCH HISTORY -->
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          📋 Партия тарыхы
+        </div>
+
+        <div class="card-subtitle">
+          Мурунку партиялар
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="empty">
+
+      🚚 Партиялардын толук тарыхы
+      Google Sheets API туташтырылгандан
+      кийин автоматтык чыгат.
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     FINANCE SECTION
+===================================================== -->
+
+<section
+  class="section"
+  id="financeSection">
+
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          💰 Финансы
+        </div>
+
+        <div class="card-subtitle">
+          Киреше, чыгым жана таза пайда
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          💵
+        </div>
+
+        <div class="stat-label">
+          Киреше
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          📉
+        </div>
+
+        <div class="stat-label">
+          Чыгым
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          💎
+        </div>
+
+        <div class="stat-label">
+          Таза пайда
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          ⚖️
+        </div>
+
+        <div class="stat-label">
+          KG
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- FINANCE DETAILS -->
+
+    <div class="parcel">
+
+      <div class="parcel-top">
+
+        <div class="track">
+          💰 Финансы деталдары
+        </div>
+
+      </div>
+
+
+      <div class="price">
+
+        📦 1 KG сатуу баасы:
+        —
+
+      </div>
+
+
+      <div class="price">
+
+        🏭 1 KG өздүк наркы:
+        —
+
+      </div>
+
+
+      <div class="price">
+
+        🚚 Логистика чыгымы:
+        —
+
+      </div>
+
+
+      <div class="price">
+
+        💎 Таза пайда:
+        —
+
+      </div>
+
+    </div>
+
+
+    <div class="status info">
+
+      💡 Бул бөлүм Google Sheets'тен
+      реалдуу финансы маалыматтары
+      алынгандан кийин автоматтык толот.
+
+    </div>
+
+  </div>
+
+
+  <!-- PROFIT -->
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          📊 Пайда анализи
+        </div>
+
+        <div class="card-subtitle">
+          Киреше менен чыгымдын айырмасы
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="chart-placeholder">
+
+      💎
+
+      <br><br>
+
+      Пайда графиги API аркылуу
+      автоматтык көрсөтүлөт.
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     CLIENTS SECTION
+===================================================== -->
+
+<section
+  class="section"
+  id="clientsSection">
+
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          👥 Клиенттер
+        </div>
+
+        <div class="card-subtitle">
+          Кардарларды башкаруу
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          👥
+        </div>
+
+        <div class="stat-label">
+          Кардарлар
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          📦
+        </div>
+
+        <div class="stat-label">
+          Посылкалар
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          🏢
+        </div>
+
+        <div class="stat-label">
+          Офисте
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          ✅
+        </div>
+
+        <div class="stat-label">
+          Берилди
+        </div>
+
+        <div class="stat-value">
+          —
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+      <div
+        class="feature-card"
+        onclick="showSection('scanner')">
+
+        <div class="feature-icon">
+          📷
+        </div>
+
+        <div class="feature-title">
+          QR Сканер
+        </div>
+
+        <div class="feature-text">
+          QR аркылуу кардарды табуу
+        </div>
+
+      </div>
+
+
+      <div
+        class="feature-card"
+        onclick="focusTrackSearch()">
+
+        <div class="feature-icon">
+          🔎
+        </div>
+
+        <div class="feature-title">
+          Track издөө
+        </div>
+
+        <div class="feature-text">
+          Track code аркылуу издөө
+        </div>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">
+          🏢
+        </div>
+
+        <div class="feature-title">
+          Офисте
+        </div>
+
+        <div class="feature-text">
+          Берүүгө даяр посылкалар
+        </div>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">
+          ✅
+        </div>
+
+        <div class="feature-title">
+          Выдано
+        </div>
+
+        <div class="feature-text">
+          Мурун берилген посылкалар
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
 
 </div>
 
 
-<!-- =========================================
-     📷 QR SCANNER
-========================================= -->
+<!-- =====================================================
+     BOTTOM NAVIGATION
+===================================================== -->
 
-<div class="card">
-
-  <div class="scan-title">
-    📷 QR СКАНЕР
-  </div>
-
-  <div id="reader"></div>
-
-  <button
-    class="start"
-    id="startButton"
-    onclick="startScanner()">
-
-    📷 Камераны ачуу
-
-  </button>
-
-  <button
-    class="reset"
-    onclick="stopScanner()">
-
-    ✕ Камераны жабуу
-
-  </button>
-
-</div>
-
-
-
-<!-- =========================================
-     CLIENT
-========================================= -->
-
-<div
-  class="card client"
-  id="clientCard">
-
-
-  <div class="status">
-    👤 КЛИЕНТ
-  </div>
-
-
-  <div
-    class="client-code"
-    id="clientCode">
-  </div>
-
-
-  <div
-    id="parcelStatus">
-  </div>
-
-
-  <div
-    id="parcelList">
-  </div>
+<nav class="bottom-nav">
 
 
   <button
-    class="issue"
-    id="issueButton"
-    onclick="issueClient()">
+    class="bottom-btn active"
+    id="navDashboard"
+    onclick="showSection('dashboard')">
 
-    🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ
+    <span>
+      📊
+    </span>
+
+    Башкы
 
   </button>
 
 
   <button
-    class="reset"
-    onclick="resetClient()">
+    class="bottom-btn"
+    id="navScanner"
+    onclick="showSection('scanner')">
 
-    🔄 Башка кардарды сканерлөө
+    <span>
+      📷
+    </span>
+
+    QR
 
   </button>
 
-</div>
+
+  <button
+    class="bottom-btn"
+    id="navBatches"
+    onclick="showSection('batches')">
+
+    <span>
+      🚚
+    </span>
+
+    Партия
+
+  </button>
 
 
-</div>
+  <button
+    class="bottom-btn"
+    id="navStatistics"
+    onclick="showSection('statistics')">
 
+    <span>
+      📈
+    </span>
+
+    Статистика
+
+  </button>
+
+
+  <button
+    class="bottom-btn"
+    id="navFinance"
+    onclick="showSection('finance')">
+
+    <span>
+      💰
+    </span>
+
+    Финансы
+
+  </button>
+
+
+</nav>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
 
 <script>
 
@@ -357,6 +2643,202 @@ let isProcessingQR = false;
 
 
 /************************************************
+🧭 NAVIGATION
+************************************************/
+
+function showSection(name){
+
+  const sections = [
+
+    "dashboard",
+    "scanner",
+    "batches",
+    "statistics",
+    "finance",
+    "clients"
+
+  ];
+
+
+  sections.forEach(
+    function(section){
+
+      const el =
+        document.getElementById(
+          section + "Section"
+        );
+
+
+      if(el){
+
+        el.classList.remove(
+          "active"
+        );
+
+      }
+
+    }
+  );
+
+
+  const target =
+    document.getElementById(
+      name + "Section"
+    );
+
+
+  if(target){
+
+    target.classList.add(
+      "active"
+    );
+
+  }
+
+
+  document
+    .querySelectorAll(
+      ".bottom-btn"
+    )
+    .forEach(
+      function(btn){
+
+        btn.classList.remove(
+          "active"
+        );
+
+      }
+    );
+
+
+  const nav =
+    document.getElementById(
+
+      "nav" +
+
+      name
+        .charAt(0)
+        .toUpperCase() +
+
+      name.slice(1)
+
+    );
+
+
+  if(nav){
+
+    nav.classList.add(
+      "active"
+    );
+
+  }
+
+
+  window.scrollTo({
+
+    top:0,
+
+    behavior:"smooth"
+
+  });
+
+}
+
+
+/************************************************
+🔎 FOCUS TRACK SEARCH
+************************************************/
+
+function focusTrackSearch(){
+
+  showSection(
+    "dashboard"
+  );
+
+
+  setTimeout(
+    function(){
+
+      const input =
+        document.getElementById(
+          "trackSearchInput"
+        );
+
+
+      if(input){
+
+        input.focus();
+
+
+        input.scrollIntoView({
+
+          behavior:"smooth",
+
+          block:"center"
+
+        });
+
+      }
+
+    },
+
+    250
+
+  );
+
+}
+
+
+/************************************************
+📊 PERIOD
+************************************************/
+
+function selectPeriod(
+  button
+){
+
+  document
+    .querySelectorAll(
+      ".period-btn"
+    )
+    .forEach(
+      function(btn){
+
+        btn.classList.remove(
+          "active"
+        );
+
+      }
+    );
+
+
+  button.classList.add(
+    "active"
+  );
+
+}
+
+
+/************************************************
+🚚 BATCHES
+************************************************/
+
+function loadBatches(){
+
+  alert(
+
+    "🚚 Партия статистикасы үчүн " +
+
+    "Google Apps Script API бөлүгү " +
+
+    "кошулганда бул бөлүм автоматтык иштейт."
+
+  );
+
+}
+
+
+/************************************************
 ▶️ START SCANNER
 ************************************************/
 
@@ -377,18 +2859,17 @@ async function startScanner(){
 
   try{
 
-
     startButton.disabled =
       true;
 
 
     startButton.textContent =
-      "⏳ Камера ачылууда...";
+      "⏳ КАМЕРА АЧЫЛУУДА...";
 
 
-    /**********************************************
-    🧹 ЭСКИ SCANNER ТАЗАЛОО
-    **********************************************/
+    /********************************************
+    🧹 ЭСКИ SCANNER
+    ********************************************/
 
     if(scanner){
 
@@ -412,19 +2893,15 @@ async function startScanner(){
     }
 
 
-    /**********************************************
-    📷 CAMERA OBJECT
-    **********************************************/
+    /********************************************
+    📷 NEW SCANNER
+    ********************************************/
 
     scanner =
       new Html5Qrcode(
         "reader"
       );
 
-
-    /**********************************************
-    📱 КАМЕРАЛАРДЫ ТАБУУ
-    **********************************************/
 
     const cameras =
       await Html5Qrcode.getCameras();
@@ -447,44 +2924,34 @@ async function startScanner(){
 
     }
 
-
-    /**********************************************
-    📷 АРТКЫ КАМЕРАНЫ ТАНДОО
+/**********************************************
+    📷 BACK CAMERA ТАНДОО
     **********************************************/
 
-    let cameraId =
-      cameras[0].id;
+    let cameraId = cameras[0].id;
 
-
-    for(
-      const camera of cameras
-    ){
+    for(const camera of cameras){
 
       const label =
-        String(
-          camera.label || ""
-        ).toLowerCase();
-
+        String(camera.label || "").toLowerCase();
 
       if(
         label.includes("back") ||
         label.includes("rear") ||
         label.includes("environment") ||
-        label.includes("арт")
+        label.includes("арт") ||
+        label.includes("негизги")
       ){
 
-        cameraId =
-          camera.id;
-
+        cameraId = camera.id;
         break;
 
       }
 
     }
 
-
     console.log(
-      "SELECTED CAMERA:",
+      "📷 SELECTED BACK CAMERA:",
       cameraId
     );
 
@@ -497,36 +2964,23 @@ async function startScanner(){
 
       cameraId,
 
-
       {
 
         fps:10,
 
-
-        qrbox:function(
-          width,
-          height
-        ){
+        qrbox:function(width,height){
 
           const size =
             Math.floor(
-              Math.min(
-                width,
-                height
-              ) * 0.70
+              Math.min(width,height) * 0.70
             );
 
-
           return {
-
             width:size,
-
             height:size
-
           };
 
         },
-
 
         aspectRatio:1.0
 
@@ -546,20 +3000,16 @@ async function startScanner(){
 
 
         if(isProcessingQR){
-
           return;
-
         }
 
 
-        isProcessingQR =
-          true;
+        isProcessingQR = true;
 
 
         handleQR(
           decodedText
         );
-
 
       },
 
@@ -578,16 +3028,14 @@ async function startScanner(){
     );
 
 
-    scannerRunning =
-      true;
+    scannerRunning = true;
 
 
-    startButton.disabled =
-      false;
+    startButton.disabled = false;
 
 
     startButton.textContent =
-      "📷 Камера иштеп жатат";
+      "📷 КАМЕРА ИШТЕП ЖАТАТ";
 
 
     console.log(
@@ -600,37 +3048,31 @@ async function startScanner(){
 
   catch(error){
 
-
     console.error(
       "❌ CAMERA ERROR:",
       error
     );
 
 
-    scannerRunning =
-      false;
+    scannerRunning = false;
 
 
     if(scanner){
 
       try{
-
         await scanner.clear();
-
       }catch(e){}
 
-      scanner =
-        null;
+      scanner = null;
 
     }
 
 
-    startButton.disabled =
-      false;
+    startButton.disabled = false;
 
 
     startButton.textContent =
-      "📷 Камераны ачуу";
+      "📷 КАМЕРАНЫ АЧУУ";
 
 
     let message =
@@ -646,13 +3088,10 @@ async function startScanner(){
 
 
     message +=
-      "Ката: " +
-      error;
+      "Ката: " + error;
 
 
-    alert(
-      message
-    );
+    alert(message);
 
   }
 
@@ -665,7 +3104,6 @@ async function startScanner(){
 
 async function stopScanner(){
 
-
   const startButton =
     document.getElementById(
       "startButton"
@@ -673,7 +3111,6 @@ async function stopScanner(){
 
 
   try{
-
 
     if(
       scanner &&
@@ -684,8 +3121,8 @@ async function stopScanner(){
 
     }
 
-
-  }catch(error){
+  }
+  catch(error){
 
     console.log(
       "STOP ERROR:",
@@ -697,15 +3134,14 @@ async function stopScanner(){
 
   try{
 
-
     if(scanner){
 
       await scanner.clear();
 
     }
 
-
-  }catch(error){
+  }
+  catch(error){
 
     console.log(
       "CLEAR ERROR:",
@@ -715,24 +3151,17 @@ async function stopScanner(){
   }
 
 
-  scanner =
-    null;
+  scanner = null;
+
+  scannerRunning = false;
+
+  isProcessingQR = false;
 
 
-  scannerRunning =
-    false;
-
-
-  isProcessingQR =
-    false;
-
-
-  startButton.disabled =
-    false;
-
+  startButton.disabled = false;
 
   startButton.textContent =
-    "📷 Камераны ачуу";
+    "📷 КАМЕРАНЫ АЧУУ";
 
 }
 
@@ -743,35 +3172,20 @@ async function stopScanner(){
 
 async function handleQR(qrText){
 
-
-  /**********************************************
-  ⛔ КАМЕРАНЫ ТОКТОТУУ
-  **********************************************/
-
   await stopScanner();
 
 
-  /**********************************************
-  🔤 QR КОДДУ ТАЗАЛОО
-  **********************************************/
-
   const clientCode =
-    String(
-      qrText || ""
-    )
-    .trim()
-    .toUpperCase();
+    String(qrText || "")
+      .trim()
+      .toUpperCase();
 
 
   console.log(
-    "CLIENT CODE:",
+    "👤 CLIENT CODE:",
     clientCode
   );
 
-
-  /**********************************************
-  ❌ QR БОШ
-  **********************************************/
 
   if(!clientCode){
 
@@ -779,17 +3193,12 @@ async function handleQR(qrText){
       "❌ QR код бош."
     );
 
-    isProcessingQR =
-      false;
+    isProcessingQR = false;
 
     return;
 
   }
 
-
-  /**********************************************
-  👤 КАРДАРДЫ ЖҮКТӨӨ
-  **********************************************/
 
   loadClient(
     clientCode
@@ -799,36 +3208,30 @@ async function handleQR(qrText){
 
 
 /************************************************
-👤 CLIENT LOAD
+👤 LOAD CLIENT
 ************************************************/
 
-function loadClient(
-  clientCode
-){
+function loadClient(clientCode){
 
   const card =
     document.getElementById(
       "clientCard"
     );
 
-
   const code =
     document.getElementById(
       "clientCode"
     );
-
 
   const list =
     document.getElementById(
       "parcelList"
     );
 
-
   const status =
     document.getElementById(
       "parcelStatus"
     );
-
 
   const button =
     document.getElementById(
@@ -844,12 +3247,11 @@ function loadClient(
     clientCode;
 
 
-  button.disabled =
-    true;
+  button.disabled = true;
 
 
   button.textContent =
-    "⏳ Текшерилүүдө...";
+    "⏳ ТЕКШЕРИЛҮҮДӨ...";
 
 
   status.innerHTML = `
@@ -864,31 +3266,21 @@ function loadClient(
   `;
 
 
-  list.innerHTML =
-    "";
+  list.innerHTML = "";
 
-
-  /**********************************************
-  📡 API CHECK CLIENT
-  **********************************************/
 
   fetch(
 
     API_URL +
-
     "?action=check_client" +
-
     "&client_code=" +
-
     encodeURIComponent(
       clientCode
     )
 
   )
 
-
   .then(function(response){
-
 
     if(!response.ok){
 
@@ -899,7 +3291,6 @@ function loadClient(
 
     }
 
-
     return response.json();
 
   })
@@ -907,20 +3298,14 @@ function loadClient(
 
   .then(function(data){
 
-
     console.log(
       "CHECK CLIENT:",
       data
     );
 
 
-    /********************************************
-    ❌ CLIENT ERROR
-    ********************************************/
-
     if(
-      data.status !==
-      "ok"
+      data.status !== "ok"
     ){
 
       status.innerHTML = `
@@ -928,20 +3313,17 @@ function loadClient(
         <div class="status error">
 
           ❌
-          ${
-            escapeHtml(
-              data.message ||
-              "Кардар табылган жок"
-            )
-          }
+          ${escapeHtml(
+            data.message ||
+            "Кардар табылган жок"
+          )}
 
         </div>
 
       `;
 
 
-      button.disabled =
-        true;
+      button.disabled = true;
 
 
       button.textContent =
@@ -953,28 +3335,21 @@ function loadClient(
     }
 
 
-    /********************************************
-    📦 PARCELS
-    ********************************************/
-
     const office =
-      data.office_parcels ||
-      [];
+      data.office_parcels || [];
 
 
     const issued =
-      data.issued_parcels ||
-      [];
+      data.issued_parcels || [];
 
 
     /********************************************
-    🟢 OFFICE PARCELS
+    🟢 OFFICE
     ********************************************/
 
     if(
       office.length > 0
     ){
-
 
       status.innerHTML = `
 
@@ -1008,8 +3383,7 @@ function loadClient(
       );
 
 
-      button.disabled =
-        false;
+      button.disabled = false;
 
 
       button.textContent =
@@ -1019,61 +3393,56 @@ function loadClient(
 
 
     /********************************************
-    ℹ️ NO OFFICE PARCELS
+    ℹ️ NO OFFICE
     ********************************************/
 
-  else{
+    else{
 
-  status.innerHTML = `
+      status.innerHTML = `
 
-    <div class="status">
+        <div class="status">
 
-      👤 Клиент:
+          👤 Клиент:
 
-      <b>
-        ${escapeHtml(
-          clientCode
-        )}
-      </b>
+          <b>
+            ${escapeHtml(
+              clientCode
+            )}
+          </b>
 
-      <br><br>
+          <br><br>
 
-      📦 Офисте посылка жок.
+          📦 Офисте посылка жок.
 
-      <br>
+          <br>
 
-      ✅ Мурун берилген:
+          ✅ Мурун берилген:
 
-      ${issued.length}
+          ${issued.length}
 
-    </div>
+        </div>
 
-  `;
-
-
-  /********************************************
-  ✅ SHOW ISSUED PARCELS
-  ********************************************/
-
-  renderIssued(
-    [],
-    issued
-  );
+      `;
 
 
-  button.disabled =
-    true;
+      renderIssued(
+        [],
+        issued
+      );
 
 
-  button.textContent =
-    "✅ БЕРҮҮ ҮЧҮН ПОСЫЛКА ЖОК";
+      button.disabled = true;
 
-}
+
+      button.textContent =
+        "✅ БЕРҮҮ ҮЧҮН ПОСЫЛКА ЖОК";
+
+    }
+
   })
 
 
   .catch(function(error){
-
 
     console.error(
       "CHECK ERROR:",
@@ -1098,8 +3467,7 @@ function loadClient(
     `;
 
 
-    button.disabled =
-      true;
+    button.disabled = true;
 
 
     button.textContent =
@@ -1111,21 +3479,27 @@ function loadClient(
 
 
 /************************************************
-📦 SHOW OFFICE PARCELS
+📦 OFFICE PARCELS
 ************************************************/
 
 function renderOfficeParcels(parcels){
 
   const list =
-    document.getElementById("parcelList");
+    document.getElementById(
+      "parcelList"
+    );
 
 
   if(!parcels.length){
 
     list.innerHTML = `
+
       <div class="empty">
+
         📦 Офисте посылка жок.
+
       </div>
+
     `;
 
     return;
@@ -1133,7 +3507,6 @@ function renderOfficeParcels(parcels){
   }
 
 
-  // 💰 ЖАЛПЫ СУММА
   let totalPrice = 0;
 
 
@@ -1141,10 +3514,13 @@ function renderOfficeParcels(parcels){
 
     let price =
       Number(
-        String(parcel.price || "")
-          .replace(",", ".")
-          .replace(/[^\d.-]/g, "")
+        String(
+          parcel.price || ""
+        )
+        .replace(",", ".")
+        .replace(/[^\d.-]/g,"")
       ) || 0;
+
 
     totalPrice += price;
 
@@ -1173,7 +3549,11 @@ function renderOfficeParcels(parcels){
       <br>
 
       <b style="font-size:30px;">
-        ${totalPrice.toLocaleString("ru-RU")} сом
+
+        ${totalPrice.toLocaleString("ru-RU")}
+
+        сом
+
       </b>
 
     </div>
@@ -1199,14 +3579,36 @@ function renderOfficeParcels(parcels){
 
         <div class="price">
 
+          👤 Клиент:
+
+          ${escapeHtml(
+            parcel.client_code ||
+            ""
+          )}
+
+        </div>
+
+
+        <div class="price">
+
           💰
+
           ${
             parcel.price === "" ||
             parcel.price == null
-              ? "Баасы көрсөтүлгөн эмес"
-              : escapeHtml(
-                  String(parcel.price)
-                ) + " сом"
+
+              ?
+
+            "Баасы көрсөтүлгөн эмес"
+
+              :
+
+            escapeHtml(
+              String(
+                parcel.price
+              )
+            ) + " сом"
+
           }
 
         </div>
@@ -1215,8 +3617,9 @@ function renderOfficeParcels(parcels){
         <div class="price">
 
           🏢
+
           ${escapeHtml(
-            parcel.status
+            parcel.status || ""
           )}
 
         </div>
@@ -1225,8 +3628,10 @@ function renderOfficeParcels(parcels){
         <div class="price">
 
           📅 Келген:
+
           ${escapeHtml(
-            parcel.date_arrived || ""
+            parcel.date_arrived ||
+            ""
           )}
 
         </div>
@@ -1238,9 +3643,12 @@ function renderOfficeParcels(parcels){
   });
 
 
-  list.innerHTML = html;
+  list.innerHTML =
+    html;
 
 }
+
+
 /************************************************
 📦 SHOW ISSUED
 ************************************************/
@@ -1256,8 +3664,7 @@ function renderIssued(
     );
 
 
-  let html =
-    "";
+  let html = "";
 
 
   if(
@@ -1305,6 +3712,8 @@ function renderIssued(
                 parcel.price || ""
               )
             )}
+
+            сом
 
           </div>
 
@@ -1370,6 +3779,8 @@ function renderIssued(
               )
             )}
 
+            сом
+
           </div>
 
 
@@ -1408,8 +3819,9 @@ function renderIssued(
 
 }
 
+
 /************************************************
-🔎 SEARCH TRACK CODE
+🔎 SEARCH TRACK
 ************************************************/
 
 function searchTrack(){
@@ -1419,10 +3831,12 @@ function searchTrack(){
       "trackSearchInput"
     );
 
+
   const result =
     document.getElementById(
       "trackSearchResult"
     );
+
 
   const trackCode =
     String(
@@ -1430,12 +3844,17 @@ function searchTrack(){
     )
     .trim();
 
+
   if(!trackCode){
 
     result.innerHTML = `
+
       <div class="status error">
+
         ❌ Track code жазыңыз
+
       </div>
+
     `;
 
     return;
@@ -1444,9 +3863,13 @@ function searchTrack(){
 
 
   result.innerHTML = `
+
     <div class="loading">
+
       ⏳ Изделүүдө...
+
     </div>
+
   `;
 
 
@@ -1472,9 +3895,11 @@ function searchTrack(){
 
     }
 
+
     return response.json();
 
   })
+
 
   .then(function(data){
 
@@ -1483,10 +3908,6 @@ function searchTrack(){
       data
     );
 
-
-    /****************************************
-    ❌ ТАБЫЛГАН ЖОК
-    ****************************************/
 
     if(
       data.status !== "ok"
@@ -1501,10 +3922,13 @@ function searchTrack(){
           <br><br>
 
           Track:
+
           <b>
+
             ${escapeHtml(
               trackCode
             )}
+
           </b>
 
         </div>
@@ -1516,19 +3940,16 @@ function searchTrack(){
     }
 
 
-    /****************************************
-    📦 DATA
-    ****************************************/
-
     const parcel =
       data.parcel || {};
+
 
     const client =
       data.client || null;
 
 
     /****************************************
-    📦 ПОСЫЛКА
+    📦 PARCEL
     ****************************************/
 
     let html = `
@@ -1545,6 +3966,7 @@ function searchTrack(){
         <div class="track">
 
           📦
+
           ${escapeHtml(
             parcel.track || ""
           )}
@@ -1557,9 +3979,12 @@ function searchTrack(){
           👤 Клиент:
 
           <b>
+
             ${escapeHtml(
-              parcel.client_code || ""
+              parcel.client_code ||
+              ""
             )}
+
           </b>
 
         </div>
@@ -1583,8 +4008,8 @@ function searchTrack(){
               String(
                 parcel.price
               )
-            ) +
-            " сом"
+            ) + " сом"
+
           }
 
         </div>
@@ -1595,9 +4020,11 @@ function searchTrack(){
           📌 Статус:
 
           <b>
+
             ${escapeHtml(
               parcel.status || ""
             )}
+
           </b>
 
         </div>
@@ -1690,11 +4117,14 @@ function searchTrack(){
             🔑 Клиенттик код:
 
             <b>
+
               ${escapeHtml(
                 String(
-                  client.client_code || ""
+                  client.client_code ||
+                  ""
                 )
               )}
+
             </b>
 
           </div>
@@ -1707,7 +4137,7 @@ function searchTrack(){
 
 
     /****************************************
-    🔘 ЭГЕР В ОФИСЕ БОЛСО
+    🟢 ЭГЕР В ОФИСЕ БОЛСО
     ****************************************/
 
     const statusText =
@@ -1719,18 +4149,25 @@ function searchTrack(){
 
 
     if(
-      statusText.includes(
-        "в офис"
-      )
+      statusText.includes("в офис")
     ){
+
+      const clientCode =
+        String(
+          parcel.client_code || ""
+        )
+        .trim()
+        .toUpperCase();
+
 
       html += `
 
         <button
           class="issue"
           onclick="issueFromSearch(
-            '${escapeHtml(
-              parcel.client_code || ""
+            '${clientCode.replace(
+              /'/g,
+              "\\'"
             )}'
           )">
 
@@ -1803,7 +4240,9 @@ function issueFromSearch(
     return;
 
   }
-      if(!confirm(
+
+
+  if(!confirm(
 
     "📦 " +
     clientCode +
@@ -1858,9 +4297,11 @@ function issueFromSearch(
 
     }
 
+
     return response.json();
 
   })
+
 
   .then(function(data){
 
@@ -1887,17 +4328,23 @@ function issueFromSearch(
           <br><br>
 
           👤 Кардар:
+
           <b>
+
             ${escapeHtml(
               clientCode
             )}
+
           </b>
 
           <br>
 
           📦 Берилди:
+
           <b>
+
             ${count}
+
           </b>
 
         </div>
@@ -1917,10 +4364,6 @@ function issueFromSearch(
 
       );
 
-
-      /****************************************
-      🔄 SEARCH'ТИ ЖАҢЫЛОО
-      ****************************************/
 
       const input =
         document.getElementById(
@@ -1957,6 +4400,7 @@ function issueFromSearch(
 
   })
 
+
   .catch(function(error){
 
     console.error(
@@ -1984,18 +4428,17 @@ function issueFromSearch(
   });
 
 }
+
+
 /************************************************
 🟢 ISSUE CLIENT
 ************************************************/
 
 function issueClient(){
 
-
   const clientCode =
     document
-      .getElementById(
-        "clientCode"
-      )
+      .getElementById("clientCode")
       .textContent
       .trim();
 
@@ -2030,12 +4473,11 @@ function issueClient(){
     );
 
 
-  button.disabled =
-    true;
+  button.disabled = true;
 
 
   button.textContent =
-    "⏳ Посылкалар берилүүдө...";
+    "⏳ ПОСЫЛКАЛАР БЕРИЛҮҮДӨ...";
 
 
   /**********************************************
@@ -2056,7 +4498,6 @@ function issueClient(){
 
   )
 
-
   .then(function(response){
 
     if(!response.ok){
@@ -2068,7 +4509,6 @@ function issueClient(){
 
     }
 
-
     return response.json();
 
   })
@@ -2076,43 +4516,49 @@ function issueClient(){
 
   .then(function(data){
 
-
     console.log(
-      "ISSUE API:",
+      "📦 ISSUE CLIENT API:",
       data
     );
 
 
+    /********************************************
+    ✅ SUCCESS
+    ********************************************/
+
     if(
-      data.status ===
-      "ok"
+      data.status === "ok"
     ){
 
-
       const count =
-        data.issued_count ||
-        0;
+        Number(
+          data.issued_count || 0
+        );
 
 
       button.textContent =
         "✅ БЕРИЛДИ";
 
 
+      /******************************************
+      🎉 SUCCESS MESSAGE
+      ******************************************/
+
       alert(
 
-        "✅ Даяр!\n\n" +
+        "✅ ДАЯР!\n\n" +
 
-        "Кардар: " +
+        "👤 Кардар: " +
         clientCode +
 
-        "\nБерилген посылка: " +
+        "\n📦 Берилген посылка: " +
         count
 
       );
 
 
       /******************************************
-      🔄 REFRESH CLIENT
+      🔄 CLIENT'ТИ КАЙРА ЖҮКТӨӨ
       ******************************************/
 
       loadClient(
@@ -2122,8 +4568,11 @@ function issueClient(){
     }
 
 
-    else{
+    /********************************************
+    ❌ API ERROR
+    ********************************************/
 
+    else{
 
       alert(
 
@@ -2151,9 +4600,8 @@ function issueClient(){
 
   .catch(function(error){
 
-
     console.error(
-      "ISSUE ERROR:",
+      "❌ ISSUE CLIENT ERROR:",
       error
     );
 
@@ -2181,41 +4629,88 @@ function issueClient(){
 
 function resetClient(){
 
+  /**********************************************
+  ⛔ SCANNER STOP
+  **********************************************/
 
   stopScanner();
 
 
-  document
-    .getElementById(
+  /**********************************************
+  👤 CLIENT CARD HIDE
+  **********************************************/
+
+  const clientCard =
+    document.getElementById(
       "clientCard"
-    )
-    .style.display =
-    "none";
+    );
 
 
-  document
-    .getElementById(
+  if(clientCard){
+
+    clientCard.style.display =
+      "none";
+
+  }
+
+
+  /**********************************************
+  👤 CLEAR CLIENT CODE
+  **********************************************/
+
+  const clientCode =
+    document.getElementById(
       "clientCode"
-    )
-    .textContent =
-    "";
+    );
 
 
-  document
-    .getElementById(
+  if(clientCode){
+
+    clientCode.textContent =
+      "";
+
+  }
+
+
+  /**********************************************
+  📦 CLEAR PARCEL LIST
+  **********************************************/
+
+  const parcelList =
+    document.getElementById(
       "parcelList"
-    )
-    .innerHTML =
-    "";
+    );
 
 
-  document
-    .getElementById(
+  if(parcelList){
+
+    parcelList.innerHTML =
+      "";
+
+  }
+
+
+  /**********************************************
+  📌 CLEAR STATUS
+  **********************************************/
+
+  const parcelStatus =
+    document.getElementById(
       "parcelStatus"
-    )
-    .innerHTML =
-    "";
+    );
 
+
+  if(parcelStatus){
+
+    parcelStatus.innerHTML =
+      "";
+
+  }
+
+
+  /**********************************************
+  🔘 RESET ISSUE BUTTON
+  **********************************************/
 
   const button =
     document.getElementById(
@@ -2223,13 +4718,53 @@ function resetClient(){
     );
 
 
-  button.disabled =
-    false;
+  if(button){
+
+    button.disabled =
+      false;
 
 
-  button.textContent =
-    "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
+    button.textContent =
+      "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
 
+  }
+
+
+  /**********************************************
+  🔎 CLEAR TRACK SEARCH
+  **********************************************/
+
+  const searchInput =
+    document.getElementById(
+      "trackSearchInput"
+    );
+
+
+  if(searchInput){
+
+    searchInput.value =
+      "";
+
+  }
+
+
+  const searchResult =
+    document.getElementById(
+      "trackSearchResult"
+    );
+
+
+  if(searchResult){
+
+    searchResult.innerHTML =
+      "";
+
+  }
+
+
+  /**********************************************
+  🔓 QR PROCESS RESET
+  **********************************************/
 
   isProcessingQR =
     false;
@@ -2238,12 +4773,42 @@ function resetClient(){
 
 
 /************************************************
+⌨️ ENTER → TRACK SEARCH
+************************************************/
+
+const trackInput =
+  document.getElementById(
+    "trackSearchInput"
+  );
+
+
+if(trackInput){
+
+  trackInput.addEventListener(
+    "keydown",
+    function(event){
+
+      if(
+        event.key === "Enter"
+      ){
+
+        event.preventDefault();
+
+        searchTrack();
+
+      }
+
+    }
+  );
+
+}
+
+
+/************************************************
 🛡️ ESCAPE HTML
 ************************************************/
 
-function escapeHtml(
-  text
-){
+function escapeHtml(text){
 
   return String(
     text
@@ -2276,6 +4841,54 @@ function escapeHtml(
 
 }
 
+
+/************************************************
+📱 MOBILE BACK BUTTON SUPPORT
+************************************************/
+
+window.addEventListener(
+  "pageshow",
+  function(){
+
+    isProcessingQR =
+      false;
+
+  }
+);
+
+
+/************************************************
+🚀 ADMIN PANEL READY
+************************************************/
+
+console.log(
+  "================================"
+);
+
+console.log(
+  "🚀 TEZ KARGO ADMIN PANEL"
+);
+
+console.log(
+  "✅ QR SCANNER READY"
+);
+
+console.log(
+  "✅ TRACK SEARCH READY"
+);
+
+console.log(
+  "✅ ISSUE CLIENT READY"
+);
+
+console.log(
+  "📡 API:",
+  API_URL
+);
+
+console.log(
+  "================================"
+);
 
 </script>
 
