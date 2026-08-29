@@ -4888,6 +4888,692 @@ console.log(
 
 console.log(
   "================================"
+);/************************************************
+📊 LOAD DASHBOARD DATA
+************************************************/
+
+async function loadDashboardData(){
+
+  try{
+
+    console.log("📊 DASHBOARD LOADING...");
+
+    const response = await fetch(
+      API_URL + "?action=dashboard"
+    );
+
+    if(!response.ok){
+
+      throw new Error(
+        "HTTP " + response.status
+      );
+
+    }
+
+    const data =
+      await response.json();
+
+    console.log(
+      "📊 DASHBOARD DATA:",
+      data
+    );
+
+
+    if(data.status !== "ok"){
+
+      throw new Error(
+        data.message ||
+        "Dashboard API error"
+      );
+
+    }
+
+
+    /********************************************
+    📊 STATS
+    ********************************************/
+
+    const stats =
+      data.stats || {};
+
+
+    /********************************************
+    👥 CLIENTS
+    ********************************************/
+
+    setStatValue(
+      "totalClients",
+      stats.total_clients
+    );
+
+    setStatValue(
+      "activeClients",
+      stats.active_clients
+    );
+
+
+    /********************************************
+    📦 PARCELS
+    ********************************************/
+
+    setStatValue(
+      "totalParcels",
+      stats.total_parcels
+    );
+
+    setStatValue(
+      "inChina",
+      stats.in_china
+    );
+
+    setStatValue(
+      "inTransit",
+      stats.in_transit
+    );
+
+    setStatValue(
+      "inOffice",
+      stats.in_office
+    );
+
+    setStatValue(
+      "issued",
+      stats.issued
+    );
+
+
+    /********************************************
+    ⚖️ TOTAL KG
+    ********************************************/
+
+    setStatValue(
+      "totalKg",
+      formatNumber(
+        stats.total_kg
+      ) + " KG"
+    );
+
+
+    /********************************************
+    💰 FINANCE
+    ********************************************/
+
+    setStatValue(
+      "totalIncome",
+      formatMoney(
+        stats.income
+      )
+    );
+
+    setStatValue(
+      "totalExpenses",
+      formatMoney(
+        stats.expenses
+      )
+    );
+
+    setStatValue(
+      "totalProfit",
+      formatMoney(
+        stats.profit
+      )
+    );
+
+
+    /********************************************
+    🚚 PARTIES
+    ********************************************/
+
+    setStatValue(
+      "totalParties",
+      stats.total_parties
+    );
+
+
+    /********************************************
+    📅 WEEK
+    ********************************************/
+
+    renderPeriodData(
+      "week",
+      data.week || {}
+    );
+
+
+    /********************************************
+    📅 MONTH
+    ********************************************/
+
+    renderPeriodData(
+      "month",
+      data.month || {}
+    );
+
+
+    /********************************************
+    🚚 BATCH HISTORY
+    ********************************************/
+
+    renderBatchHistory(
+      data.parties || []
+    );
+
+
+    /********************************************
+    💰 FINANCE HISTORY
+    ********************************************/
+
+    renderFinance(
+      data.finance || []
+    );
+
+
+    console.log(
+      "✅ DASHBOARD LOADED"
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "❌ DASHBOARD ERROR:",
+      error
+    );
+
+  }
+
+}
+
+
+/************************************************
+🔢 SET STAT VALUE
+************************************************/
+
+function setStatValue(
+  id,
+  value
+){
+
+  const element =
+    document.getElementById(id);
+
+
+  if(!element){
+
+    console.warn(
+      "⚠️ Element not found:",
+      id
+    );
+
+    return;
+
+  }
+
+
+  element.textContent =
+    value == null
+      ? "0"
+      : value;
+
+}
+
+
+/************************************************
+💰 MONEY FORMAT
+************************************************/
+
+function formatMoney(
+  value
+){
+
+  const number =
+    Number(value || 0);
+
+
+  return (
+    number.toLocaleString(
+      "ru-RU"
+    ) +
+    " сом"
+  );
+
+}
+
+
+/************************************************
+🔢 NUMBER FORMAT
+************************************************/
+
+function formatNumber(
+  value
+){
+
+  return Number(
+    value || 0
+  ).toLocaleString(
+    "ru-RU",
+    {
+      maximumFractionDigits: 2
+    }
+  );
+
+}
+
+
+/************************************************
+📅 PERIOD DATA
+************************************************/
+
+function renderPeriodData(
+  type,
+  data
+){
+
+  const prefix =
+    type === "week"
+      ? "week"
+      : "month";
+
+
+  setStatValue(
+    prefix + "Parcels",
+    data.parcels || 0
+  );
+
+
+  setStatValue(
+    prefix + "Arrived",
+    data.arrived || 0
+  );
+
+
+  setStatValue(
+    prefix + "Issued",
+    data.issued || 0
+  );
+
+
+  setStatValue(
+    prefix + "Parties",
+    data.parties || 0
+  );
+
+
+  setStatValue(
+    prefix + "Kg",
+    formatNumber(
+      data.kg
+    ) + " KG"
+  );
+
+
+  setStatValue(
+    prefix + "Income",
+    formatMoney(
+      data.income
+    )
+  );
+
+
+  setStatValue(
+    prefix + "Expenses",
+    formatMoney(
+      data.expenses
+    )
+  );
+
+
+  setStatValue(
+    prefix + "Profit",
+    formatMoney(
+      data.profit
+    )
+  );
+
+}
+
+
+/************************************************
+🚚 BATCH HISTORY
+************************************************/
+
+function renderBatchHistory(
+  batches
+){
+
+  const container =
+    document.getElementById(
+      "batchHistory"
+    );
+
+
+  if(!container){
+
+    console.warn(
+      "⚠️ batchHistory element not found"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    !batches ||
+    batches.length === 0
+  ){
+
+    container.innerHTML = `
+
+      <div class="empty">
+
+        🚚 Азырынча партия жок.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  let html = "";
+
+
+  batches
+    .slice()
+    .reverse()
+    .forEach(
+      function(batch){
+
+        html += `
+
+          <div class="parcel">
+
+            <div class="track">
+
+              🚚 Партия
+
+            </div>
+
+
+            <div class="price">
+
+              📤 Жөнөтүлгөн:
+
+              ${escapeHtml(
+                batch.date_send || ""
+              )}
+
+            </div>
+
+
+            <div class="price">
+
+              📥 Келген:
+
+              ${escapeHtml(
+                batch.date_arrival || ""
+              )}
+
+            </div>
+
+
+            <div class="price">
+
+              📦 Партия:
+
+              <b>
+
+                ${batch.parties || 0}
+
+              </b>
+
+            </div>
+
+
+            <div class="price">
+
+              ⚖️ Салмак:
+
+              <b>
+
+                ${formatNumber(
+                  batch.kg
+                )}
+
+                KG
+
+              </b>
+
+            </div>
+
+
+            <div class="price">
+
+              📉 Чыгым:
+
+              ${formatMoney(
+                batch.expense
+              )}
+
+            </div>
+
+
+            <div class="price">
+
+              💰 Киреше:
+
+              ${formatMoney(
+                batch.income
+              )}
+
+            </div>
+
+
+            <div class="price">
+
+              💎 Таза пайда:
+
+              <b>
+
+                +${formatMoney(
+                  batch.profit
+                )}
+
+              </b>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+
+  container.innerHTML =
+    html;
+
+}
+
+
+/************************************************
+💰 FINANCE
+************************************************/
+
+function renderFinance(
+  finance
+){
+
+  const container =
+    document.getElementById(
+      "financeHistory"
+    );
+
+
+  if(!container){
+
+    console.warn(
+      "⚠️ financeHistory element not found"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    !finance ||
+    finance.length === 0
+  ){
+
+    container.innerHTML = `
+
+      <div class="empty">
+
+        💰 Финансы боюнча маалымат жок.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  let html = "";
+
+
+  finance
+    .slice()
+    .reverse()
+    .forEach(
+      function(row){
+
+        html += `
+
+          <div class="parcel">
+
+            <div class="track">
+
+              💰 Финансы
+
+            </div>
+
+
+            <div class="price">
+
+              📤 Жөнөтүлгөн:
+
+              ${escapeHtml(
+                row.date_send || ""
+              )}
+
+            </div>
+
+
+            <div class="price">
+
+              📥 Келген:
+
+              ${escapeHtml(
+                row.date_arrival || ""
+              )}
+
+            </div>
+
+
+            <div class="price">
+
+              📦 Партия:
+
+              ${row.parties || 0}
+
+            </div>
+
+
+            <div class="price">
+
+              ⚖️ KG:
+
+              ${formatNumber(
+                row.kg
+              )}
+
+            </div>
+
+
+            <div class="price">
+
+              📉 Чыгым:
+
+              ${formatMoney(
+                row.expense
+              )}
+
+            </div>
+
+
+            <div class="price">
+
+              💰 Киреше:
+
+              ${formatMoney(
+                row.income
+              )}
+
+            </div>
+
+
+            <div class="price">
+
+              💎 Пайда:
+
+              <b>
+
+                +${formatMoney(
+                  row.profit
+                )}
+
+              </b>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+
+  container.innerHTML =
+    html;
+
+}
+
+
+/************************************************
+🚀 AUTO LOAD DASHBOARD
+************************************************/
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    console.log(
+      "🚀 ADMIN PANEL START"
+    );
+
+
+    loadDashboardData();
+
+  }
 );
 
 </script>
