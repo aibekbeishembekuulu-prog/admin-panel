@@ -2810,23 +2810,263 @@ function selectPeriod(
 
 
 /************************************************
-🚚 BATCHES
+🚚 LOAD BATCHES
 ************************************************/
 
 function loadBatches(){
 
-  alert(
+  console.log("🚚 ПАРТИЯЛАР ЖҮКТӨЛҮҮДӨ...");
 
-    "🚚 Партия статистикасы үчүн " +
+  fetch(
+    API_URL + "?action=dashboard"
+  )
 
-    "Google Apps Script API бөлүгү " +
+  .then(function(response){
 
-    "кошулганда бул бөлүм автоматтык иштейт."
+    if(!response.ok){
 
-  );
+      throw new Error(
+        "HTTP " + response.status
+      );
+
+    }
+
+    return response.json();
+
+  })
+
+  .then(function(data){
+
+    console.log(
+      "🚚 DASHBOARD API:",
+      data
+    );
+
+
+    if(data.status !== "ok"){
+
+      throw new Error(
+        data.message ||
+        "API ката"
+      );
+
+    }
+
+
+    /****************************************
+    📊 PARTY TOTALS
+    ****************************************/
+
+    const totals =
+      data.party_totals || {};
+
+
+    /****************************************
+    🚚 CURRENT PARTY
+    ****************************************/
+
+    const current =
+      data.current_party;
+
+
+    /****************************************
+    📊 STATS CARDS
+    ****************************************/
+
+    const cards =
+      document.querySelectorAll(
+        "#batchesSection .stat-card"
+      );
+
+
+    if(cards.length >= 4){
+
+      cards[0]
+        .querySelector(".stat-value")
+        .textContent =
+          totals.parties || 0;
+
+
+      cards[1]
+        .querySelector(".stat-value")
+        .textContent =
+          (totals.kg || 0) + " KG";
+
+
+      cards[2]
+        .querySelector(".stat-value")
+        .textContent =
+          totals.parcels || 0;
+
+
+      cards[3]
+        .querySelector(".stat-value")
+        .textContent =
+          totals.in_transit || 0;
+
+    }
+
+
+    /****************************************
+    🚚 CURRENT PARTY
+    ****************************************/
+
+    const currentCard =
+      document.querySelector(
+        "#batchesSection .parcel"
+      );
+
+
+    if(!currentCard){
+
+      return;
+
+    }
+
+
+    if(current){
+
+      currentCard.innerHTML = `
+
+        <div class="parcel-top">
+
+          <div class="track">
+
+            🚚 Учурдагы партия
+
+          </div>
+
+          <span class="badge badge-success">
+
+            ЖОЛДО
+
+          </span>
+
+        </div>
+
+
+        <div class="price">
+
+          📅 Жолго чыккан:
+
+          <b>
+            ${escapeHtml(
+              current.date_send || "—"
+            )}
+          </b>
+
+        </div>
+
+
+        <div class="price">
+
+          📅 Келүү:
+
+          <b>
+            ${escapeHtml(
+              current.date_arrival || "—"
+            )}
+          </b>
+
+        </div>
+
+
+        <div class="price">
+
+          ⚖️ Салмагы:
+
+          <b>
+            ${current.kg || 0} KG
+          </b>
+
+        </div>
+
+
+        <div class="price">
+
+          📦 Посылка:
+
+          <b>
+            ${current.parcels || 0}
+          </b>
+
+        </div>
+
+      `;
+
+    }
+
+    else{
+
+      currentCard.innerHTML = `
+
+        <div class="parcel-top">
+
+          <div class="track">
+
+            🚚 Учурдагы партия
+
+          </div>
+
+          <span class="badge badge-gray">
+
+            ЖОК
+
+          </span>
+
+        </div>
+
+
+        <div class="price">
+
+          📅 Жолго чыккан: —
+
+        </div>
+
+
+        <div class="price">
+
+          📅 Келүү: —
+
+        </div>
+
+
+        <div class="price">
+
+          ⚖️ Салмагы: —
+
+        </div>
+
+
+        <div class="price">
+
+          📦 Посылка: —
+
+        </div>
+
+      `;
+
+    }
+
+  })
+
+
+  .catch(function(error){
+
+    console.error(
+      "❌ BATCH ERROR:",
+      error
+    );
+
+
+    alert(
+      "❌ Партия маалыматтарын жүктөөдө ката:\n\n" +
+      error.message
+    );
+
+  });
 
 }
-
 
 /************************************************
 ▶️ START SCANNER
