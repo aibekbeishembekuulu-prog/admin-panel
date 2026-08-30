@@ -5150,80 +5150,45 @@ function formatNumber(
 
 }
 
-
 /************************************************
 📅 PERIOD DATA
 ************************************************/
 
-function renderPeriodData(
-  type,
-  data
-){
+function renderPeriodData(type, data){
 
-  const prefix =
-    type === "week"
-      ? "week"
-      : "month";
+  data = data || {};
+
+  console.log(
+    "📊 PERIOD:",
+    type,
+    data
+  );
 
 
   setStatValue(
-    prefix + "Parcels",
+    "periodParcels",
     data.parcels || 0
   );
 
 
   setStatValue(
-    prefix + "Arrived",
-    data.arrived || 0
+    "periodKg",
+    formatNumber(data.kg) + " KG"
   );
 
 
   setStatValue(
-    prefix + "Issued",
-    data.issued || 0
-  );
-
-
-  setStatValue(
-    prefix + "Parties",
+    "periodParties",
     data.parties || 0
   );
 
 
   setStatValue(
-    prefix + "Kg",
-    formatNumber(
-      data.kg
-    ) + " KG"
-  );
-
-
-  setStatValue(
-    prefix + "Income",
-    formatMoney(
-      data.income
-    )
-  );
-
-
-  setStatValue(
-    prefix + "Expenses",
-    formatMoney(
-      data.expenses
-    )
-  );
-
-
-  setStatValue(
-    prefix + "Profit",
-    formatMoney(
-      data.profit
-    )
+    "periodIssued",
+    data.issued || 0
   );
 
 }
-
-
 /************************************************
 🚚 BATCH HISTORY
 ************************************************/
