@@ -2807,10 +2807,8 @@ function selectPeriod(
   );
 
 }
-
-
 /************************************************
-🚚 LOAD BATCHES
+🚚 LOAD BATCHES — FIXED
 ************************************************/
 
 function loadBatches(){
@@ -2843,6 +2841,10 @@ function loadBatches(){
     );
 
 
+    /****************************************
+    ❌ API ERROR
+    ****************************************/
+
     if(data.status !== "ok"){
 
       throw new Error(
@@ -2866,7 +2868,7 @@ function loadBatches(){
     ****************************************/
 
     const current =
-      data.current_party;
+      data.current_party || null;
 
 
     /****************************************
@@ -2881,28 +2883,44 @@ function loadBatches(){
 
     if(cards.length >= 4){
 
+      // 🚚 Жалпы партия
+
       cards[0]
         .querySelector(".stat-value")
         .textContent =
-          totals.parties || 0;
+          Number(
+            totals.parties || 0
+          );
 
+
+      // ⚖️ Жалпы KG
 
       cards[1]
         .querySelector(".stat-value")
         .textContent =
-          (totals.kg || 0) + " KG";
+          Number(
+            totals.kg || 0
+          ) + " KG";
 
+
+      // 📦 Посылка
 
       cards[2]
         .querySelector(".stat-value")
         .textContent =
-          totals.parcels || 0;
+          Number(
+            totals.parcels || 0
+          );
 
+
+      // 🚛 Жолдо
 
       cards[3]
         .querySelector(".stat-value")
         .textContent =
-          totals.in_transit || 0;
+          Number(
+            totals.in_transit || 0
+          );
 
     }
 
@@ -2919,10 +2937,18 @@ function loadBatches(){
 
     if(!currentCard){
 
+      console.error(
+        "❌ Учурдагы партия блогу табылган жок"
+      );
+
       return;
 
     }
 
+
+    /****************************************
+    🚚 CURRENT PARTY EXISTS
+    ****************************************/
 
     if(current){
 
@@ -2950,9 +2976,12 @@ function loadBatches(){
           📅 Жолго чыккан:
 
           <b>
-            ${escapeHtml(
-              current.date_send || "—"
-            )}
+
+            ${
+              current.date_send ||
+              "—"
+            }
+
           </b>
 
         </div>
@@ -2963,9 +2992,12 @@ function loadBatches(){
           📅 Келүү:
 
           <b>
-            ${escapeHtml(
-              current.date_arrival || "—"
-            )}
+
+            ${
+              current.date_arrival ||
+              "—"
+            }
+
           </b>
 
         </div>
@@ -2976,7 +3008,15 @@ function loadBatches(){
           ⚖️ Салмагы:
 
           <b>
-            ${current.kg || 0} KG
+
+            ${
+              Number(
+                current.kg || 0
+              )
+            }
+
+            KG
+
           </b>
 
         </div>
@@ -2987,7 +3027,13 @@ function loadBatches(){
           📦 Посылка:
 
           <b>
-            ${current.parcels || 0}
+
+            ${
+              Number(
+                current.parcels || 0
+              )
+            }
+
           </b>
 
         </div>
@@ -2995,6 +3041,11 @@ function loadBatches(){
       `;
 
     }
+
+
+    /****************************************
+    ❌ CURRENT PARTY NOT FOUND
+    ****************************************/
 
     else{
 
@@ -3047,6 +3098,11 @@ function loadBatches(){
       `;
 
     }
+
+
+    console.log(
+      "✅ ПАРТИЯЛАР ИЙГИЛИКТҮҮ ЖҮКТӨЛДҮ"
+    );
 
   })
 
