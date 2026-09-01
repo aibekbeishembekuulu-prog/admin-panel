@@ -1754,96 +1754,20 @@ button:disabled{
     </div>
 
   </div>
+<!-- WEEKLY -->
 
+<div class="card">
 
-  <!-- WEEKLY -->
+  <div class="card-head">
 
-  <div class="card">
+    <div>
 
-    <div class="card-head">
-
-      <div>
-
-        <div class="card-title">
-          📅 1 жумалык отчет
-        </div>
-
-        <div class="card-subtitle">
-          Акыркы 7 күндүн көрсөткүчтөрү
-        </div>
-
+      <div class="card-title">
+        📅 1 жумалык отчет
       </div>
 
-    </div>
-
-
-    <div class="feature-grid">
-
-      <div class="feature-card">
-
-        <div class="feature-icon">
-          📦
-        </div>
-
-        <div class="feature-title">
-          Посылка
-        </div>
-
-        <div class="feature-text">
-          —
-        </div>
-
-      </div>
-
-
-      <div class="feature-card">
-
-        <div class="feature-icon">
-          ⚖️
-        </div>
-
-        <div class="feature-title">
-          KG
-        </div>
-
-        <div class="feature-text">
-          —
-        </div>
-
-      </div>
-
-
-      <div class="feature-card">
-
-        <div class="feature-icon">
-          🚚
-        </div>
-
-        <div class="feature-title">
-          Партия
-        </div>
-
-        <div class="feature-text">
-          —
-        </div>
-
-      </div>
-
-
-      <div class="feature-card">
-
-        <div class="feature-icon">
-          💰
-        </div>
-
-        <div class="feature-title">
-          Түшүм
-        </div>
-
-        <div class="feature-text">
-          —
-        </div>
-
+      <div class="card-subtitle">
+        Акыркы 7 күндүн көрсөткүчтөрү
       </div>
 
     </div>
@@ -1851,100 +1775,213 @@ button:disabled{
   </div>
 
 
-  <!-- MONTHLY -->
+  <div class="feature-grid">
 
-  <div class="card">
+    <!-- 📦 ПОСЫЛКА -->
 
-    <div class="card-head">
+    <div class="feature-card">
 
-      <div>
+      <div class="feature-icon">
+        📦
+      </div>
 
-        <div class="card-title">
-          📆 Айлык отчет
-        </div>
+      <div class="feature-title">
+        Посылка
+      </div>
 
-        <div class="card-subtitle">
-          Бул айдын жалпы статистикасы
-        </div>
-
+      <div
+        class="feature-text"
+        id="weekParcels"
+      >
+        0
       </div>
 
     </div>
 
 
-    <div class="feature-grid">
+    <!-- ⚖️ KG -->
 
-      <div class="feature-card">
+    <div class="feature-card">
 
-        <div class="feature-icon">
-          📦
-        </div>
-
-        <div class="feature-title">
-          Посылка
-        </div>
-
-        <div class="feature-text">
-          —
-        </div>
-
+      <div class="feature-icon">
+        ⚖️
       </div>
 
-
-      <div class="feature-card">
-
-        <div class="feature-icon">
-          ⚖️
-        </div>
-
-        <div class="feature-title">
-          Жалпы KG
-        </div>
-
-        <div class="feature-text">
-          —
-        </div>
-
+      <div class="feature-title">
+        KG
       </div>
 
-
-      <div class="feature-card">
-
-        <div class="feature-icon">
-          🚚
-        </div>
-
-        <div class="feature-title">
-          Партия
-        </div>
-
-        <div class="feature-text">
-          —
-        </div>
-
+      <div
+        class="feature-text"
+        id="weekKg"
+      >
+        0 KG
       </div>
 
+    </div>
 
-      <div class="feature-card">
 
-        <div class="feature-icon">
-          💎
-        </div>
+    <!-- 🚚 ПАРТИЯ -->
 
-        <div class="feature-title">
-          Таза пайда
-        </div>
+    <div class="feature-card">
 
-        <div class="feature-text">
-          —
-        </div>
+      <div class="feature-icon">
+        🚚
+      </div>
 
+      <div class="feature-title">
+        Партия
+      </div>
+
+      <div
+        class="feature-text"
+        id="weekParties"
+      >
+        0
+      </div>
+
+    </div>
+
+
+    <!-- 💰 ТҮШҮМ -->
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        💰
+      </div>
+
+      <div class="feature-title">
+        Түшүм
+      </div>
+
+      <div
+        class="feature-text"
+        id="weekIncome"
+      >
+        0 сом
       </div>
 
     </div>
 
   </div>
 
+</div>
+
+
+<!-- MONTHLY -->
+
+<div class="card">
+
+  <div class="card-head">
+
+    <div>
+
+      <div class="card-title">
+        📆 Айлык отчет
+      </div>
+
+      <div class="card-subtitle">
+        Бул айдын жалпы статистикасы
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="feature-grid">
+
+    <!-- 📦 ПОСЫЛКА -->
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        📦
+      </div>
+
+      <div class="feature-title">
+        Посылка
+      </div>
+
+      <div
+        class="feature-text"
+        id="monthParcels"
+      >
+        0
+      </div>
+
+    </div>
+
+
+    <!-- ⚖️ KG -->
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        ⚖️
+      </div>
+
+      <div class="feature-title">
+        Жалпы KG
+      </div>
+
+      <div
+        class="feature-text"
+        id="monthKg"
+      >
+        0 KG
+      </div>
+
+    </div>
+
+
+    <!-- 🚚 ПАРТИЯ -->
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        🚚
+      </div>
+
+      <div class="feature-title">
+        Партия
+      </div>
+
+      <div
+        class="feature-text"
+        id="monthParties"
+      >
+        0
+      </div>
+
+    </div>
+
+
+    <!-- 💎 ТАЗА ПАЙДА -->
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        💎
+      </div>
+
+      <div class="feature-title">
+        Таза пайда
+      </div>
+
+      <div
+        class="feature-text"
+        id="monthProfit"
+      >
+        0 сом
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
 </section>
 
 
@@ -5725,28 +5762,76 @@ function renderPeriodData(type, data){
   );
 
 
+  /********************************************
+  📦 PARCELS
+  ********************************************/
+
+  const parcelsId =
+    type === "week"
+      ? "weekParcels"
+      : "monthParcels";
+
+
   setStatValue(
-    "periodParcels",
+    parcelsId,
     data.parcels || 0
   );
 
 
+  /********************************************
+  ⚖️ KG
+  ********************************************/
+
+  const kgId =
+    type === "week"
+      ? "weekKg"
+      : "monthKg";
+
+
   setStatValue(
-    "periodKg",
+    kgId,
     formatNumber(data.kg) + " KG"
   );
 
 
+  /********************************************
+  🚚 PARTIES
+  ********************************************/
+
+  const partiesId =
+    type === "week"
+      ? "weekParties"
+      : "monthParties";
+
+
   setStatValue(
-    "periodParties",
+    partiesId,
     data.parties || 0
   );
 
 
-  setStatValue(
-    "periodIssued",
-    data.issued || 0
-  );
+  /********************************************
+  💰 INCOME / PROFIT
+  ********************************************/
+
+  if(type === "week"){
+
+    setStatValue(
+      "weekIncome",
+      formatMoney(data.income)
+    );
+
+  }
+
+
+  if(type === "month"){
+
+    setStatValue(
+      "monthProfit",
+      formatMoney(data.profit)
+    );
+
+  }
 
 }
 /************************************************
