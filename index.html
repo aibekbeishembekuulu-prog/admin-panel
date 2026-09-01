@@ -2808,12 +2808,13 @@ function selectPeriod(
 
 }
 /************************************************
-🚚 LOAD BATCHES — FIXED
+🚚 LOAD BATCHES — FULL VERSION
 ************************************************/
 
 function loadBatches(){
 
   console.log("🚚 ПАРТИЯЛАР ЖҮКТӨЛҮҮДӨ...");
+
 
   fetch(
     API_URL + "?action=dashboard"
@@ -2832,6 +2833,7 @@ function loadBatches(){
     return response.json();
 
   })
+
 
   .then(function(data){
 
@@ -2872,6 +2874,14 @@ function loadBatches(){
 
 
     /****************************************
+    📋 ALL PARTIES
+    ****************************************/
+
+    const parties =
+      data.parties || [];
+
+
+    /****************************************
     📊 STATS CARDS
     ****************************************/
 
@@ -2903,7 +2913,7 @@ function loadBatches(){
           ) + " KG";
 
 
-      // 📦 Посылка
+      // 📦 Жалпы посылка
 
       cards[2]
         .querySelector(".stat-value")
@@ -2935,10 +2945,153 @@ function loadBatches(){
       );
 
 
-    if(!currentCard){
+    if(currentCard){
 
-      console.error(
-        "❌ Учурдагы партия блогу табылган жок"
+      if(current){
+
+        currentCard.innerHTML = `
+
+          <div class="parcel-top">
+
+            <div class="track">
+
+              🚚 Учурдагы партия
+
+            </div>
+
+            <span class="badge badge-success">
+
+              ЖОЛДО
+
+            </span>
+
+          </div>
+
+
+          <div class="price">
+
+            📅 Жолго чыккан:
+
+            <b>
+              ${escapeHtml(
+                current.date_send || "—"
+              )}
+            </b>
+
+          </div>
+
+
+          <div class="price">
+
+            📅 Келүү:
+
+            <b>
+              ${escapeHtml(
+                current.date_arrival || "—"
+              )}
+            </b>
+
+          </div>
+
+
+          <div class="price">
+
+            ⚖️ Салмагы:
+
+            <b>
+              ${Number(
+                current.kg || 0
+              )} KG
+            </b>
+
+          </div>
+
+
+          <div class="price">
+
+            📦 Посылка:
+
+            <b>
+              ${Number(
+                current.parcels || 0
+              )}
+            </b>
+
+          </div>
+
+        `;
+
+      }
+
+      else{
+
+        currentCard.innerHTML = `
+
+          <div class="parcel-top">
+
+            <div class="track">
+
+              🚚 Учурдагы партия
+
+            </div>
+
+            <span class="badge badge-gray">
+
+              ЖОК
+
+            </span>
+
+          </div>
+
+
+          <div class="price">
+
+            📅 Жолго чыккан: —
+
+          </div>
+
+
+          <div class="price">
+
+            📅 Келүү: —
+
+          </div>
+
+
+          <div class="price">
+
+            ⚖️ Салмагы: —
+
+          </div>
+
+
+          <div class="price">
+
+            📦 Посылка: —
+
+          </div>
+
+        `;
+
+      }
+
+    }
+
+
+    /****************************************
+    📋 PARTY HISTORY
+    ****************************************/
+
+    const historyEmpty =
+      document.querySelector(
+        "#batchesSection .empty"
+      );
+
+
+    if(!historyEmpty){
+
+      console.warn(
+        "⚠️ Партия тарыхынын .empty блогу табылган жок"
       );
 
       return;
@@ -2947,161 +3100,231 @@ function loadBatches(){
 
 
     /****************************************
-    🚚 CURRENT PARTY EXISTS
+    📋 NO PARTIES
     ****************************************/
 
-    if(current){
+    if(
+      !parties ||
+      parties.length === 0
+    ){
 
-      currentCard.innerHTML = `
+      historyEmpty.innerHTML = `
 
-        <div class="parcel-top">
-
-          <div class="track">
-
-            🚚 Учурдагы партия
-
-          </div>
-
-          <span class="badge badge-success">
-
-            ЖОЛДО
-
-          </span>
-
-        </div>
-
-
-        <div class="price">
-
-          📅 Жолго чыккан:
-
-          <b>
-
-            ${
-              current.date_send ||
-              "—"
-            }
-
-          </b>
-
-        </div>
-
-
-        <div class="price">
-
-          📅 Келүү:
-
-          <b>
-
-            ${
-              current.date_arrival ||
-              "—"
-            }
-
-          </b>
-
-        </div>
-
-
-        <div class="price">
-
-          ⚖️ Салмагы:
-
-          <b>
-
-            ${
-              Number(
-                current.kg || 0
-              )
-            }
-
-            KG
-
-          </b>
-
-        </div>
-
-
-        <div class="price">
-
-          📦 Посылка:
-
-          <b>
-
-            ${
-              Number(
-                current.parcels || 0
-              )
-            }
-
-          </b>
-
-        </div>
+        🚚 Партиялар жок.
 
       `;
+
+      return;
 
     }
 
 
     /****************************************
-    ❌ CURRENT PARTY NOT FOUND
+    🔄 SORT — NEWEST FIRST
     ****************************************/
 
-    else{
+    const sortedParties =
+      parties.slice().sort(
+        function(a,b){
 
-      currentCard.innerHTML = `
+          return parseCargoDate(
+            b.date_send
+          ) -
+          parseCargoDate(
+            a.date_send
+          );
 
-        <div class="parcel-top">
+        }
+      );
 
-          <div class="track">
 
-            🚚 Учурдагы партия
+    /****************************************
+    🧱 HISTORY HTML
+    ****************************************/
+
+    let historyHTML = "";
+
+
+    sortedParties.forEach(
+      function(party){
+
+        const dateSend =
+          party.date_send ||
+          party["дата_отправки"] ||
+          "—";
+
+
+        const dateArrival =
+          party.date_arrival ||
+          party["дата_прибытия"] ||
+          "";
+
+
+        const parcels =
+          Number(
+            party.parcels ??
+            party["посылки"] ??
+            0
+          );
+
+
+        const kg =
+          Number(
+            party.kg ??
+            party["кг"] ??
+            0
+          );
+
+
+        /****************************************
+        🚛 STATUS
+        ****************************************/
+
+        let status = "КЕЛДИ";
+
+        let badgeClass =
+          "badge-success";
+
+
+        if(
+          !dateArrival ||
+          dateArrival === "—"
+        ){
+
+          status = "ЖОЛДО";
+
+          badgeClass =
+            "badge-warning";
+
+        }
+
+
+        /****************************************
+        ⭐ CURRENT PARTY
+        ****************************************/
+
+        const isCurrent =
+          current &&
+          String(
+            current.date_send || ""
+          ) === String(
+            dateSend
+          );
+
+
+        historyHTML += `
+
+          <div class="parcel">
+
+            <div class="parcel-top">
+
+              <div class="track">
+
+                🚚 Партия
+                ${isCurrent ? "🔥" : ""}
+
+              </div>
+
+
+              <span class="badge ${badgeClass}">
+
+                ${status}
+
+              </span>
+
+            </div>
+
+
+            <div class="price">
+
+              📅 Жолго чыккан:
+
+              <b>
+
+                ${escapeHtml(
+                  String(dateSend)
+                )}
+
+              </b>
+
+            </div>
+
+
+            <div class="price">
+
+              📅 Келүү:
+
+              <b>
+
+                ${
+                  dateArrival
+                    ? escapeHtml(
+                        String(
+                          dateArrival
+                        )
+                      )
+                    : "Жолдо"
+                }
+
+              </b>
+
+            </div>
+
+
+            <div class="price">
+
+              ⚖️ Салмагы:
+
+              <b>
+
+                ${kg} KG
+
+              </b>
+
+            </div>
+
+
+            <div class="price">
+
+              📦 Посылка:
+
+              <b>
+
+                ${parcels}
+
+              </b>
+
+            </div>
 
           </div>
 
-          <span class="badge badge-gray">
+        `;
 
-            ЖОК
-
-          </span>
-
-        </div>
+      }
+    );
 
 
-        <div class="price">
+    /****************************************
+    📋 REPLACE HISTORY
+    ****************************************/
 
-          📅 Жолго чыккан: —
+    historyEmpty.outerHTML = `
 
-        </div>
+      <div
+        class="batch-history"
+        id="batchHistoryList"
+      >
 
+        ${historyHTML}
 
-        <div class="price">
+      </div>
 
-          📅 Келүү: —
-
-        </div>
-
-
-        <div class="price">
-
-          ⚖️ Салмагы: —
-
-        </div>
-
-
-        <div class="price">
-
-          📦 Посылка: —
-
-        </div>
-
-      `;
-
-    }
+    `;
 
 
     console.log(
-      "✅ ПАРТИЯЛАР ИЙГИЛИКТҮҮ ЖҮКТӨЛДҮ"
+      "✅ ПАРТИЯЛАР ИЙГИЛИКТҮҮ ЖҮКТӨЛДҮ:",
+      sortedParties.length
     );
 
   })
@@ -3121,6 +3344,47 @@ function loadBatches(){
     );
 
   });
+
+}
+
+
+/************************************************
+📅 CARGO DATE PARSER
+************************************************/
+
+function parseCargoDate(value){
+
+  if(!value){
+
+    return 0;
+
+  }
+
+
+  const text =
+    String(value)
+      .trim()
+      .replace(/\s+/g,"");
+
+
+  const match =
+    text.match(
+      /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/
+    );
+
+
+  if(!match){
+
+    return 0;
+
+  }
+
+
+  return new Date(
+    Number(match[3]),
+    Number(match[2]) - 1,
+    Number(match[1])
+  ).getTime();
 
 }
 
