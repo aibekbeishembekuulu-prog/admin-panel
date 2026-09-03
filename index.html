@@ -4093,6 +4093,50 @@ function loadClient(clientCode){
 
   });
 
+}/************************************************
+🔎 MANUAL CLIENT SEARCH
+************************************************/
+
+function searchClientByCode(){
+
+  const input =
+    document.getElementById(
+      "manualClientCode"
+    );
+
+  if(!input){
+
+    alert(
+      "❌ Клиент коду үчүн талаа табылган жок."
+    );
+
+    return;
+  }
+
+  const clientCode =
+    input.value
+      .trim()
+      .toUpperCase();
+
+  if(!clientCode){
+
+    alert(
+      "⚠️ Клиент кодун киргизиңиз.\n\n" +
+      "Мисалы: T0232"
+    );
+
+    input.focus();
+
+    return;
+  }
+
+  console.log(
+    "🔎 MANUAL CLIENT SEARCH:",
+    clientCode
+  );
+
+  loadClient(clientCode);
+
 }
 
 
