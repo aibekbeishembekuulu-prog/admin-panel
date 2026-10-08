@@ -1,2688 +1,2026 @@
 <!DOCTYPE html>
 <html lang="ky">
+
 <head>
 
-<meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width,
-      initial-scale=1.0,
-      maximum-scale=1.0,
-      user-scalable=no">
-
-<title>Tez Kargo — Premium Admin</title>
-
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-
-<style>
-
-/* =====================================================
-   TEZ KARGO PREMIUM ADMIN 2026
-===================================================== */
-
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
-:root{
-  --red:#dc2626;
-  --red-dark:#991b1b;
-  --red-soft:#fef2f2;
-
-  --green:#16a34a;
-  --green-soft:#f0fdf4;
-
-  --orange:#f59e0b;
-  --orange-soft:#fffbeb;
-
-  --blue:#2563eb;
-  --blue-soft:#eff6ff;
-
-  --purple:#7c3aed;
-  --purple-soft:#f5f3ff;
-
-  --black:#111827;
-  --dark:#1f2937;
-
-  --gray:#6b7280;
-  --gray-light:#9ca3af;
-
-  --border:#e5e7eb;
-  --bg:#f5f6f8;
-
-  --white:#ffffff;
-
-  --radius:22px;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--black);
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Arial,
-    sans-serif;
-}
-
-button,
-input{
-  font-family:inherit;
-}
-
-button{
-  border:0;
-  cursor:pointer;
-}
-
-button:disabled{
-  opacity:.55;
-  cursor:not-allowed;
-}
-
-
-/* =====================================================
-   HEADER
-===================================================== */
-
-.header{
-  position:relative;
-  overflow:hidden;
-
-  background:
-    linear-gradient(
-      145deg,
-      #111827 0%,
-      #1f2937 55%,
-      #7f1d1d 100%
-    );
-
-  color:white;
-
-  padding:
-    24px
-    18px
-    28px;
-
-  border-radius:
-    0 0 30px 30px;
-
-  box-shadow:
-    0 12px 35px rgba(17,24,39,.20);
-}
-
-.header::before{
-  content:"";
-  position:absolute;
-
-  width:180px;
-  height:180px;
-
-  right:-80px;
-  top:-80px;
-
-  background:
-    rgba(255,255,255,.08);
-
-  border-radius:50%;
-}
-
-.header::after{
-  content:"";
-  position:absolute;
-
-  width:120px;
-  height:120px;
-
-  left:-60px;
-  bottom:-70px;
-
-  background:
-    rgba(220,38,38,.25);
-
-  border-radius:50%;
-}
-
-.header-top{
-  position:relative;
-  z-index:2;
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.logo-wrap{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.logo-icon{
-  width:48px;
-  height:48px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  border-radius:16px;
-
-  background:
-    rgba(255,255,255,.12);
-
-  backdrop-filter:blur(10px);
-
-  font-size:25px;
-
-  box-shadow:
-    inset 0 1px rgba(255,255,255,.12);
-}
-
-.logo{
-  font-size:22px;
-  font-weight:900;
-  letter-spacing:-.5px;
-}
-
-.subtitle{
-  margin-top:3px;
-  font-size:11px;
-  opacity:.65;
-  letter-spacing:.8px;
-}
-
-.live{
-  display:flex;
-  align-items:center;
-  gap:7px;
-
-  padding:8px 11px;
-
-  border-radius:999px;
-
-  background:
-    rgba(255,255,255,.10);
-
-  font-size:11px;
-  font-weight:800;
-}
-
-.live-dot{
-  width:7px;
-  height:7px;
-  background:#4ade80;
-  border-radius:50%;
-
-  box-shadow:
-    0 0 0 4px rgba(74,222,128,.13);
-
-  animation:
-    livePulse 1.7s infinite;
-}
-
-@keyframes livePulse{
-  0%,100%{
-    opacity:1;
-  }
-
-  50%{
-    opacity:.35;
-  }
-}
-
-
-/* =====================================================
-   CONTAINER
-===================================================== */
-
-.container{
-  width:100%;
-  max-width:620px;
-
-  margin:auto;
-
-  padding:
-    16px
-    16px
-    110px;
-}
-
-
-/* =====================================================
-   DASHBOARD
-===================================================== */
-
-.dashboard-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-
-  margin:
-    5px
-    2px
-    12px;
-}
-
-.dashboard-title h2{
-  margin:0;
-  font-size:18px;
-  font-weight:900;
-}
-
-.dashboard-title span{
-  color:var(--gray);
-  font-size:11px;
-}
-
-.stats-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:11px;
-
-  margin-bottom:16px;
-}
-
-.stat-card{
-  position:relative;
-  overflow:hidden;
-
-  background:white;
-
-  border:
-    1px solid
-    rgba(229,231,235,.8);
-
-  border-radius:20px;
-
-  padding:16px;
-
-  box-shadow:
-    0 7px 25px rgba(17,24,39,.055);
-}
-
-.stat-card::after{
-  content:"";
-
-  position:absolute;
-
-  width:70px;
-  height:70px;
-
-  right:-30px;
-  bottom:-30px;
-
-  border-radius:50%;
-
-  background:
-    var(--red-soft);
-}
-
-.stat-icon{
-  font-size:21px;
-  margin-bottom:10px;
-}
-
-.stat-label{
-  color:var(--gray);
-  font-size:11px;
-  font-weight:700;
-}
-
-.stat-value{
-  margin-top:4px;
-
-  font-size:22px;
-  font-weight:900;
-  letter-spacing:-.5px;
-}
-
-.stat-value.loading-value{
-  color:#d1d5db;
-}
-
-
-/* =====================================================
-   NAVIGATION
-===================================================== */
-
-.nav-scroll{
-  display:flex;
-  gap:8px;
-
-  overflow-x:auto;
-
-  padding:
-    2px
-    1px
-    8px;
-
-  margin-bottom:8px;
-
-  scrollbar-width:none;
-}
-
-.nav-scroll::-webkit-scrollbar{
-  display:none;
-}
-
-.nav-btn{
-  flex:0 0 auto;
-
-  padding:11px 14px;
-
-  border-radius:14px;
-
-  background:white;
-
-  color:var(--gray);
-
-  border:1px solid var(--border);
-
-  font-size:12px;
-  font-weight:800;
-
-  transition:.2s;
-}
-
-.nav-btn.active{
-  background:var(--black);
-  color:white;
-  border-color:var(--black);
-
-  box-shadow:
-    0 7px 18px rgba(17,24,39,.16);
-}
-
-
-/* =====================================================
-   SECTIONS
-===================================================== */
-
-.section{
-  display:none;
-}
-
-.section.active{
-  display:block;
-}
-
-
-/* =====================================================
-   CARD
-===================================================== */
-
-.card{
-  background:white;
-
-  border-radius:var(--radius);
-
-  padding:18px;
-
-  margin-bottom:14px;
-
-  border:
-    1px solid
-    rgba(229,231,235,.85);
-
-  box-shadow:
-    0 8px 28px rgba(17,24,39,.055);
-}
-
-.card-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-
-  margin-bottom:15px;
-}
-
-.card-title{
-  font-size:17px;
-  font-weight:900;
-}
-
-.card-subtitle{
-  margin-top:3px;
-
-  color:var(--gray);
-
-  font-size:11px;
-}
-
-
-/* =====================================================
-   SEARCH
-===================================================== */
-
-.search-box{
-  position:relative;
-}
-
-.search-icon{
-  position:absolute;
-
-  left:15px;
-  top:50%;
-
-  transform:translateY(-50%);
-
-  font-size:18px;
-}
-
-.search-input{
-  width:100%;
-
-  padding:
-    16px
-    16px
-    16px
-    45px;
-
-  border:
-    1px solid
-    var(--border);
-
-  border-radius:16px;
-
-  background:#fafafa;
-
-  color:var(--black);
-
-  font-size:15px;
-
-  outline:none;
-
-  transition:.2s;
-}
-
-.search-input:focus{
-  background:white;
-
-  border-color:
-    #f87171;
-
-  box-shadow:
-    0 0 0 4px
-    rgba(220,38,38,.08);
-}
-
-
-/* =====================================================
-   BUTTONS
-===================================================== */
-
-.btn{
-  width:100%;
-
-  min-height:52px;
-
-  margin-top:11px;
-
-  border-radius:16px;
-
-  font-size:14px;
-
-  font-weight:900;
-
-  transition:
-    transform .15s,
-    box-shadow .15s;
-}
-
-.btn:active{
-  transform:scale(.98);
-}
-
-.btn-primary{
-  background:
-    linear-gradient(
-      135deg,
-      #111827,
-      #374151
-    );
-
-  color:white;
-
-  box-shadow:
-    0 8px 20px
-    rgba(17,24,39,.16);
-}
-
-.btn-red{
-  background:
-    linear-gradient(
-      135deg,
-      #dc2626,
-      #b91c1c
-    );
-
-  color:white;
-
-  box-shadow:
-    0 8px 20px
-    rgba(220,38,38,.18);
-}
-
-.btn-green{
-  background:
-    linear-gradient(
-      135deg,
-      #16a34a,
-      #15803d
-    );
-
-  color:white;
-}
-
-.btn-light{
-  background:#f3f4f6;
-  color:var(--black);
-}
-
-
-/* =====================================================
-   QR
-===================================================== */
-
-.qr-box{
-  background:
-    linear-gradient(
-      145deg,
-      #111827,
-      #374151
-    );
-
-  border-radius:20px;
-
-  padding:12px;
-
-  box-shadow:
-    inset 0 1px
-    rgba(255,255,255,.08);
-}
-
-#reader{
-  width:100%;
-  min-height:20px;
-  overflow:hidden;
-  border-radius:16px;
-  background:#111827;
-}
-
-#reader video{
-  width:100% !important;
-  border-radius:16px;
-}
-
-.camera-hint{
-  text-align:center;
-
-  color:var(--gray);
-
-  font-size:11px;
-
-  margin:
-    10px
-    0
-    0;
-}
-
-
-/* =====================================================
-   STATUS
-===================================================== */
-
-.status{
-  padding:14px;
-
-  border-radius:15px;
-
-  text-align:center;
-
-  margin-bottom:12px;
-
-  background:#f3f4f6;
-
-  font-size:13px;
-  font-weight:700;
-}
-
-.success{
-  background:var(--green-soft);
-  color:#166534;
-}
-
-.error{
-  background:#fef2f2;
-  color:#991b1b;
-}
-
-.warning{
-  background:var(--orange-soft);
-  color:#92400e;
-}
-
-.info{
-  background:var(--blue-soft);
-  color:#1e40af;
-}
-
-
-/* =====================================================
-   CLIENT
-===================================================== */
-
-.client-code{
-  font-size:32px;
-
-  font-weight:950;
-
-  color:var(--red);
-
-  text-align:center;
-
-  margin:
-    8px
-    0
-    18px;
-
-  letter-spacing:1px;
-}
-
-.client-profile{
-  background:
-    linear-gradient(
-      145deg,
-      #fff,
-      #f9fafb
-    );
-
-  border:
-    1px solid
-    var(--border);
-
-  border-radius:18px;
-
-  padding:15px;
-
-  margin-bottom:13px;
-}
-
-.profile-row{
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-
-  padding:
-    9px
-    0;
-
-  border-bottom:
-    1px solid
-    #f3f4f6;
-
-  font-size:13px;
-}
-
-.profile-row:last-child{
-  border-bottom:0;
-}
-
-.profile-label{
-  color:var(--gray);
-}
-
-.profile-value{
-  text-align:right;
-  font-weight:800;
-}
-
-
-/* =====================================================
-   PARCEL
-===================================================== */
-
-.count{
-  text-align:center;
-
-  font-size:13px;
-  font-weight:900;
-
-  margin:
-    12px
-    0;
-}
-
-.total-box{
-  text-align:center;
-
-  padding:19px;
-
-  border-radius:19px;
-
-  background:
-    linear-gradient(
-      145deg,
-      #f0fdf4,
-      #dcfce7
-    );
-
-  color:#166534;
-
-  margin-bottom:13px;
-}
-
-.total-label{
-  font-size:11px;
-  font-weight:800;
-}
-
-.total-value{
-  margin-top:4px;
-
-  font-size:29px;
-  font-weight:950;
-}
-
-.parcel{
-  border:
-    1px solid
-    var(--border);
-
-  border-radius:17px;
-
-  padding:15px;
-
-  margin-top:10px;
-
-  background:white;
-
-  transition:.2s;
-}
-
-.parcel:hover{
-  box-shadow:
-    0 8px 22px
-    rgba(17,24,39,.06);
-}
-
-.parcel-top{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-
-  align-items:center;
-}
-
-.track{
-  font-size:16px;
-  font-weight:900;
-
-  word-break:break-all;
-}
-
-.price{
-  margin-top:8px;
-
-  color:var(--gray);
-
-  font-size:12px;
-}
-
-.badge{
-  display:inline-flex;
-  align-items:center;
-
-  padding:6px 9px;
-
-  border-radius:999px;
-
-  font-size:10px;
-
-  font-weight:900;
-
-  white-space:nowrap;
-}
-
-.badge-green{
-  background:#dcfce7;
-  color:#166534;
-}
-
-.badge-gray{
-  background:#f3f4f6;
-  color:#4b5563;
-}
-
-.badge-red{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-
-/* =====================================================
-   LOADING
-===================================================== */
-
-.loading{
-  text-align:center;
-
-  padding:20px;
-
-  color:var(--gray);
-
-  font-size:13px;
-}
-
-.spinner{
-  width:24px;
-  height:24px;
-
-  margin:
-    0
-    auto
-    10px;
-
-  border:
-    3px solid
-    #e5e7eb;
-
-  border-top-color:
-    var(--red);
-
-  border-radius:50%;
-
-  animation:
-    spin .7s linear infinite;
-}
-
-@keyframes spin{
-  to{
-    transform:rotate(360deg);
-  }
-}
-
-
-/* =====================================================
-   EMPTY
-===================================================== */
-
-.empty{
-  text-align:center;
-
-  padding:25px 15px;
-
-  color:var(--gray);
-
-  font-size:13px;
-}
-
-
-/* =====================================================
-   PREMIUM FEATURE CARDS
-===================================================== */
-
-.feature-grid{
-  display:grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
-  gap:11px;
-}
-
-.feature-card{
-  padding:17px;
-
-  background:white;
-
-  border:
-    1px solid
-    var(--border);
-
-  border-radius:19px;
-
-  min-height:115px;
-
-  box-shadow:
-    0 7px 20px
-    rgba(17,24,39,.045);
-}
-
-.feature-icon{
-  font-size:23px;
-  margin-bottom:10px;
-}
-
-.feature-title{
-  font-size:13px;
-  font-weight:900;
-}
-
-.feature-text{
-  margin-top:5px;
-
-  font-size:10px;
-
-  color:var(--gray);
-
-  line-height:1.4;
-}
-
-
-/* =====================================================
-   STATISTICS
-===================================================== */
-
-.period-row{
-  display:flex;
-  gap:8px;
-
-  overflow-x:auto;
-
-  scrollbar-width:none;
-
-  margin-bottom:13px;
-}
-
-.period-row::-webkit-scrollbar{
-  display:none;
-}
-
-.period-btn{
-  flex:0 0 auto;
-
-  padding:9px 13px;
-
-  border-radius:12px;
-
-  background:#f3f4f6;
-
-  color:var(--gray);
-
-  font-size:11px;
-  font-weight:800;
-}
-
-.period-btn.active{
-  background:var(--black);
-  color:white;
-}
-
-.chart-placeholder{
-  height:190px;
-
-  border-radius:18px;
-
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      #f9fafb 0,
-      #f9fafb 1px,
-      transparent 1px,
-      transparent 47px
-    );
-
-  border:
-    1px solid
-    var(--border);
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  color:var(--gray);
-
-  font-size:12px;
-
-  text-align:center;
-
-  padding:20px;
-}
-
-
-/* =====================================================
-   BOTTOM NAV
-===================================================== */
-
-.bottom-nav{
-  position:fixed;
-
-  z-index:100;
-
-  left:50%;
-
-  transform:translateX(-50%);
-
-  bottom:12px;
-
-  width:
-    calc(100% - 24px);
-
-  max-width:590px;
-
-  padding:8px;
-
-  display:flex;
-
-  gap:4px;
-
-  background:
-    rgba(17,24,39,.94);
-
-  backdrop-filter:
-    blur(18px);
-
-  border-radius:21px;
-
-  box-shadow:
-    0 15px 40px
-    rgba(17,24,39,.25);
-}
-
-.bottom-btn{
-  flex:1;
-
-  padding:9px 4px;
-
-  border-radius:15px;
-
-  background:transparent;
-
-  color:#9ca3af;
-
-  font-size:9px;
-
-  font-weight:800;
-}
-
-.bottom-btn span{
-  display:block;
-
-  font-size:19px;
-
-  margin-bottom:3px;
-}
-
-.bottom-btn.active{
-  background:
-    rgba(255,255,255,.10);
-
-  color:white;
-}
-
-
-/* =====================================================
-   DESKTOP
-===================================================== */
-
-@media(min-width:700px){
-
-  .container{
-    padding-top:22px;
-  }
-
-  .stats-grid{
-    grid-template-columns:
-      repeat(4,1fr);
-  }
-
-  .feature-grid{
-    grid-template-columns:
-      repeat(4,1fr);
-  }
-
-  .bottom-nav{
-    display:none;
-  }
-
-}
-
-
-/* =====================================================
-   NO SELECT
-===================================================== */
-
-.no-select{
-  user-select:none;
-}
-
-</style>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Tez Kargo — Premium Admin</title>
+
+  <style>
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    body{
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+      background:#f5f6f8;
+      color:#222;
+    }
+
+    button,
+    input,
+    select{
+      font-family:inherit;
+    }
+
+    .app{
+      min-height:100vh;
+    }
+
+    /* ================================
+       HEADER
+    ================================= */
+
+    .header{
+      background:#fff;
+      border-bottom:1px solid #e5e5e5;
+      padding:16px 20px;
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+
+    .header-inner{
+      max-width:1200px;
+      margin:auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .brand-logo{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      background:#e53935;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:21px;
+      font-weight:800;
+    }
+
+    .brand-name{
+      font-size:19px;
+      font-weight:800;
+    }
+
+    .brand-sub{
+      font-size:11px;
+      color:#888;
+      margin-top:2px;
+    }
+
+    /* ================================
+       NAV
+    ================================= */
+
+    .nav{
+      max-width:1200px;
+      margin:auto;
+      padding:12px 15px;
+
+      display:flex;
+      gap:8px;
+
+      overflow-x:auto;
+
+      background:#f5f6f8;
+    }
+
+    .nav button{
+      border:none;
+      background:#fff;
+      padding:10px 14px;
+      border-radius:10px;
+
+      cursor:pointer;
+      white-space:nowrap;
+
+      color:#555;
+      font-size:13px;
+      font-weight:600;
+    }
+
+    .nav button.active{
+      background:#e53935;
+      color:#fff;
+    }
+
+    /* ================================
+       MAIN
+    ================================= */
+
+    .main{
+      max-width:1200px;
+      margin:auto;
+      padding:15px;
+    }
+
+    .section{
+      display:none;
+    }
+
+    .section.active{
+      display:block;
+    }
+
+    /* ================================
+       CARD
+    ================================= */
+
+    .card{
+      background:#fff;
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:15px;
+
+      box-shadow:
+        0 2px 10px rgba(0,0,0,.04);
+    }
+
+    .card-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .card-title{
+      font-size:18px;
+      font-weight:800;
+    }
+
+    .card-subtitle{
+      color:#888;
+      font-size:12px;
+      margin-top:4px;
+    }
+
+    /* ================================
+       STATS
+    ================================= */
+
+    .stats-grid{
+      display:grid;
+      grid-template-columns:
+        repeat(4,1fr);
+
+      gap:12px;
+    }
+
+    .stat-card{
+      background:#fafafa;
+      border:1px solid #eee;
+      border-radius:14px;
+      padding:15px;
+    }
+
+    .stat-icon{
+      font-size:22px;
+      margin-bottom:8px;
+    }
+
+    .stat-label{
+      color:#777;
+      font-size:12px;
+      margin-bottom:5px;
+    }
+
+    .stat-value{
+      font-size:21px;
+      font-weight:800;
+      color:#222;
+    }
+
+    /* ================================
+       BUTTONS
+    ================================= */
+
+    .btn{
+      border:none;
+      border-radius:10px;
+      padding:11px 15px;
+
+      cursor:pointer;
+
+      font-weight:700;
+      font-size:13px;
+    }
+
+    .btn-primary{
+      background:#e53935;
+      color:#fff;
+    }
+
+    .btn-secondary{
+      background:#f0f1f3;
+      color:#333;
+    }
+
+    .btn-success{
+      background:#2e7d32;
+      color:#fff;
+    }
+
+    .btn-danger{
+      background:#c62828;
+      color:#fff;
+    }
+
+    /* ================================
+       INPUT
+    ================================= */
+
+    .input{
+      width:100%;
+
+      border:1px solid #ddd;
+      border-radius:10px;
+
+      padding:12px 13px;
+
+      outline:none;
+      font-size:14px;
+
+      background:#fff;
+    }
+
+    .input:focus{
+      border-color:#e53935;
+    }
+
+    .input-row{
+      display:flex;
+      gap:10px;
+    }
+
+    /* ================================
+       SEARCH
+    ================================= */
+
+    .search-box{
+      display:flex;
+      gap:10px;
+      margin-bottom:15px;
+    }
+
+    /* ================================
+       PARCEL
+    ================================= */
+
+    .parcel{
+      border:1px solid #eee;
+      border-radius:14px;
+      padding:15px;
+      margin-bottom:10px;
+      background:#fff;
+    }
+
+    .parcel-top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .track{
+      font-weight:800;
+      font-size:14px;
+    }
+
+    .price{
+      color:#666;
+      font-size:13px;
+      margin-top:7px;
+    }
+
+    /* ================================
+       STATUS
+    ================================= */
+
+    .status{
+      border-radius:10px;
+      padding:11px 13px;
+      font-size:13px;
+      margin-top:12px;
+    }
+
+    .status.info{
+      background:#eef5ff;
+      color:#315f9b;
+    }
+
+    .status.success{
+      background:#edf8ef;
+      color:#287334;
+    }
+
+    .status.error{
+      background:#fff0f0;
+      color:#b3261e;
+    }
+
+    /* ================================
+       PERIOD
+    ================================= */
+
+    .period-row{
+      display:flex;
+      gap:8px;
+      overflow-x:auto;
+      margin-bottom:15px;
+    }
+
+    .period-btn{
+      border:none;
+      background:#f0f1f3;
+      padding:9px 14px;
+      border-radius:9px;
+
+      white-space:nowrap;
+      cursor:pointer;
+    }
+
+    .period-btn.active{
+      background:#e53935;
+      color:#fff;
+    }
+
+    /* ================================
+       CHART
+    ================================= */
+
+    .chart-placeholder{
+      min-height:180px;
+
+      display:flex;
+      align-items:center;
+      justify-content:center;
+
+      text-align:center;
+
+      color:#999;
+
+      border:1px dashed #ddd;
+      border-radius:14px;
+
+      padding:20px;
+    }
+
+    /* ================================
+       TABLE
+    ================================= */
+
+    .table-wrap{
+      overflow-x:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:650px;
+    }
+
+    th,
+    td{
+      padding:11px 10px;
+      border-bottom:1px solid #eee;
+
+      text-align:left;
+      font-size:13px;
+    }
+
+    th{
+      background:#fafafa;
+      font-weight:800;
+    }
+
+    /* ================================
+       MOBILE
+    ================================= */
+
+    @media(max-width:700px){
+
+      .header{
+        padding:12px 14px;
+      }
+
+      .main{
+        padding:10px;
+      }
+
+      .stats-grid{
+        grid-template-columns:
+          repeat(2,1fr);
+      }
+
+      .stat-card{
+        padding:13px;
+      }
+
+      .stat-value{
+        font-size:18px;
+      }
+
+      .card{
+        padding:14px;
+        border-radius:14px;
+      }
+
+      .input-row{
+        flex-direction:column;
+      }
+
+      .search-box{
+        flex-direction:column;
+      }
+
+    }
+
+    @media(max-width:400px){
+
+      .stats-grid{
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+      }
+
+      .stat-value{
+        font-size:16px;
+      }
+
+      .stat-label{
+        font-size:11px;
+      }
+
+    }
+
+  </style>
 
 </head>
 
+
 <body>
 
+<div class="app">
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
+  <!-- ================================
+       HEADER
+  ================================= -->
 
-<header class="header">
+  <header class="header">
 
-  <div class="header-top">
+    <div class="header-inner">
 
-    <div class="logo-wrap">
+      <div class="brand">
 
-      <div class="logo-icon">
-        📦
-      </div>
-
-      <div>
-
-        <div class="logo">
-          TEZ KARGO
+        <div class="brand-logo">
+          TK
         </div>
 
-        <div class="subtitle">
-          PREMIUM ADMIN PANEL
+        <div>
+
+          <div class="brand-name">
+            Tez Kargo
+          </div>
+
+          <div class="brand-sub">
+            Premium Admin
+          </div>
+
         </div>
 
       </div>
 
     </div>
 
-    <div class="live">
-      <span class="live-dot"></span>
-      LIVE
-    </div>
-
-  </div>
-
-</header>
+  </header>
 
 
-<div class="container">
+  <!-- ================================
+       NAVIGATION
+  ================================= -->
 
+  <nav class="nav">
 
-<!-- =====================================================
-     DASHBOARD
-===================================================== -->
-
-<section
-  class="section active"
-  id="dashboardSection">
-
-  <div class="dashboard-title">
-
-    <h2>
+    <button
+      class="active"
+      onclick="showSection('dashboardSection',this)"
+    >
       📊 Dashboard
-    </h2>
-
-    <span>
-      Бүгүн
-    </span>
-
-  </div>
-
-<div class="stats-grid">
-
-  <div class="stat-card">
-    <div class="stat-icon">📦</div>
-
-    <div class="stat-label">
-      Жалпы посылка
-    </div>
-
-    <div class="stat-value" id="totalParcels">
-      —
-    </div>
-  </div>
-
-
-  <div class="stat-card">
-    <div class="stat-icon">⚖️</div>
-
-    <div class="stat-label">
-      Жалпы KG
-    </div>
-
-    <div class="stat-value" id="totalKg">
-      —
-    </div>
-  </div>
-
-
-  <div class="stat-card">
-    <div class="stat-icon">🏢</div>
-
-    <div class="stat-label">
-      Офисте
-    </div>
-
-    <div class="stat-value" id="inOffice">
-      —
-    </div>
-  </div>
-
-
-  <div class="stat-card">
-    <div class="stat-icon">✅</div>
-
-    <div class="stat-label">
-      Берилди
-    </div>
-
-    <div class="stat-value" id="issued">
-      —
-    </div>
-  </div>
-
-</div>
-
-
-  <div class="card">
-
-    <div class="card-head">
-
-      <div>
-
-        <div class="card-title">
-          ⚡ Тез аракет
-        </div>
-
-        <div class="card-subtitle">
-          Көп колдонулган функциялар
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="feature-grid">
-
-      <div
-        class="feature-card"
-        onclick="showSection('scanner')">
-
-        <div class="feature-icon">
-          📷
-        </div>
-
-        <div class="feature-title">
-          QR Сканер
-        </div>
-
-        <div class="feature-text">
-          Кардарды QR аркылуу табуу
-        </div>
-
-      </div>
-
-
-      <div
-        class="feature-card"
-        onclick="focusTrackSearch()">
-
-        <div class="feature-icon">
-          🔎
-        </div>
-
-        <div class="feature-title">
-          Track издөө
-        </div>
-
-        <div class="feature-text">
-          Track code аркылуу издөө
-        </div>
-
-      </div>
-
-
-      <div
-        class="feature-card"
-        onclick="showSection('statistics')">
-
-        <div class="feature-icon">
-          📈
-        </div>
-
-        <div class="feature-title">
-          Статистика
-        </div>
-
-        <div class="feature-text">
-          7 күндүк жана айлык отчет
-        </div>
-
-      </div>
-
-
-      <div
-        class="feature-card"
-        onclick="showSection('finance')">
-
-        <div class="feature-icon">
-          💰
-        </div>
-
-        <div class="feature-title">
-          Финансы
-        </div>
-
-        <div class="feature-text">
-          Киреше жана таза пайда
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- TRACK SEARCH -->
-
-  <div
-    class="card"
-    id="trackSearchCard">
-
-    <div class="card-head">
-
-      <div>
-
-        <div class="card-title">
-          🔎 Track Code издөө
-        </div>
-
-        <div class="card-subtitle">
-          Посылканы тез табыңыз
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="search-box">
-
-      <span class="search-icon">
-        🔎
-      </span>
-
-      <input
-        type="text"
-        id="trackSearchInput"
-        class="search-input"
-        placeholder="Track code жазыңыз..."
-        autocomplete="off"
-        onkeydown="
-          if(event.key==='Enter'){
-            searchTrack();
-          }
-        "
-      >
-
-    </div>
-
-
-    <button
-      class="btn btn-primary"
-      onclick="searchTrack()">
-
-      🔎 ИЗДӨӨ
-
     </button>
 
-
-    <div
-      id="trackSearchResult"
-      style="margin-top:15px;">
-    </div>
-
-  </div>
-
-
-</section>
-
-
-<!-- =====================================================
-     SCANNER SECTION
-===================================================== -->
-
-<section
-  class="section"
-  id="scannerSection">
-
-
-  <div class="card">
-
-    <div class="card-head">
-
-      <div>
-
-        <div class="card-title">
-          📷 QR Сканер
-        </div>
-
-        <div class="card-subtitle">
-          Кардардын QR кодун камерага көрсөтүңүз
-        </div>
-
-      </div>
-
-      <div class="badge badge-green">
-        LIVE
-      </div>
-
-    </div>
-
-
-    <div class="qr-box">
-
-      <div id="reader"></div>
-
-    </div>
-
-
-    <div class="camera-hint">
-
-      📱 QR кодду кадрдын ортосуна
-      туура жайгаштырыңыз
-
-    </div>
-
-
     <button
-      class="btn btn-primary"
-      id="startButton"
-      onclick="startScanner()">
-
-      📷 КАМЕРАНЫ АЧУУ
-
+      onclick="showSection('scannerSection',this)"
+    >
+      📷 Scanner
     </button>
 
-
     <button
-      class="btn btn-light"
-      onclick="stopScanner()">
-
-      ✕ КАМЕРАНЫ ЖАБУУ
-
+      onclick="showSection('batchesSection',this)"
+    >
+      📦 Партия
     </button>
 
- <!-- =====================================================
-     MANUAL CLIENT SEARCH
-===================================================== -->
+    <button
+      onclick="showSection('statisticsSection',this)"
+    >
+      📈 Statistics
+    </button>
 
-<div class="manual-search">
+    <button
+      onclick="showSection('financeSection',this)"
+    >
+      💰 Финансы
+    </button>
 
-  <div class="manual-title">
-    🔢 КЛИЕНТ КОДУН КИРГИЗҮҮ
-  </div>
+    <button
+      onclick="showSection('clientsSection',this)"
+    >
+      👥 Clients
+    </button>
 
-  <div class="manual-search-row">
+  </nav>
 
-    <input
-      type="text"
-      id="manualClientCode"
-      class="search-input"
-      placeholder="Мисалы: T0232"
-      autocomplete="off"
-      autocapitalize="characters"
+
+  <main class="main">
+
+
+    <!-- ================================
+         DASHBOARD
+    ================================= -->
+
+    <section
+      class="section active"
+      id="dashboardSection"
     >
 
-    <button
-      class="btn btn-primary"
-      onclick="searchClientByCode()">
+      <div class="card">
 
-      🔎 ТАБУУ
+        <div class="card-head">
 
-    </button>
+          <div>
 
-  </div>
+            <div class="card-title">
+              📊 Dashboard
+            </div>
 
-</div> </div>
+            <div class="card-subtitle">
+              Tez Kargo жалпы статистикасы
+            </div>
 
+          </div>
 
-  <!-- ===================================================
-       CLIENT CARD
-  ==================================================== -->
-
-  <div
-    class="card"
-    id="clientCard"
-    style="display:none;">
-
-
-    <div class="card-head">
-
-      <div>
-
-        <div class="card-title">
-          👤 Кардар
         </div>
 
-        <div class="card-subtitle">
-          QR аркылуу табылган кардар
-        </div>
 
-      </div>
+        <div class="stats-grid">
 
-      <div class="badge badge-green">
-        FOUND
-      </div>
+          <div class="stat-card">
 
-    </div>
+            <div class="stat-icon">
+              👥
+            </div>
 
+            <div class="stat-label">
+              Клиенттер
+            </div>
 
-    <div
-      class="client-code"
-      id="clientCode">
-    </div>
+            <div
+              class="stat-value"
+              id="totalClients"
+            >
+              —
+            </div>
 
-
-    <div
-      id="parcelStatus">
-    </div>
-
-
-    <div
-      id="parcelList">
-    </div>
+          </div>
 
 
-    <button
-      class="btn btn-green"
-      id="issueButton"
-      onclick="issueClient()">
+          <div class="stat-card">
 
-      🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ
+            <div class="stat-icon">
+              🟢
+            </div>
 
-    </button>
+            <div class="stat-label">
+              Активдүү
+            </div>
 
+            <div
+              class="stat-value"
+              id="activeClients"
+            >
+              —
+            </div>
 
-    <button
-      class="btn btn-light"
-      onclick="resetClient()">
-
-      🔄 БАШКА КАРДАР
-
-    </button>
-
-  </div>
-
-</section>
+          </div>
 
 
-<!-- =====================================================
-     STATISTICS SECTION
-===================================================== -->
+          <div class="stat-card">
 
-<section
-  class="section"
-  id="statisticsSection">
+            <div class="stat-icon">
+              📦
+            </div>
+
+            <div class="stat-label">
+              Посылкалар
+            </div>
+
+            <div
+              class="stat-value"
+              id="totalParcels"
+            >
+              —
+            </div>
+
+          </div>
 
 
-  <div class="card">
+          <div class="stat-card">
 
-    <div class="card-head">
+            <div class="stat-icon">
+              ⚖️
+            </div>
 
-      <div>
+            <div class="stat-label">
+              KG
+            </div>
 
-        <div class="card-title">
-          📈 Статистика
-        </div>
+            <div
+              class="stat-value"
+              id="totalKg"
+            >
+              —
+            </div>
 
-        <div class="card-subtitle">
-          Cargo ишинин негизги көрсөткүчтөрү
+          </div>
+
         </div>
 
       </div>
 
-    </div>
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div>
+
+            <div class="card-title">
+              📦 Посылка статусу
+            </div>
+
+          </div>
+
+        </div>
 
 
-    <!-- PERIOD -->
+        <div class="stats-grid">
 
-    <div class="period-row">
+          <div class="stat-card">
 
-      <button
-        class="period-btn active"
-        onclick="selectPeriod(this)">
+            <div class="stat-icon">
+              🇨🇳
+            </div>
 
-        7 күн
+            <div class="stat-label">
+              Кытайда
+            </div>
 
-      </button>
+            <div
+              class="stat-value"
+              id="inChina"
+            >
+              —
+            </div>
 
-
-      <button
-        class="period-btn"
-        onclick="selectPeriod(this)">
-
-        30 күн
-
-      </button>
-
-
-      <button
-        class="period-btn"
-        onclick="selectPeriod(this)">
-
-        Бул ай
-
-      </button>
+          </div>
 
 
-      <button
-        class="period-btn"
-        onclick="selectPeriod(this)">
+          <div class="stat-card">
 
-        Баары
+            <div class="stat-icon">
+              🚚
+            </div>
 
-      </button>
+            <div class="stat-label">
+              Жолдо
+            </div>
 
-    </div>
+            <div
+              class="stat-value"
+              id="inTransit"
+            >
+              —
+            </div>
 
-
-   <!-- STAT CARDS -->
-
-<div class="stats-grid">
-
-  <div class="stat-card">
-
-    <div class="stat-icon">
-      📦
-    </div>
-
-    <div class="stat-label">
-      Посылкалар
-    </div>
-
-    <div
-      class="stat-value"
-      id="periodParcels">
-      —
-    </div>
-
-  </div>
+          </div>
 
 
-  <div class="stat-card">
+          <div class="stat-card">
 
-    <div class="stat-icon">
-      ⚖️
-    </div>
+            <div class="stat-icon">
+              🏢
+            </div>
 
-    <div class="stat-label">
-      KG
-    </div>
+            <div class="stat-label">
+              Офисте
+            </div>
 
-    <div
-      class="stat-value"
-      id="periodKg">
-      —
-    </div>
+            <div
+              class="stat-value"
+              id="inOffice"
+            >
+              —
+            </div>
 
-  </div>
-
-
-  <div class="stat-card">
-
-    <div class="stat-icon">
-      🚚
-    </div>
-
-    <div class="stat-label">
-      Партия
-    </div>
-
-    <div
-      class="stat-value"
-      id="periodParties">
-      —
-    </div>
-
-  </div>
+          </div>
 
 
-  <div class="stat-card">
+          <div class="stat-card">
 
-    <div class="stat-icon">
-      ✅
-    </div>
+            <div class="stat-icon">
+              ✅
+            </div>
 
-    <div class="stat-label">
-      Берилди
-    </div>
+            <div class="stat-label">
+              Берилди
+            </div>
 
-    <div
-      class="stat-value"
-      id="periodIssued">
-      —
-    </div>
+            <div
+              class="stat-value"
+              id="issued"
+            >
+              —
+            </div>
 
-  </div>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div>
+
+            <div class="card-title">
+              💰 Финансылык жыйынтык
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              💵
+            </div>
+
+            <div class="stat-label">
+              Киреше
+            </div>
+
+            <div
+              class="stat-value"
+              id="totalIncome"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              📉
+            </div>
+
+            <div class="stat-label">
+              Чыгым
+            </div>
+
+            <div
+              class="stat-value"
+              id="totalExpenses"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              💎
+            </div>
+
+            <div class="stat-label">
+              Пайда
+            </div>
+
+            <div
+              class="stat-value"
+              id="totalProfit"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              📦
+            </div>
+
+            <div class="stat-label">
+              Партия
+            </div>
+
+            <div
+              class="stat-value"
+              id="totalParties"
+            >
+              —
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div>
+
+            <div class="card-title">
+              📦 Акыркы партиялар
+            </div>
+
+          </div>
+
+        </div>
+
+        <div id="batchHistory">
+
+          Жүктөлүүдө...
+
+        </div>
+
+      </div>
+
+
+    </section>
+
+
+    <!-- ================================
+         SCANNER
+    ================================= -->
+
+    <section
+      class="section"
+      id="scannerSection"
+    >
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div>
+
+            <div class="card-title">
+              📷 QR Scanner
+            </div>
+
+            <div class="card-subtitle">
+              Клиенттин кодун сканерлеңиз
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="reader"
+          style="
+            width:100%;
+            max-width:500px;
+            margin:auto;
+          "
+        ></div>
+
+
+        <div
+          class="status info"
+          id="scannerStatus"
+        >
+          QR сканер даяр.
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div class="card-title">
+            🔎 Код менен издөө
+          </div>
+
+        </div>
+
+
+        <div class="search-box">
+
+          <input
+            class="input"
+            id="clientCodeInput"
+            placeholder="Мисалы: T0265"
+          >
+
+          <button
+            class="btn btn-primary"
+            onclick="searchClientByCode()"
+          >
+            Издөө
+          </button>
+
+        </div>
+
+
+        <div id="clientResult"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================================
+         BATCHES
+    ================================= -->
+
+    <section
+      class="section"
+      id="batchesSection"
+    >
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div>
+
+            <div class="card-title">
+              📦 Партиялар
+            </div>
+
+            <div class="card-subtitle">
+              Кытайдан келген партиялар
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div id="batchesContainer">
+
+          Жүктөлүүдө...
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================================
+         STATISTICS
+    ================================= -->
+
+    <section
+      class="section"
+      id="statisticsSection"
+    >
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div>
+
+            <div class="card-title">
+              📈 Статистика
+            </div>
+
+            <div class="card-subtitle">
+              Өсүү жана көрсөткүчтөр
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="period-row">
+
+          <button
+            class="period-btn active"
+            onclick="selectPeriod(this)"
+          >
+            7 күн
+          </button>
+
+          <button
+            class="period-btn"
+            onclick="selectPeriod(this)"
+          >
+            30 күн
+          </button>
+
+          <button
+            class="period-btn"
+            onclick="selectPeriod(this)"
+          >
+            Бул ай
+          </button>
+
+          <button
+            class="period-btn"
+            onclick="selectPeriod(this)"
+          >
+            Баары
+          </button>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              📦
+            </div>
+
+            <div class="stat-label">
+              Посылка
+            </div>
+
+            <div
+              class="stat-value"
+              id="periodParcels"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              ⚖️
+            </div>
+
+            <div class="stat-label">
+              KG
+            </div>
+
+            <div
+              class="stat-value"
+              id="periodKg"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              📦
+            </div>
+
+            <div class="stat-label">
+              Партия
+            </div>
+
+            <div
+              class="stat-value"
+              id="periodParties"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              ✅
+            </div>
+
+            <div class="stat-label">
+              Берилди
+            </div>
+
+            <div
+              class="stat-value"
+              id="periodIssued"
+            >
+              —
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div class="card-title">
+            📊 Апталык отчет
+          </div>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+          <div class="stat-card">
+
+            <div class="stat-label">
+              Посылка
+            </div>
+
+            <div
+              class="stat-value"
+              id="weekParcels"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-label">
+              KG
+            </div>
+
+            <div
+              class="stat-value"
+              id="weekKg"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-label">
+              Партия
+            </div>
+
+            <div
+              class="stat-value"
+              id="weekParties"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-label">
+              Киреше
+            </div>
+
+            <div
+              class="stat-value"
+              id="weekIncome"
+            >
+              —
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div class="card-title">
+            📅 Айлык отчет
+          </div>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+          <div class="stat-card">
+
+            <div class="stat-label">
+              Посылка
+            </div>
+
+            <div
+              class="stat-value"
+              id="monthParcels"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-label">
+              KG
+            </div>
+
+            <div
+              class="stat-value"
+              id="monthKg"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-label">
+              Партия
+            </div>
+
+            <div
+              class="stat-value"
+              id="monthParties"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-label">
+              Пайда
+            </div>
+
+            <div
+              class="stat-value"
+              id="monthProfit"
+            >
+              —
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+    <!-- ================================
+         FINANCE
+    ================================= -->
+
+    <section
+      class="section"
+      id="financeSection"
+    >
+
+      <!-- FINANCE SUMMARY -->
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div>
+
+            <div class="card-title">
+              💰 Финансы
+            </div>
+
+            <div class="card-subtitle">
+              Киреше, логистика, башка чыгым жана таза пайда
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+          <!-- INCOME -->
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              💵
+            </div>
+
+            <div class="stat-label">
+              Киреше
+            </div>
+
+            <div
+              class="stat-value"
+              id="financeIncome"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <!-- EXPENSE -->
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              📉
+            </div>
+
+            <div class="stat-label">
+              Жалпы чыгым
+            </div>
+
+            <div
+              class="stat-value"
+              id="financeExpense"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <!-- PROFIT -->
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              💎
+            </div>
+
+            <div class="stat-label">
+              Таза пайда
+            </div>
+
+            <div
+              class="stat-value"
+              id="financeProfit"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <!-- KG -->
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              ⚖️
+            </div>
+
+            <div class="stat-label">
+              Жалпы KG
+            </div>
+
+            <div
+              class="stat-value"
+              id="financeKg"
+            >
+              —
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- FINANCE DETAILS -->
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div>
+
+            <div class="card-title">
+              📊 Финансы деталдары
+            </div>
+
+            <div class="card-subtitle">
+              Партиялар боюнча жалпы эсеп
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+          <!-- PARTIES -->
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              📦
+            </div>
+
+            <div class="stat-label">
+              Партия
+            </div>
+
+            <div
+              class="stat-value"
+              id="financeParties"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <!-- PIECES -->
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              🛍
+            </div>
+
+            <div class="stat-label">
+              Штук
+            </div>
+
+            <div
+              class="stat-value"
+              id="financePieces"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <!-- LOGISTICS -->
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              🚚
+            </div>
+
+            <div class="stat-label">
+              Логистика
+            </div>
+
+            <div
+              class="stat-value"
+              id="financeLogistics"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <!-- OTHER EXPENSE -->
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              💸
+            </div>
+
+            <div class="stat-label">
+              Башка чыгым
+            </div>
+
+            <div
+              class="stat-value"
+              id="financeOtherExpense"
+            >
+              —
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- COST PER KG -->
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div>
+
+            <div class="card-title">
+              ⚖️ 1 KG анализи
+            </div>
+
+            <div class="card-subtitle">
+              Орточо реалдуу көрсөткүч
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              💵
+            </div>
+
+            <div class="stat-label">
+              1 KG киреше
+            </div>
+
+            <div
+              class="stat-value"
+              id="financeIncomePerKg"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              🚚
+            </div>
+
+            <div class="stat-label">
+              1 KG логистика
+            </div>
+
+            <div
+              class="stat-value"
+              id="financeLogisticsPerKg"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              📉
+            </div>
+
+            <div class="stat-label">
+              1 KG жалпы чыгым
+            </div>
+
+            <div
+              class="stat-value"
+              id="financeExpensePerKg"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              💎
+            </div>
+
+            <div class="stat-label">
+              1 KG таза пайда
+            </div>
+
+            <div
+              class="stat-value"
+              id="financeProfitPerKg"
+            >
+              —
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="status info"
+        >
+          💡 1 KG көрсөткүчтөрү жалпы киреше, чыгым жана KG боюнча автоматтык эсептелет.
+        </div>
+
+      </div>
+
+
+      <!-- FINANCE HISTORY -->
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div>
+
+            <div class="card-title">
+              📋 Партиялар боюнча финансы
+            </div>
+
+            <div class="card-subtitle">
+              Ар бир партиянын киреше жана чыгымы
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Жөнөтүү
+                </th>
+
+                <th>
+                  Келүү
+                </th>
+
+                <th>
+                  Штук
+                </th>
+
+                <th>
+                  KG
+                </th>
+
+                <th>
+                  Логистика
+                </th>
+
+                <th>
+                  Киреше
+                </th>
+
+                <th>
+                  Пайда
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody
+              id="financeHistory"
+            >
+
+              <tr>
+
+                <td
+                  colspan="7"
+                  style="
+                    text-align:center;
+                    color:#999;
+                    padding:25px;
+                  "
+                >
+                  Финансы маалыматтары жүктөлүүдө...
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+
+      <!-- FINANCE INFO -->
+
+      <div
+        class="card"
+      >
+
+        <div
+          class="status info"
+        >
+
+          💡 <b>Логистика чыгымы</b> —
+          Кытай Каргого төлөнгөн акча +
+          Бишкек–Токмок жолу +
+          пакет/логистика чыгымы.
+
+          <br><br>
+
+          💸 <b>Башка чыгымдар</b> —
+          аренда, свет, интернет жана башка жалпы чыгымдар.
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================================
+         CLIENTS
+    ================================= -->
+
+    <section
+      class="section"
+      id="clientsSection"
+    >
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div>
+
+            <div class="card-title">
+              👥 Клиенттер
+            </div>
+
+            <div class="card-subtitle">
+              Клиенттерди издөө жана текшерүү
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <div class="search-box">
+
+          <input
+            class="input"
+            id="clientsSearchInput"
+            placeholder="Клиент коду же аты..."
+            oninput="filterClients()"
+          >
+
+        </div>
+
+
+        <!-- CLIENTS LIST -->
+
+        <div id="clientsContainer">
+
+          <div
+            class="status info"
+          >
+            Клиенттер жүктөлүүдө...
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- CLIENT DETAIL -->
+
+      <div
+        class="card"
+        id="clientDetailCard"
+        style="display:none;"
+      >
+
+        <div class="card-head">
+
+          <div>
+
+            <div class="card-title">
+              👤 Клиент профили
+            </div>
+
+            <div class="card-subtitle">
+              Клиент тууралуу маалымат
+            </div>
+
+          </div>
+
+          <button
+            class="btn btn-secondary"
+            onclick="resetClient()"
+          >
+            Жабуу
+          </button>
+
+        </div>
+
+
+        <div id="clientDetail">
+
+        </div>
+
+      </div>
+
+
+      <!-- CLIENT STATUS -->
+
+      <div class="card">
+
+        <div class="card-head">
+
+          <div>
+
+            <div class="card-title">
+              📊 Клиент статистикасы
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              👥
+            </div>
+
+            <div class="stat-label">
+              Бардык клиент
+            </div>
+
+            <div
+              class="stat-value"
+              id="clientsTotal"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              🟢
+            </div>
+
+            <div class="stat-label">
+              Активдүү
+            </div>
+
+            <div
+              class="stat-value"
+              id="clientsActive"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              🟡
+            </div>
+
+            <div class="stat-label">
+              Биринчи заказ
+            </div>
+
+            <div
+              class="stat-value"
+              id="clientsFirstOrder"
+            >
+              —
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              🔴
+            </div>
+
+            <div class="stat-label">
+              Заказ жок
+            </div>
+
+            <div
+              class="stat-value"
+              id="clientsInactive"
+            >
+              —
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
 
 </div>
-
-    <!-- CHART -->
-
-    <div class="chart-placeholder">
-
-      <div>
-
-        📊
-
-        <br><br>
-
-        График Google Sheets статистика
-        API туташтырылгандан кийин
-        автоматтык чыгат.
-
-      </div>
-
-    </div>
-
-  </div>
-<!-- WEEKLY -->
-
-<div class="card">
-
-  <div class="card-head">
-
-    <div>
-
-      <div class="card-title">
-        📅 1 жумалык отчет
-      </div>
-
-      <div class="card-subtitle">
-        Акыркы 7 күндүн көрсөткүчтөрү
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div class="feature-grid">
-
-    <!-- 📦 ПОСЫЛКА -->
-
-    <div class="feature-card">
-
-      <div class="feature-icon">
-        📦
-      </div>
-
-      <div class="feature-title">
-        Посылка
-      </div>
-
-      <div
-        class="feature-text"
-        id="weekParcels"
-      >
-        0
-      </div>
-
-    </div>
-
-
-    <!-- ⚖️ KG -->
-
-    <div class="feature-card">
-
-      <div class="feature-icon">
-        ⚖️
-      </div>
-
-      <div class="feature-title">
-        KG
-      </div>
-
-      <div
-        class="feature-text"
-        id="weekKg"
-      >
-        0 KG
-      </div>
-
-    </div>
-
-
-    <!-- 🚚 ПАРТИЯ -->
-
-    <div class="feature-card">
-
-      <div class="feature-icon">
-        🚚
-      </div>
-
-      <div class="feature-title">
-        Партия
-      </div>
-
-      <div
-        class="feature-text"
-        id="weekParties"
-      >
-        0
-      </div>
-
-    </div>
-
-
-    <!-- 💰 ТҮШҮМ -->
-
-    <div class="feature-card">
-
-      <div class="feature-icon">
-        💰
-      </div>
-
-      <div class="feature-title">
-        Түшүм
-      </div>
-
-      <div
-        class="feature-text"
-        id="weekIncome"
-      >
-        0 сом
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- MONTHLY -->
-
-<div class="card">
-
-  <div class="card-head">
-
-    <div>
-
-      <div class="card-title">
-        📆 Айлык отчет
-      </div>
-
-      <div class="card-subtitle">
-        Бул айдын жалпы статистикасы
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div class="feature-grid">
-
-    <!-- 📦 ПОСЫЛКА -->
-
-    <div class="feature-card">
-
-      <div class="feature-icon">
-        📦
-      </div>
-
-      <div class="feature-title">
-        Посылка
-      </div>
-
-      <div
-        class="feature-text"
-        id="monthParcels"
-      >
-        0
-      </div>
-
-    </div>
-
-
-    <!-- ⚖️ KG -->
-
-    <div class="feature-card">
-
-      <div class="feature-icon">
-        ⚖️
-      </div>
-
-      <div class="feature-title">
-        Жалпы KG
-      </div>
-
-      <div
-        class="feature-text"
-        id="monthKg"
-      >
-        0 KG
-      </div>
-
-    </div>
-
-
-    <!-- 🚚 ПАРТИЯ -->
-
-    <div class="feature-card">
-
-      <div class="feature-icon">
-        🚚
-      </div>
-
-      <div class="feature-title">
-        Партия
-      </div>
-
-      <div
-        class="feature-text"
-        id="monthParties"
-      >
-        0
-      </div>
-
-    </div>
-
-
-    <!-- 💎 ТАЗА ПАЙДА -->
-
-    <div class="feature-card">
-
-      <div class="feature-icon">
-        💎
-      </div>
-
-      <div class="feature-title">
-        Таза пайда
-      </div>
-
-      <div
-        class="feature-text"
-        id="monthProfit"
-      >
-        0 сом
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-</section>
-
-
-<!-- =====================================================
-     BATCHES SECTION
-===================================================== -->
-
-<section
-  class="section"
-  id="batchesSection">
-
-
-  <div class="card">
-
-    <div class="card-head">
-
-      <div>
-
-        <div class="card-title">
-          🚚 Партиялар
-        </div>
-
-        <div class="card-subtitle">
-          Жолго чыккан cargo партиялары
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- BATCH SUMMARY -->
-
-    <div class="stats-grid">
-
-      <div class="stat-card">
-
-        <div class="stat-icon">
-          🚚
-        </div>
-
-        <div class="stat-label">
-          Жалпы партия
-        </div>
-
-        <div class="stat-value">
-          —
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-icon">
-          ⚖️
-        </div>
-
-        <div class="stat-label">
-          Жалпы KG
-        </div>
-
-        <div class="stat-value">
-          —
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-icon">
-          📦
-        </div>
-
-        <div class="stat-label">
-          Посылка
-        </div>
-
-        <div class="stat-value">
-          —
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-icon">
-          🚛
-        </div>
-
-        <div class="stat-label">
-          Жолдо
-        </div>
-
-        <div class="stat-value">
-          —
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- CURRENT BATCH -->
-
-    <div class="parcel">
-
-      <div class="parcel-top">
-
-        <div class="track">
-
-          🚚 Учурдагы партия
-
-        </div>
-
-        <span class="badge badge-gray">
-          API
-        </span>
-
-      </div>
-
-
-      <div class="price">
-
-        📅 Жолго чыккан:
-        —
-
-      </div>
-
-
-      <div class="price">
-
-        📅 Келүү:
-        —
-
-      </div>
-
-
-      <div class="price">
-
-        ⚖️ Салмагы:
-        — KG
-
-      </div>
-
-
-      <div class="price">
-
-        📦 Посылка:
-        —
-
-      </div>
-
-    </div>
-
-
-    <button
-      class="btn btn-primary"
-      onclick="loadBatches()">
-
-      🔄 МААЛЫМАТТЫ ЖАҢЫЛОО
-
-    </button>
-
-  </div>
-
-
-  <!-- BATCH HISTORY -->
-
-  <div class="card">
-
-    <div class="card-head">
-
-      <div>
-
-        <div class="card-title">
-          📋 Партия тарыхы
-        </div>
-
-        <div class="card-subtitle">
-          Мурунку партиялар
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="empty">
-
-      🚚 Партиялардын толук тарыхы
-      Google Sheets API туташтырылгандан
-      кийин автоматтык чыгат.
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-     FINANCE SECTION
-===================================================== -->
-
-<section
-  class="section"
-  id="financeSection">
-
-
-  <div class="card">
-
-    <div class="card-head">
-
-      <div>
-
-        <div class="card-title">
-          💰 Финансы
-        </div>
-
-        <div class="card-subtitle">
-          Киреше, чыгым жана таза пайда
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="stats-grid">
-
-      <div class="stat-card">
-
-        <div class="stat-icon">
-          💵
-        </div>
-
-        <div class="stat-label">
-          Киреше
-        </div>
-
-        <div class="stat-value">
-          —
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-icon">
-          📉
-        </div>
-
-        <div class="stat-label">
-          Чыгым
-        </div>
-
-        <div class="stat-value">
-          —
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-icon">
-          💎
-        </div>
-
-        <div class="stat-label">
-          Таза пайда
-        </div>
-
-        <div class="stat-value">
-          —
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-icon">
-          ⚖️
-        </div>
-
-        <div class="stat-label">
-          KG
-        </div>
-
-        <div class="stat-value">
-          —
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- FINANCE DETAILS -->
-
-    <div class="parcel">
-
-      <div class="parcel-top">
-
-        <div class="track">
-          💰 Финансы деталдары
-        </div>
-
-      </div>
-
-
-      <div class="price">
-
-        📦 1 KG сатуу баасы:
-        —
-
-      </div>
-
-
-      <div class="price">
-
-        🏭 1 KG өздүк наркы:
-        —
-
-      </div>
-
-
-      <div class="price">
-
-        🚚 Логистика чыгымы:
-        —
-
-      </div>
-
-
-      <div class="price">
-
-        💎 Таза пайда:
-        —
-
-      </div>
-
-    </div>
-
-
-    <div class="status info">
-
-      💡 Бул бөлүм Google Sheets'тен
-      реалдуу финансы маалыматтары
-      алынгандан кийин автоматтык толот.
-
-    </div>
-
-  </div>
-
-
-  <!-- PROFIT -->
-
-  <div class="card">
-
-    <div class="card-head">
-
-      <div>
-
-        <div class="card-title">
-          📊 Пайда анализи
-        </div>
-
-        <div class="card-subtitle">
-          Киреше менен чыгымдын айырмасы
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="chart-placeholder">
-
-      💎
-
-      <br><br>
-
-      Пайда графиги API аркылуу
-      автоматтык көрсөтүлөт.
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-     CLIENTS SECTION
-===================================================== -->
-
-<section
-  class="section"
-  id="clientsSection">
-
-
-  <div class="card">
-
-    <div class="card-head">
-
-      <div>
-
-        <div class="card-title">
-          👥 Клиенттер
-        </div>
-
-        <div class="card-subtitle">
-          Кардарларды башкаруу
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="stats-grid">
-
-      <div class="stat-card">
-
-        <div class="stat-icon">
-          👥
-        </div>
-
-        <div class="stat-label">
-          Кардарлар
-        </div>
-
-        <div class="stat-value">
-          —
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-icon">
-          📦
-        </div>
-
-        <div class="stat-label">
-          Посылкалар
-        </div>
-
-        <div class="stat-value">
-          —
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-icon">
-          🏢
-        </div>
-
-        <div class="stat-label">
-          Офисте
-        </div>
-
-        <div class="stat-value">
-          —
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-icon">
-          ✅
-        </div>
-
-        <div class="stat-label">
-          Берилди
-        </div>
-
-        <div class="stat-value">
-          —
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="feature-grid">
-
-      <div
-        class="feature-card"
-        onclick="showSection('scanner')">
-
-        <div class="feature-icon">
-          📷
-        </div>
-
-        <div class="feature-title">
-          QR Сканер
-        </div>
-
-        <div class="feature-text">
-          QR аркылуу кардарды табуу
-        </div>
-
-      </div>
-
-
-      <div
-        class="feature-card"
-        onclick="focusTrackSearch()">
-
-        <div class="feature-icon">
-          🔎
-        </div>
-
-        <div class="feature-title">
-          Track издөө
-        </div>
-
-        <div class="feature-text">
-          Track code аркылуу издөө
-        </div>
-
-      </div>
-
-
-      <div class="feature-card">
-
-        <div class="feature-icon">
-          🏢
-        </div>
-
-        <div class="feature-title">
-          Офисте
-        </div>
-
-        <div class="feature-text">
-          Берүүгө даяр посылкалар
-        </div>
-
-      </div>
-
-
-      <div class="feature-card">
-
-        <div class="feature-icon">
-          ✅
-        </div>
-
-        <div class="feature-title">
-          Выдано
-        </div>
-
-        <div class="feature-text">
-          Мурун берилген посылкалар
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-</div>
-
-
-<!-- =====================================================
-     BOTTOM NAVIGATION
-===================================================== -->
-
-<nav class="bottom-nav">
-
-
-  <button
-    class="bottom-btn active"
-    id="navDashboard"
-    onclick="showSection('dashboard')">
-
-    <span>
-      📊
-    </span>
-
-    Башкы
-
-  </button>
-
-
-  <button
-    class="bottom-btn"
-    id="navScanner"
-    onclick="showSection('scanner')">
-
-    <span>
-      📷
-    </span>
-
-    QR
-
-  </button>
-
-
-  <button
-    class="bottom-btn"
-    id="navBatches"
-    onclick="showSection('batches')">
-
-    <span>
-      🚚
-    </span>
-
-    Партия
-
-  </button>
-
-
-  <button
-    class="bottom-btn"
-    id="navStatistics"
-    onclick="showSection('statistics')">
-
-    <span>
-      📈
-    </span>
-
-    Статистика
-
-  </button>
-
-
-  <button
-    class="bottom-btn"
-    id="navFinance"
-    onclick="showSection('finance')">
-
-    <span>
-      💰
-    </span>
-
-    Финансы
-
-  </button>
-
-
-</nav>
-
-
-<!-- =====================================================
-     JAVASCRIPT
-===================================================== -->
-
 <script>
 
-
 /************************************************
-⚙️ GOOGLE APPS SCRIPT API
+ 🔗 API
 ************************************************/
 
 const API_URL =
@@ -2690,1215 +2028,205 @@ const API_URL =
 
 
 /************************************************
-📷 SCANNER VARIABLES
+ 🧭 SECTION
 ************************************************/
 
-let scanner = null;
-
-let scannerRunning = false;
-
-let isProcessingQR = false;
-
-
-/************************************************
-🧭 NAVIGATION
-************************************************/
-
-function showSection(name){
-
-  const sections = [
-
-    "dashboard",
-    "scanner",
-    "batches",
-    "statistics",
-    "finance",
-    "clients"
-
-  ];
-
-
-  sections.forEach(
-    function(section){
-
-      const el =
-        document.getElementById(
-          section + "Section"
-        );
-
-
-      if(el){
-
-        el.classList.remove(
-          "active"
-        );
-
-      }
-
-    }
-  );
-
-
-  const target =
-    document.getElementById(
-      name + "Section"
-    );
-
-
-  if(target){
-
-    target.classList.add(
-      "active"
-    );
-
-  }
-
-
-  document
-    .querySelectorAll(
-      ".bottom-btn"
-    )
-    .forEach(
-      function(btn){
-
-        btn.classList.remove(
-          "active"
-        );
-
-      }
-    );
-
-
-  const nav =
-    document.getElementById(
-
-      "nav" +
-
-      name
-        .charAt(0)
-        .toUpperCase() +
-
-      name.slice(1)
-
-    );
-
-
-  if(nav){
-
-    nav.classList.add(
-      "active"
-    );
-
-  }
-
-
-  window.scrollTo({
-
-    top:0,
-
-    behavior:"smooth"
-
-  });
-
-}
-
-
-/************************************************
-🔎 FOCUS TRACK SEARCH
-************************************************/
-
-function focusTrackSearch(){
-
-  showSection(
-    "dashboard"
-  );
-
-
-  setTimeout(
-    function(){
-
-      const input =
-        document.getElementById(
-          "trackSearchInput"
-        );
-
-
-      if(input){
-
-        input.focus();
-
-
-        input.scrollIntoView({
-
-          behavior:"smooth",
-
-          block:"center"
-
-        });
-
-      }
-
-    },
-
-    250
-
-  );
-
-}
-
-
-/************************************************
-📊 PERIOD
-************************************************/
-
-function selectPeriod(
+function showSection(
+  sectionId,
   button
 ){
 
   document
-    .querySelectorAll(
-      ".period-btn"
-    )
-    .forEach(
-      function(btn){
+    .querySelectorAll(".section")
+    .forEach(function(section){
 
-        btn.classList.remove(
-          "active"
-        );
+      section.classList.remove("active");
 
-      }
+    });
+
+
+  const section =
+    document.getElementById(
+      sectionId
     );
 
 
-  button.classList.add(
-    "active"
+  if(section){
+
+    section.classList.add("active");
+
+  }
+
+
+  document
+    .querySelectorAll(".nav button")
+    .forEach(function(btn){
+
+      btn.classList.remove("active");
+
+    });
+
+
+  if(button){
+
+    button.classList.add("active");
+
+  }
+
+
+  /*
+    Керектүү бөлүм ачылганда
+    маалыматты кайра жүктөйбүз
+  */
+
+  if(sectionId === "dashboardSection"){
+
+    loadDashboardData();
+
+  }
+
+
+  if(sectionId === "financeSection"){
+
+    loadFinanceAnalysis();
+
+  }
+
+
+  if(sectionId === "clientsSection"){
+
+    loadClients();
+
+  }
+
+}
+
+
+/************************************************
+ 🔢 FORMAT NUMBER
+************************************************/
+
+function formatNumber(
+  value
+){
+
+  const number =
+    Number(value) || 0;
+
+
+  return number.toLocaleString(
+    "ru-RU",
+    {
+      maximumFractionDigits:2
+    }
   );
 
 }
-/************************************************
-🚚 LOAD BATCHES — FULL VERSION
-************************************************/
-
-function loadBatches(){
-
-  console.log("🚚 ПАРТИЯЛАР ЖҮКТӨЛҮҮДӨ...");
-
-
-  fetch(
-    API_URL + "?action=dashboard"
-  )
-
-  .then(function(response){
-
-    if(!response.ok){
-
-      throw new Error(
-        "HTTP " + response.status
-      );
-
-    }
-
-    return response.json();
-
-  })
-
-
-  .then(function(data){
-
-    console.log(
-      "🚚 DASHBOARD API:",
-      data
-    );
-
-
-    /****************************************
-    ❌ API ERROR
-    ****************************************/
-
-    if(data.status !== "ok"){
-
-      throw new Error(
-        data.message ||
-        "API ката"
-      );
-
-    }
-
-
-    /****************************************
-    📊 PARTY TOTALS
-    ****************************************/
-
-    const totals =
-      data.party_totals || {};
-
-
-    /****************************************
-    🚚 CURRENT PARTY
-    ****************************************/
-
-    const current =
-      data.current_party || null;
-
-
-    /****************************************
-    📋 ALL PARTIES
-    ****************************************/
-
-    const parties =
-      data.parties || [];
-
-
-    /****************************************
-    📊 STATS CARDS
-    ****************************************/
-
-    const cards =
-      document.querySelectorAll(
-        "#batchesSection .stat-card"
-      );
-
-
-    if(cards.length >= 4){
-
-      // 🚚 Жалпы партия
-
-      cards[0]
-        .querySelector(".stat-value")
-        .textContent =
-          Number(
-            totals.parties || 0
-          );
-
-
-      // ⚖️ Жалпы KG
-
-      cards[1]
-        .querySelector(".stat-value")
-        .textContent =
-          Number(
-            totals.kg || 0
-          ) + " KG";
-
-
-      // 📦 Жалпы посылка
-
-      cards[2]
-        .querySelector(".stat-value")
-        .textContent =
-          Number(
-            totals.parcels || 0
-          );
-
-
-      // 🚛 Жолдо
-
-      cards[3]
-        .querySelector(".stat-value")
-        .textContent =
-          Number(
-            totals.in_transit || 0
-          );
-
-    }
-
-
-    /****************************************
-    🚚 CURRENT PARTY
-    ****************************************/
-
-    const currentCard =
-      document.querySelector(
-        "#batchesSection .parcel"
-      );
-
-
-    if(currentCard){
-
-      if(current){
-
-        currentCard.innerHTML = `
-
-          <div class="parcel-top">
-
-            <div class="track">
-
-              🚚 Учурдагы партия
-
-            </div>
-
-            <span class="badge badge-success">
-
-              ЖОЛДО
-
-            </span>
-
-          </div>
-
-
-          <div class="price">
-
-            📅 Жолго чыккан:
-
-            <b>
-              ${escapeHtml(
-                current.date_send || "—"
-              )}
-            </b>
-
-          </div>
-
-
-          <div class="price">
-
-            📅 Келүү:
-
-            <b>
-              ${escapeHtml(
-                current.date_arrival || "—"
-              )}
-            </b>
-
-          </div>
-
-
-          <div class="price">
-
-            ⚖️ Салмагы:
-
-            <b>
-              ${Number(
-                current.kg || 0
-              )} KG
-            </b>
-
-          </div>
-
-
-          <div class="price">
-
-            📦 Посылка:
-
-            <b>
-              ${Number(
-                current.parcels || 0
-              )}
-            </b>
-
-          </div>
-
-        `;
-
-      }
-
-      else{
-
-        currentCard.innerHTML = `
-
-          <div class="parcel-top">
-
-            <div class="track">
-
-              🚚 Учурдагы партия
-
-            </div>
-
-            <span class="badge badge-gray">
-
-              ЖОК
-
-            </span>
-
-          </div>
-
-
-          <div class="price">
-
-            📅 Жолго чыккан: —
-
-          </div>
-
-
-          <div class="price">
-
-            📅 Келүү: —
-
-          </div>
-
-
-          <div class="price">
-
-            ⚖️ Салмагы: —
-
-          </div>
-
-
-          <div class="price">
-
-            📦 Посылка: —
-
-          </div>
-
-        `;
-
-      }
-
-    }
-
-
-    /****************************************
-    📋 PARTY HISTORY
-    ****************************************/
-
-    const historyEmpty =
-      document.querySelector(
-        "#batchesSection .empty"
-      );
-
-
-    if(!historyEmpty){
-
-      console.warn(
-        "⚠️ Партия тарыхынын .empty блогу табылган жок"
-      );
-
-      return;
-
-    }
-
-
-    /****************************************
-    📋 NO PARTIES
-    ****************************************/
-
-    if(
-      !parties ||
-      parties.length === 0
-    ){
-
-      historyEmpty.innerHTML = `
-
-        🚚 Партиялар жок.
-
-      `;
-
-      return;
-
-    }
-
-
-    /****************************************
-    🔄 SORT — NEWEST FIRST
-    ****************************************/
-
-    const sortedParties =
-      parties.slice().sort(
-        function(a,b){
-
-          return parseCargoDate(
-            b.date_send
-          ) -
-          parseCargoDate(
-            a.date_send
-          );
-
-        }
-      );
-
-
-    /****************************************
-    🧱 HISTORY HTML
-    ****************************************/
-
-    let historyHTML = "";
-
-
-    sortedParties.forEach(
-      function(party){
-
-        const dateSend =
-          party.date_send ||
-          party["дата_отправки"] ||
-          "—";
-
-
-        const dateArrival =
-          party.date_arrival ||
-          party["дата_прибытия"] ||
-          "";
-
-
-        const parcels =
-          Number(
-            party.parcels ??
-            party["посылки"] ??
-            0
-          );
-
-
-        const kg =
-          Number(
-            party.kg ??
-            party["кг"] ??
-            0
-          );
-
-
-        /****************************************
-        🚛 STATUS
-        ****************************************/
-
-        let status = "КЕЛДИ";
-
-        let badgeClass =
-          "badge-success";
-
-
-        if(
-          !dateArrival ||
-          dateArrival === "—"
-        ){
-
-          status = "ЖОЛДО";
-
-          badgeClass =
-            "badge-warning";
-
-        }
-
-
-        /****************************************
-        ⭐ CURRENT PARTY
-        ****************************************/
-
-        const isCurrent =
-          current &&
-          String(
-            current.date_send || ""
-          ) === String(
-            dateSend
-          );
-
-
-        historyHTML += `
-
-          <div class="parcel">
-
-            <div class="parcel-top">
-
-              <div class="track">
-
-                🚚 Партия
-                ${isCurrent ? "🔥" : ""}
-
-              </div>
-
-
-              <span class="badge ${badgeClass}">
-
-                ${status}
-
-              </span>
-
-            </div>
-
-
-            <div class="price">
-
-              📅 Жолго чыккан:
-
-              <b>
-
-                ${escapeHtml(
-                  String(dateSend)
-                )}
-
-              </b>
-
-            </div>
-
-
-            <div class="price">
-
-              📅 Келүү:
-
-              <b>
-
-                ${
-                  dateArrival
-                    ? escapeHtml(
-                        String(
-                          dateArrival
-                        )
-                      )
-                    : "Жолдо"
-                }
-
-              </b>
-
-            </div>
-
-
-            <div class="price">
-
-              ⚖️ Салмагы:
-
-              <b>
-
-                ${kg} KG
-
-              </b>
-
-            </div>
-
-
-            <div class="price">
-
-              📦 Посылка:
-
-              <b>
-
-                ${parcels}
-
-              </b>
-
-            </div>
-
-          </div>
-
-        `;
-
-      }
-    );
-
-
-    /****************************************
-    📋 REPLACE HISTORY
-    ****************************************/
-
-    historyEmpty.outerHTML = `
-
-      <div
-        class="batch-history"
-        id="batchHistoryList"
-      >
-
-        ${historyHTML}
-
-      </div>
-
-    `;
-
-
-    console.log(
-      "✅ ПАРТИЯЛАР ИЙГИЛИКТҮҮ ЖҮКТӨЛДҮ:",
-      sortedParties.length
-    );
-
-  })
-
-
-  .catch(function(error){
-
-    console.error(
-      "❌ BATCH ERROR:",
-      error
-    );
-
-
-    alert(
-      "❌ Партия маалыматтарын жүктөөдө ката:\n\n" +
-      error.message
-    );
-
-  });
-
-}
 
 
 /************************************************
-📅 CARGO DATE PARSER
+ 💰 FORMAT MONEY
 ************************************************/
 
-function parseCargoDate(value){
+function formatMoney(
+  value
+){
 
-  if(!value){
+  const number =
+    Number(value) || 0;
 
-    return 0;
 
-  }
-
-
-  const text =
-    String(value)
-      .trim()
-      .replace(/\s+/g,"");
-
-
-  const match =
-    text.match(
-      /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/
-    );
-
-
-  if(!match){
-
-    return 0;
-
-  }
-
-
-  return new Date(
-    Number(match[3]),
-    Number(match[2]) - 1,
-    Number(match[1])
-  ).getTime();
-
-}
-
-/************************************************
-▶️ START SCANNER
-************************************************/
-
-async function startScanner(){
-
-  if(scannerRunning){
-
-    return;
-
-  }
-
-
-  const startButton =
-    document.getElementById(
-      "startButton"
-    );
-
-
-  try{
-
-    startButton.disabled =
-      true;
-
-
-    startButton.textContent =
-      "⏳ КАМЕРА АЧЫЛУУДА...";
-
-
-    /********************************************
-    🧹 ЭСКИ SCANNER
-    ********************************************/
-
-    if(scanner){
-
-      try{
-
-        await scanner.stop();
-
-      }catch(e){}
-
-
-      try{
-
-        await scanner.clear();
-
-      }catch(e){}
-
-
-      scanner =
-        null;
-
-    }
-
-
-    /********************************************
-    📷 NEW SCANNER
-    ********************************************/
-
-    scanner =
-      new Html5Qrcode(
-        "reader"
-      );
-
-
-    const cameras =
-      await Html5Qrcode.getCameras();
-
-
-    console.log(
-      "AVAILABLE CAMERAS:",
-      cameras
-    );
-
-
-    if(
-      !cameras ||
-      cameras.length === 0
-    ){
-
-      throw new Error(
-        "Телефондо камера табылган жок."
-      );
-
-    }
-
-/**********************************************
-    📷 BACK CAMERA ТАНДОО
-    **********************************************/
-
-    let cameraId = cameras[0].id;
-
-    for(const camera of cameras){
-
-      const label =
-        String(camera.label || "").toLowerCase();
-
-      if(
-        label.includes("back") ||
-        label.includes("rear") ||
-        label.includes("environment") ||
-        label.includes("арт") ||
-        label.includes("негизги")
-      ){
-
-        cameraId = camera.id;
-        break;
-
-      }
-
-    }
-
-    console.log(
-      "📷 SELECTED BACK CAMERA:",
-      cameraId
-    );
-
-
-    /**********************************************
-    🚀 START CAMERA
-    **********************************************/
-
-    await scanner.start(
-
-      cameraId,
-
+  return (
+    number.toLocaleString(
+      "ru-RU",
       {
-
-        fps:10,
-
-        qrbox:function(width,height){
-
-          const size =
-            Math.floor(
-              Math.min(width,height) * 0.70
-            );
-
-          return {
-            width:size,
-            height:size
-          };
-
-        },
-
-        aspectRatio:1.0
-
-      },
-
-
-      /********************************************
-      ✅ QR FOUND
-      ********************************************/
-
-      function(decodedText){
-
-        console.log(
-          "✅ QR SCANNED:",
-          decodedText
-        );
-
-
-        if(isProcessingQR){
-          return;
-        }
-
-
-        isProcessingQR = true;
-
-
-        handleQR(
-          decodedText
-        );
-
-      },
-
-
-      /********************************************
-      ℹ️ QR ERROR
-      ********************************************/
-
-      function(errorMessage){
-
-        // QR табылганга чейин
-        // чыккан каталарды көрсөтпөйбүз.
-
+        maximumFractionDigits:2
       }
-
-    );
-
-
-    scannerRunning = true;
-
-
-    startButton.disabled = false;
-
-
-    startButton.textContent =
-      "📷 КАМЕРА ИШТЕП ЖАТАТ";
-
-
-    console.log(
-      "✅ CAMERA STARTED"
-    );
-
-
-  }
-
-
-  catch(error){
-
-    console.error(
-      "❌ CAMERA ERROR:",
-      error
-    );
-
-
-    scannerRunning = false;
-
-
-    if(scanner){
-
-      try{
-        await scanner.clear();
-      }catch(e){}
-
-      scanner = null;
-
-    }
-
-
-    startButton.disabled = false;
-
-
-    startButton.textContent =
-      "📷 КАМЕРАНЫ АЧУУ";
-
-
-    let message =
-      "❌ Камера ачылган жок.\n\n";
-
-
-    message +=
-      "Chrome браузеринде камерага уруксат бериңиз.\n\n";
-
-
-    message +=
-      "Chrome → 🔒 → Камера → Уруксат берүү\n\n";
-
-
-    message +=
-      "Ката: " + error;
-
-
-    alert(message);
-
-  }
-
-}
-
-
-/************************************************
-⛔ STOP SCANNER
-************************************************/
-
-async function stopScanner(){
-
-  const startButton =
-    document.getElementById(
-      "startButton"
-    );
-
-
-  try{
-
-    if(
-      scanner &&
-      scannerRunning
-    ){
-
-      await scanner.stop();
-
-    }
-
-  }
-  catch(error){
-
-    console.log(
-      "STOP ERROR:",
-      error
-    );
-
-  }
-
-
-  try{
-
-    if(scanner){
-
-      await scanner.clear();
-
-    }
-
-  }
-  catch(error){
-
-    console.log(
-      "CLEAR ERROR:",
-      error
-    );
-
-  }
-
-
-  scanner = null;
-
-  scannerRunning = false;
-
-  isProcessingQR = false;
-
-
-  startButton.disabled = false;
-
-  startButton.textContent =
-    "📷 КАМЕРАНЫ АЧУУ";
-
-}
-
-
-/************************************************
-🔎 QR PROCESS
-************************************************/
-
-async function handleQR(qrText){
-
-  await stopScanner();
-
-
-  const clientCode =
-    String(qrText || "")
-      .trim()
-      .toUpperCase();
-
-
-  console.log(
-    "👤 CLIENT CODE:",
-    clientCode
-  );
-
-
-  if(!clientCode){
-
-    alert(
-      "❌ QR код бош."
-    );
-
-    isProcessingQR = false;
-
-    return;
-
-  }
-
-
-  loadClient(
-    clientCode
-  );
-
-}
-
-
-/************************************************
-👤 LOAD CLIENT
-************************************************/
-
-function loadClient(clientCode){
-
-  const card =
-    document.getElementById(
-      "clientCard"
-    );
-
-  const code =
-    document.getElementById(
-      "clientCode"
-    );
-
-  const list =
-    document.getElementById(
-      "parcelList"
-    );
-
-  const status =
-    document.getElementById(
-      "parcelStatus"
-    );
-
-  const button =
-    document.getElementById(
-      "issueButton"
-    );
-
-
-  card.style.display =
-    "block";
-
-
-  code.textContent =
-    clientCode;
-
-
-  button.disabled = true;
-
-
-  button.textContent =
-    "⏳ ТЕКШЕРИЛҮҮДӨ...";
-
-
-  status.innerHTML = `
-
-    <div class="loading">
-
-      ⏳ Кардардын посылкалары
-      текшерилүүдө...
-
-    </div>
-
-  `;
-
-
-  list.innerHTML = "";
-
-
-  fetch(
-
-    API_URL +
-    "?action=check_client" +
-    "&client_code=" +
-    encodeURIComponent(
-      clientCode
     )
+    +
+    " сом"
+  );
 
+}
+
+
+/************************************************
+ 📝 SET STAT
+************************************************/
+
+function setStatValue(
+  id,
+  value
+){
+
+  const element =
+    document.getElementById(id);
+
+
+  if(element){
+
+    element.textContent =
+      value;
+
+  }
+
+}
+
+
+/************************************************
+ 🧹 ESCAPE HTML
+************************************************/
+
+function escapeHtml(
+  value
+){
+
+  return String(
+    value ?? ""
   )
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+  .replace(
+    /</g,
+    "&lt;"
+  )
+  .replace(
+    />/g,
+    "&gt;"
+  )
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+  .replace(
+    /'/g,
+    "&#039;"
+  );
 
-  .then(function(response){
+}
+
+
+/************************************************
+ 📊 DASHBOARD
+************************************************/
+
+async function loadDashboardData(){
+
+  try{
+
+    console.log(
+      "📊 DASHBOARD LOADING..."
+    );
+
+
+    const response =
+      await fetch(
+        API_URL +
+        "?action=dashboard"
+      );
+
 
     if(!response.ok){
 
@@ -3909,259 +2237,313 @@ function loadClient(clientCode){
 
     }
 
-    return response.json();
 
-  })
+    const data =
+      await response.json();
 
-
-  .then(function(data){
 
     console.log(
-      "CHECK CLIENT:",
+      "📊 DASHBOARD DATA:",
       data
     );
 
 
-    if(
-      data.status !== "ok"
-    ){
+    if(data.status === "error"){
 
-      status.innerHTML = `
-
-        <div class="status error">
-
-          ❌
-          ${escapeHtml(
-            data.message ||
-            "Кардар табылган жок"
-          )}
-
-        </div>
-
-      `;
-
-
-      button.disabled = true;
-
-
-      button.textContent =
-        "❌ КАРДАР ТАБЫЛГАН ЖОК";
-
-
-      return;
-
-    }
-
-
-    const office =
-      data.office_parcels || [];
-
-
-    const issued =
-      data.issued_parcels || [];
-
-
-    /********************************************
-    🟢 OFFICE
-    ********************************************/
-
-    if(
-      office.length > 0
-    ){
-
-      status.innerHTML = `
-
-        <div class="status success">
-
-          👤 Клиент:
-
-          <b>
-            ${escapeHtml(
-              clientCode
-            )}
-          </b>
-
-          <br><br>
-
-          🏢 Офисте:
-
-          <b>
-            ${office.length}
-          </b>
-
-          посылка
-
-        </div>
-
-      `;
-
-
-      renderOfficeParcels(
-        office
+      throw new Error(
+        data.message ||
+        "Dashboard API error"
       );
 
-
-      button.disabled = false;
-
-
-      button.textContent =
-        "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
-
     }
 
 
-    /********************************************
-    ℹ️ NO OFFICE
-    ********************************************/
-
-    else{
-
-      status.innerHTML = `
-
-        <div class="status">
-
-          👤 Клиент:
-
-          <b>
-            ${escapeHtml(
-              clientCode
-            )}
-          </b>
-
-          <br><br>
-
-          📦 Офисте посылка жок.
-
-          <br>
-
-          ✅ Мурун берилген:
-
-          ${issued.length}
-
-        </div>
-
-      `;
+    const stats =
+      data.stats ||
+      {};
 
 
-      renderIssued(
-        [],
-        issued
-      );
+    setStatValue(
+      "totalClients",
+      formatNumber(
+        stats.totalClients ??
+        stats.clients ??
+        0
+      )
+    );
 
 
-      button.disabled = true;
+    setStatValue(
+      "activeClients",
+      formatNumber(
+        stats.activeClients ??
+        0
+      )
+    );
 
 
-      button.textContent =
-        "✅ БЕРҮҮ ҮЧҮН ПОСЫЛКА ЖОК";
+    setStatValue(
+      "totalParcels",
+      formatNumber(
+        stats.totalParcels ??
+        stats.parcels ??
+        0
+      )
+    );
 
-    }
 
-  })
+    setStatValue(
+      "totalKg",
+      formatNumber(
+        stats.totalKg ??
+        data.finance?.kg ??
+        0
+      ) +
+      " KG"
+    );
 
 
-  .catch(function(error){
+    setStatValue(
+      "inChina",
+      formatNumber(
+        stats.inChina ??
+        stats.china ??
+        0
+      )
+    );
+
+
+    setStatValue(
+      "inTransit",
+      formatNumber(
+        stats.inTransit ??
+        stats.transit ??
+        0
+      )
+    );
+
+
+    setStatValue(
+      "inOffice",
+      formatNumber(
+        stats.inOffice ??
+        stats.office ??
+        0
+      )
+    );
+
+
+    setStatValue(
+      "issued",
+      formatNumber(
+        stats.issued ??
+        0
+      )
+    );
+
+
+    setStatValue(
+      "totalIncome",
+      formatMoney(
+        stats.totalIncome ??
+        data.finance?.income ??
+        0
+      )
+    );
+
+
+    setStatValue(
+      "totalExpenses",
+      formatMoney(
+        stats.totalExpenses ??
+        data.finance?.totalExpense ??
+        0
+      )
+    );
+
+
+    setStatValue(
+      "totalProfit",
+      formatMoney(
+        stats.totalProfit ??
+        data.finance?.profit ??
+        0
+      )
+    );
+
+
+    setStatValue(
+      "totalParties",
+      formatNumber(
+        stats.totalParties ??
+        data.finance?.parties ??
+        0
+      )
+    );
+
+
+    renderPeriodData(
+      "week",
+      data.week ||
+      {}
+    );
+
+
+    renderPeriodData(
+      "month",
+      data.month ||
+      {}
+    );
+
+
+    renderBatchHistory(
+      data.parties ||
+      []
+    );
+
+
+    console.log(
+      "✅ DASHBOARD LOADED"
+    );
+
+  }
+  catch(error){
 
     console.error(
-      "CHECK ERROR:",
+      "❌ DASHBOARD ERROR:",
       error
     );
 
-
-    status.innerHTML = `
-
-      <div class="status error">
-
-        ❌ API менен байланыш жок.
-
-        <br><br>
-
-        ${escapeHtml(
-          error.message
-        )}
-
-      </div>
-
-    `;
-
-
-    button.disabled = true;
-
-
-    button.textContent =
-      "❌ КАТА";
-
-  });
-
-}/************************************************
-🔎 MANUAL CLIENT SEARCH
-************************************************/
-
-function searchClientByCode(){
-
-  const input =
-    document.getElementById(
-      "manualClientCode"
-    );
-
-  if(!input){
-
-    alert(
-      "❌ Клиент коду үчүн талаа табылган жок."
-    );
-
-    return;
   }
-
-  const clientCode =
-    input.value
-      .trim()
-      .toUpperCase();
-
-  if(!clientCode){
-
-    alert(
-      "⚠️ Клиент кодун киргизиңиз.\n\n" +
-      "Мисалы: T0232"
-    );
-
-    input.focus();
-
-    return;
-  }
-
-  console.log(
-    "🔎 MANUAL CLIENT SEARCH:",
-    clientCode
-  );
-
-  loadClient(clientCode);
 
 }
 
 
 /************************************************
-📦 OFFICE PARCELS
+ 📅 PERIOD DATA
 ************************************************/
 
-function renderOfficeParcels(parcels){
+function renderPeriodData(
+  type,
+  data
+){
 
-  const list =
-    document.getElementById(
-      "parcelList"
+  if(type === "week"){
+
+    setStatValue(
+      "weekParcels",
+      formatNumber(
+        data.parcels ??
+        data.totalParcels ??
+        0
+      )
     );
 
 
-  if(!parcels.length){
+    setStatValue(
+      "weekKg",
+      formatNumber(
+        data.kg ??
+        0
+      ) +
+      " KG"
+    );
 
-    list.innerHTML = `
 
-      <div class="empty">
+    setStatValue(
+      "weekParties",
+      formatNumber(
+        data.parties ??
+        0
+      )
+    );
 
-        📦 Офисте посылка жок.
 
+    setStatValue(
+      "weekIncome",
+      formatMoney(
+        data.income ??
+        0
+      )
+    );
+
+  }
+
+
+  if(type === "month"){
+
+    setStatValue(
+      "monthParcels",
+      formatNumber(
+        data.parcels ??
+        data.totalParcels ??
+        0
+      )
+    );
+
+
+    setStatValue(
+      "monthKg",
+      formatNumber(
+        data.kg ??
+        0
+      ) +
+      " KG"
+    );
+
+
+    setStatValue(
+      "monthParties",
+      formatNumber(
+        data.parties ??
+        0
+      )
+    );
+
+
+    setStatValue(
+      "monthProfit",
+      formatMoney(
+        data.profit ??
+        0
+      )
+    );
+
+  }
+
+}
+
+
+/************************************************
+ 📦 BATCH HISTORY
+************************************************/
+
+function renderBatchHistory(
+  parties
+){
+
+  const container =
+    document.getElementById(
+      "batchHistory"
+    );
+
+
+  if(!container){
+
+    return;
+
+  }
+
+
+  if(
+    !Array.isArray(parties) ||
+    parties.length === 0
+  ){
+
+    container.innerHTML = `
+      <div class="status info">
+        Партия маалыматтары жок.
       </div>
-
     `;
 
     return;
@@ -4169,354 +2551,835 @@ function renderOfficeParcels(parcels){
   }
 
 
-  let totalPrice = 0;
+  container.innerHTML =
+    parties
+      .slice(0,10)
+      .map(function(party){
+
+        return `
+          <div class="parcel">
+
+            <div class="parcel-top">
+
+              <div class="track">
+                📦 Партия
+              </div>
+
+              <div>
+                ${escapeHtml(
+                  party.date ||
+                  party.sendDate ||
+                  ""
+                )}
+              </div>
+
+            </div>
+
+            <div class="price">
+              🛍 Штук:
+              ${formatNumber(
+                party.pieces ??
+                party.count ??
+                0
+              )}
+            </div>
+
+            <div class="price">
+              ⚖️ KG:
+              ${formatNumber(
+                party.kg ??
+                0
+              )}
+            </div>
+
+          </div>
+        `;
+
+      })
+      .join("");
+
+}
 
 
-  parcels.forEach(function(parcel){
+/************************************************
+ 💰 FINANCE ANALYSIS
+************************************************/
 
-    let price =
-      Number(
-        String(
-          parcel.price || ""
+async function loadFinanceAnalysis(){
+
+  try{
+
+    console.log(
+      "💰 FINANCE LOADING..."
+    );
+
+
+    const response =
+      await fetch(
+        API_URL +
+        "?action=finance_analysis"
+      );
+
+
+    if(!response.ok){
+
+      throw new Error(
+        "HTTP " +
+        response.status
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    console.log(
+      "💰 FINANCE DATA:",
+      data
+    );
+
+
+    if(data.status === "error"){
+
+      throw new Error(
+        data.message ||
+        "Finance API error"
+      );
+
+    }
+
+
+    /*
+      Негизги көрсөткүчтөр
+    */
+
+    setStatValue(
+      "financeIncome",
+      formatMoney(
+        data.income
+      )
+    );
+
+
+    setStatValue(
+      "financeExpense",
+      formatMoney(
+        data.totalExpense
+      )
+    );
+
+
+    setStatValue(
+      "financeProfit",
+      formatMoney(
+        data.profit
+      )
+    );
+
+
+    setStatValue(
+      "financeKg",
+      formatNumber(
+        data.kg
+      ) +
+      " KG"
+    );
+
+
+    /*
+      Деталдар
+    */
+
+    setStatValue(
+      "financeParties",
+      formatNumber(
+        data.parties
+      )
+    );
+
+
+    setStatValue(
+      "financePieces",
+      formatNumber(
+        data.pieces
+      )
+    );
+
+
+    setStatValue(
+      "financeLogistics",
+      formatMoney(
+        data.logistics
+      )
+    );
+
+
+    setStatValue(
+      "financeOtherExpense",
+      formatMoney(
+        data.expense
+      )
+    );
+
+
+    /*
+      1 KG анализи
+    */
+
+    const kg =
+      Number(data.kg) || 0;
+
+
+    const income =
+      Number(data.income) || 0;
+
+
+    const logistics =
+      Number(data.logistics) || 0;
+
+
+    const totalExpense =
+      Number(data.totalExpense) || 0;
+
+
+    const profit =
+      Number(data.profit) || 0;
+
+
+    if(kg > 0){
+
+      setStatValue(
+        "financeIncomePerKg",
+        formatMoney(
+          income / kg
         )
-        .replace(",", ".")
-        .replace(/[^\d.-]/g,"")
-      ) || 0;
+      );
 
 
-    totalPrice += price;
-
-  });
-
-
-  let html = `
-
-    <div class="count">
-
-      🏢 ОФИСТЕГИ ПОСЫЛКАЛАР:
-      ${parcels.length}
-
-    </div>
+      setStatValue(
+        "financeLogisticsPerKg",
+        formatMoney(
+          logistics / kg
+        )
+      );
 
 
-    <div class="status success"
-         style="
-           font-size:22px;
-           margin:15px 0;
-           padding:18px;
-         ">
+      setStatValue(
+        "financeExpensePerKg",
+        formatMoney(
+          totalExpense / kg
+        )
+      );
 
-      💰 ЖАЛПЫ СУММА:
 
-      <br>
+      setStatValue(
+        "financeProfitPerKg",
+        formatMoney(
+          profit / kg
+        )
+      );
 
-      <b style="font-size:30px;">
+    }
+    else{
 
-        ${totalPrice.toLocaleString("ru-RU")}
+      setStatValue(
+        "financeIncomePerKg",
+        "0 сом"
+      );
 
-        сом
 
-      </b>
+      setStatValue(
+        "financeLogisticsPerKg",
+        "0 сом"
+      );
+
+
+      setStatValue(
+        "financeExpensePerKg",
+        "0 сом"
+      );
+
+
+      setStatValue(
+        "financeProfitPerKg",
+        "0 сом"
+      );
+
+    }
+
+
+    /*
+      Азырынча партиялар өзүнчө
+      API менен берилбесе,
+      таблицада маалымат жок деп көрсөтөбүз.
+    */
+
+    const history =
+      document.getElementById(
+        "financeHistory"
+      );
+
+
+    if(history){
+
+      history.innerHTML = `
+        <tr>
+
+          <td colspan="7"
+              style="
+                text-align:center;
+                color:#999;
+                padding:25px;
+              "
+          >
+
+            Партиялык деталдар
+            кийинки этапта API аркылуу
+            автоматтык чыгарылат.
+
+          </td>
+
+        </tr>
+      `;
+
+    }
+
+
+    console.log(
+      "✅ FINANCE LOADED"
+    );
+
+  }
+  catch(error){
+
+    console.error(
+      "❌ FINANCE ERROR:",
+      error
+    );
+
+
+    const ids = [
+      "financeIncome",
+      "financeExpense",
+      "financeProfit",
+      "financeKg",
+      "financeParties",
+      "financePieces",
+      "financeLogistics",
+      "financeOtherExpense"
+    ];
+
+
+    ids.forEach(function(id){
+
+      const element =
+        document.getElementById(id);
+
+
+      if(element){
+
+        element.textContent =
+          "Ката";
+
+      }
+
+    });
+
+  }
+
+}
+
+
+/************************************************
+ 👥 CLIENTS
+************************************************/
+
+let allClients = [];
+
+
+async function loadClients(){
+
+  try{
+
+    const response =
+      await fetch(
+        API_URL +
+        "?action=clients"
+      );
+
+
+    if(!response.ok){
+
+      throw new Error(
+        "HTTP " +
+        response.status
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    console.log(
+      "👥 CLIENTS:",
+      data
+    );
+
+
+    if(data.status === "error"){
+
+      throw new Error(
+        data.message ||
+        "Clients API error"
+      );
+
+    }
+
+
+    allClients =
+      Array.isArray(data)
+        ? data
+        : (
+            data.clients ||
+            []
+          );
+
+
+    renderClients(
+      allClients
+    );
+
+
+    /*
+      Статистика
+    */
+
+    let active = 0;
+    let firstOrder = 0;
+    let inactive = 0;
+
+
+    allClients.forEach(
+      function(client){
+
+        const status =
+          String(
+            client.status ||
+            client.client_status ||
+            ""
+          ).toLowerCase();
+
+
+        if(
+          status.includes("актив")
+        ){
+
+          active++;
+
+        }
+        else if(
+          status.includes("перв")
+        ){
+
+          firstOrder++;
+
+        }
+        else{
+
+          inactive++;
+
+        }
+
+      }
+    );
+
+
+    setStatValue(
+      "clientsTotal",
+      formatNumber(
+        allClients.length
+      )
+    );
+
+
+    setStatValue(
+      "clientsActive",
+      formatNumber(
+        active
+      )
+    );
+
+
+    setStatValue(
+      "clientsFirstOrder",
+      formatNumber(
+        firstOrder
+      )
+    );
+
+
+    setStatValue(
+      "clientsInactive",
+      formatNumber(
+        inactive
+      )
+    );
+
+  }
+  catch(error){
+
+    console.error(
+      "❌ CLIENTS ERROR:",
+      error
+    );
+
+
+    const container =
+      document.getElementById(
+        "clientsContainer"
+      );
+
+
+    if(container){
+
+      container.innerHTML = `
+        <div class="status error">
+          ❌ Клиенттерди жүктөөдө ката:
+          ${escapeHtml(
+            error.message
+          )}
+        </div>
+      `;
+
+    }
+
+  }
+
+}
+
+
+/************************************************
+ 👥 RENDER CLIENTS
+************************************************/
+
+function renderClients(
+  clients
+){
+
+  const container =
+    document.getElementById(
+      "clientsContainer"
+    );
+
+
+  if(!container){
+
+    return;
+
+  }
+
+
+  if(
+    !Array.isArray(clients) ||
+    clients.length === 0
+  ){
+
+    container.innerHTML = `
+      <div class="status info">
+        Клиенттер табылган жок.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    clients
+      .map(function(client,index){
+
+        const code =
+          client.clientCode ||
+          client.code ||
+          client.client_code ||
+          "";
+
+
+        const name =
+          client.name ||
+          client.clientName ||
+          "";
+
+
+        const phone =
+          client.phone ||
+          "";
+
+
+        const status =
+          client.status ||
+          client.client_status ||
+          "";
+
+
+        return `
+
+          <div
+            class="parcel"
+            onclick="
+              showClientFromList(${index})
+            "
+            style="cursor:pointer;"
+          >
+
+            <div class="parcel-top">
+
+              <div class="track">
+                👤
+                ${escapeHtml(
+                  name ||
+                  "Клиент"
+                )}
+              </div>
+
+              <div>
+                ${escapeHtml(
+                  code
+                )}
+              </div>
+
+            </div>
+
+            <div class="price">
+              📞
+              ${escapeHtml(
+                phone
+              )}
+            </div>
+
+            <div class="price">
+              📊
+              ${escapeHtml(
+                status
+              )}
+            </div>
+
+          </div>
+
+        `;
+
+      })
+      .join("");
+
+}
+
+
+/************************************************
+ 👤 SHOW CLIENT
+************************************************/
+
+function showClientFromList(
+  index
+){
+
+  const client =
+    allClients[index];
+
+
+  if(!client){
+
+    return;
+
+  }
+
+
+  const card =
+    document.getElementById(
+      "clientDetailCard"
+    );
+
+
+  const detail =
+    document.getElementById(
+      "clientDetail"
+    );
+
+
+  if(!card || !detail){
+
+    return;
+
+  }
+
+
+  card.style.display =
+    "block";
+
+
+  detail.innerHTML = `
+
+    <div class="parcel">
+
+      <div class="track">
+        👤
+        ${escapeHtml(
+          client.name ||
+          client.clientName ||
+          "Клиент"
+        )}
+      </div>
+
+      <div class="price">
+        🆔 Код:
+        ${escapeHtml(
+          client.clientCode ||
+          client.code ||
+          ""
+        )}
+      </div>
+
+      <div class="price">
+        📞 Телефон:
+        ${escapeHtml(
+          client.phone ||
+          ""
+        )}
+      </div>
+
+      <div class="price">
+        📊 Статус:
+        ${escapeHtml(
+          client.status ||
+          client.client_status ||
+          ""
+        )}
+      </div>
+
+      <div class="price">
+        💰 Баланс:
+        ${formatMoney(
+          client.balance ||
+          0
+        )}
+      </div>
 
     </div>
 
   `;
 
-
-  parcels.forEach(function(parcel){
-
-    html += `
-
-      <div class="parcel">
-
-        <div class="track">
-
-          📦
-          ${escapeHtml(
-            parcel.track
-          )}
-
-        </div>
-
-
-        <div class="price">
-
-          👤 Клиент:
-
-          ${escapeHtml(
-            parcel.client_code ||
-            ""
-          )}
-
-        </div>
-
-
-        <div class="price">
-
-          💰
-
-          ${
-            parcel.price === "" ||
-            parcel.price == null
-
-              ?
-
-            "Баасы көрсөтүлгөн эмес"
-
-              :
-
-            escapeHtml(
-              String(
-                parcel.price
-              )
-            ) + " сом"
-
-          }
-
-        </div>
-
-
-        <div class="price">
-
-          🏢
-
-          ${escapeHtml(
-            parcel.status || ""
-          )}
-
-        </div>
-
-
-        <div class="price">
-
-          📅 Келген:
-
-          ${escapeHtml(
-            parcel.date_arrived ||
-            ""
-          )}
-
-        </div>
-
-      </div>
-
-    `;
-
-  });
-
-
-  list.innerHTML =
-    html;
-
 }
 
 
 /************************************************
-📦 SHOW ISSUED
+ 🔎 FILTER CLIENTS
 ************************************************/
 
-function renderIssued(
-  issued,
-  already
-){
-
-  const list =
-    document.getElementById(
-      "parcelList"
-    );
-
-
-  let html = "";
-
-
-  if(
-    issued.length > 0
-  ){
-
-    html += `
-
-      <div class="count">
-
-        📦 Жаңы берилген:
-
-        ${issued.length}
-
-      </div>
-
-    `;
-
-
-    issued.forEach(
-      function(parcel)
-    {
-
-      html += `
-
-        <div class="parcel">
-
-          <div class="track">
-
-            📦
-
-            ${escapeHtml(
-              parcel.track
-            )}
-
-          </div>
-
-
-          <div class="price">
-
-            💰
-
-            ${escapeHtml(
-              String(
-                parcel.price || ""
-              )
-            )}
-
-            сом
-
-          </div>
-
-
-          <div class="price">
-
-            🟢 Выдано
-
-          </div>
-
-        </div>
-
-      `;
-
-    });
-
-  }
-
-
-  if(
-    already.length > 0
-  ){
-
-    html += `
-
-      <div class="count">
-
-        ℹ️ Мурун берилген:
-
-        ${already.length}
-
-      </div>
-
-    `;
-
-
-    already.forEach(
-      function(parcel)
-    {
-
-      html += `
-
-        <div class="parcel">
-
-          <div class="track">
-
-            📦
-
-            ${escapeHtml(
-              parcel.track
-            )}
-
-          </div>
-
-
-          <div class="price">
-
-            💰
-
-            ${escapeHtml(
-              String(
-                parcel.price || ""
-              )
-            )}
-
-            сом
-
-          </div>
-
-
-          <div class="price">
-
-            ✅ Уже выдано
-
-          </div>
-
-        </div>
-
-      `;
-
-    });
-
-  }
-
-
-  if(!html){
-
-    html = `
-
-      <div class="empty">
-
-        📦 Посылка жок.
-
-      </div>
-
-    `;
-
-  }
-
-
-  list.innerHTML =
-    html;
-
-}
-
-
-/************************************************
-🔎 SEARCH TRACK
-************************************************/
-
-function searchTrack(){
+function filterClients(){
 
   const input =
     document.getElementById(
-      "trackSearchInput"
+      "clientsSearchInput"
+    );
+
+
+  if(!input){
+
+    return;
+
+  }
+
+
+  const search =
+    input.value
+      .trim()
+      .toLowerCase();
+
+
+  if(!search){
+
+    renderClients(
+      allClients
+    );
+
+    return;
+
+  }
+
+
+  const filtered =
+    allClients.filter(
+      function(client){
+
+        const text =
+          [
+            client.name,
+            client.clientName,
+            client.clientCode,
+            client.code,
+            client.phone,
+            client.status
+          ]
+          .join(" ")
+          .toLowerCase();
+
+
+        return text.includes(
+          search
+        );
+
+      }
+    );
+
+
+  renderClients(
+    filtered
+  );
+
+}
+
+
+/************************************************
+ 🔎 CLIENT BY CODE
+************************************************/
+
+async function searchClientByCode(){
+
+  const input =
+    document.getElementById(
+      "clientCodeInput"
     );
 
 
   const result =
     document.getElementById(
-      "trackSearchResult"
+      "clientResult"
     );
 
 
-  const trackCode =
-    String(
-      input.value || ""
-    )
-    .trim();
+  if(!input || !result){
+
+    return;
+
+  }
 
 
-  if(!trackCode){
+  const code =
+    input.value
+      .trim()
+      .toUpperCase();
+
+
+  if(!code){
 
     result.innerHTML = `
-
       <div class="status error">
-
-        ❌ Track code жазыңыз
-
+        ❌ Клиенттик кодду жазыңыз.
       </div>
-
     `;
 
     return;
@@ -4525,369 +3388,131 @@ function searchTrack(){
 
 
   result.innerHTML = `
-
-    <div class="loading">
-
-      ⏳ Изделүүдө...
-
+    <div class="status info">
+      🔎 Изделүүдө...
     </div>
-
   `;
 
 
-  fetch(
+  try{
 
-    API_URL +
-    "?action=search_track" +
-    "&track_code=" +
-    encodeURIComponent(
-      trackCode
-    )
-
-  )
-
-  .then(function(response){
-
-    if(!response.ok){
-
-      throw new Error(
-        "HTTP " +
-        response.status
+    const response =
+      await fetch(
+        API_URL +
+        "?action=check_client" +
+        "&client_code=" +
+        encodeURIComponent(code)
       );
 
-    }
 
+    const data =
+      await response.json();
 
-    return response.json();
-
-  })
-
-
-  .then(function(data){
 
     console.log(
-      "🔎 SEARCH TRACK:",
+      "CLIENT:",
       data
     );
 
 
     if(
-      data.status !== "ok"
+      data.status === "error"
     ){
 
-      result.innerHTML = `
-
-        <div class="status error">
-
-          ❌ Посылка табылган жок
-
-          <br><br>
-
-          Track:
-
-          <b>
-
-            ${escapeHtml(
-              trackCode
-            )}
-
-          </b>
-
-        </div>
-
-      `;
-
-      return;
+      throw new Error(
+        data.message ||
+        "Клиент табылган жок"
+      );
 
     }
-
-
-    const parcel =
-      data.parcel || {};
 
 
     const client =
-      data.client || null;
-
-
-    /****************************************
-    📦 PARCEL
-    ****************************************/
-
-    let html = `
-
-      <div class="status success">
-
-        ✅ ПОСЫЛКА ТАБЫЛДЫ
-
-      </div>
-
-
-      <div class="parcel">
-
-        <div class="track">
-
-          📦
-
-          ${escapeHtml(
-            parcel.track || ""
-          )}
-
-        </div>
-
-
-        <div class="price">
-
-          👤 Клиент:
-
-          <b>
-
-            ${escapeHtml(
-              parcel.client_code ||
-              ""
-            )}
-
-          </b>
-
-        </div>
-
-
-        <div class="price">
-
-          💰 Баасы:
-
-          ${
-            parcel.price === "" ||
-            parcel.price == null
-
-            ?
-
-            "Көрсөтүлгөн эмес"
-
-            :
-
-            escapeHtml(
-              String(
-                parcel.price
-              )
-            ) + " сом"
-
-          }
-
-        </div>
-
-
-        <div class="price">
-
-          📌 Статус:
-
-          <b>
-
-            ${escapeHtml(
-              parcel.status || ""
-            )}
-
-          </b>
-
-        </div>
-
-
-        <div class="price">
-
-          📅 Жөнөтүлгөн:
-
-          ${escapeHtml(
-            parcel.date_sent || ""
-          )}
-
-        </div>
-
-
-        <div class="price">
-
-          📅 Келген:
-
-          ${escapeHtml(
-            parcel.date_arrived || ""
-          )}
-
-        </div>
-
-      </div>
-
-    `;
-
-
-    /****************************************
-    👤 CLIENT
-    ****************************************/
-
-    if(client){
-
-      html += `
-
-        <div class="parcel">
-
-          <div class="track">
-
-            👤 КЛИЕНТ
-
-          </div>
-
-
-          <div class="price">
-
-            👤 Аты:
-
-            ${escapeHtml(
-              String(
-                client.name || ""
-              )
-            )}
-
-          </div>
-
-
-          <div class="price">
-
-            📞 Телефон:
-
-            ${escapeHtml(
-              String(
-                client.phone || ""
-              )
-            )}
-
-          </div>
-
-
-          <div class="price">
-
-            🏠 Дарек:
-
-            ${escapeHtml(
-              String(
-                client.address || ""
-              )
-            )}
-
-          </div>
-
-
-          <div class="price">
-
-            🔑 Клиенттик код:
-
-            <b>
-
-              ${escapeHtml(
-                String(
-                  client.client_code ||
-                  ""
-                )
-              )}
-
-            </b>
-
-          </div>
-
-        </div>
-
-      `;
-
-    }
-
-
-    /****************************************
-    🟢 ЭГЕР В ОФИСЕ БОЛСО
-    ****************************************/
-
-    const statusText =
-      String(
-        parcel.status || ""
-      )
-      .toLowerCase()
-      .trim();
-
-
-    if(
-      statusText.includes("в офис")
-    ){
-
-      const clientCode =
-        String(
-          parcel.client_code || ""
-        )
-        .trim()
-        .toUpperCase();
-
-
-      html += `
-
-        <button
-          class="issue"
-          onclick="issueFromSearch(
-            '${clientCode.replace(
-              /'/g,
-              "\\'"
-            )}'
-          )">
-
-          🟢 КАРДАРДЫН ПОСЫЛКАЛАРЫН БЕРҮҮ
-
-        </button>
-
-      `;
-
-    }
-
-
-    result.innerHTML =
-      html;
-
-  })
-
-
-  .catch(function(error){
-
-    console.error(
-      "❌ SEARCH ERROR:",
-      error
-    );
+      data.client ||
+      data;
 
 
     result.innerHTML = `
 
-      <div class="status error">
+      <div class="parcel">
 
-        ❌ Сервер менен байланыш жок.
+        <div class="track">
+          👤
+          ${escapeHtml(
+            client.name ||
+            client.clientName ||
+            "Клиент"
+          )}
+        </div>
 
-        <br><br>
+        <div class="price">
+          🆔 Код:
+          ${escapeHtml(
+            client.clientCode ||
+            client.code ||
+            code
+          )}
+        </div>
 
-        ${escapeHtml(
-          error.message
-        )}
+        <div class="price">
+          📞 Телефон:
+          ${escapeHtml(
+            client.phone ||
+            ""
+          )}
+        </div>
+
+        <div class="price">
+          📊 Статус:
+          ${escapeHtml(
+            client.status ||
+            ""
+          )}
+        </div>
+
+        <button
+          class="btn btn-success"
+          style="margin-top:12px;"
+          onclick="
+            issueClient('${escapeHtml(code)}')
+          "
+        >
+          📦 Посылкаларды берүү
+        </button>
 
       </div>
 
     `;
 
-  });
+  }
+  catch(error){
+
+    result.innerHTML = `
+      <div class="status error">
+        ❌
+        ${escapeHtml(
+          error.message
+        )}
+      </div>
+    `;
+
+  }
 
 }
 
 
 /************************************************
-📦 ISSUE FROM TRACK SEARCH
+ 📦 ISSUE CLIENT
 ************************************************/
 
-function issueFromSearch(
+async function issueClient(
   clientCode
 ){
 
   clientCode =
     String(
-      clientCode || ""
+      clientCode ||
+      ""
     )
     .trim()
     .toUpperCase();
@@ -4904,17 +3529,86 @@ function issueFromSearch(
   }
 
 
-  if(!confirm(
-
-    "📦 " +
-    clientCode +
-    " кардардын офистеги бардык посылкаларын беребизби?"
-
-  )){
+  if(
+    !confirm(
+      "📦 " +
+      clientCode +
+      " кодундагы посылкаларды беребизби?"
+    )
+  ){
 
     return;
 
   }
+
+
+  try{
+
+    const response =
+      await fetch(
+        API_URL +
+        "?action=issue_client" +
+        "&client_code=" +
+        encodeURIComponent(
+          clientCode
+        )
+      );
+
+
+    const data =
+      await response.json();
+
+
+    console.log(
+      "ISSUE:",
+      data
+    );
+
+
+    if(
+      data.status === "error"
+    ){
+
+      throw new Error(
+        data.message ||
+        "Берүүдө ката"
+      );
+
+    }
+
+
+    alert(
+      "✅ Посылкалар берилди."
+    );
+
+
+    loadDashboardData();
+
+    searchClientByCode();
+
+  }
+  catch(error){
+
+    alert(
+      "❌ " +
+      error.message
+    );
+
+  }
+
+}
+
+
+/************************************************
+ 🔎 TRACK SEARCH
+************************************************/
+
+async function searchTrack(){
+
+  const input =
+    document.getElementById(
+      "trackSearchInput"
+    );
 
 
   const result =
@@ -4923,362 +3617,248 @@ function issueFromSearch(
     );
 
 
+  if(!input || !result){
+
+    return;
+
+  }
+
+
+  const track =
+    input.value
+      .trim()
+      .toUpperCase();
+
+
+  if(!track){
+
+    result.innerHTML = `
+      <div class="status error">
+        ❌ Track кодду жазыңыз.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
   result.innerHTML = `
-
-    <div class="loading">
-
-      ⏳ Посылкалар берилүүдө...
-
+    <div class="status info">
+      🔎 Изделүүдө...
     </div>
-
   `;
 
 
-  fetch(
+  try{
 
-    API_URL +
+    const response =
+      await fetch(
+        API_URL +
+        "?action=search_track" +
+        "&track_code=" +
+        encodeURIComponent(track)
+      );
 
-    "?action=issue_client" +
 
-    "&client_code=" +
+    const data =
+      await response.json();
 
-    encodeURIComponent(
-      clientCode
-    )
 
-  )
-
-  .then(function(response){
-
-    if(!response.ok){
+    if(
+      data.status === "error"
+    ){
 
       throw new Error(
-        "HTTP " +
-        response.status
+        data.message ||
+        "Track табылган жок"
       );
 
     }
 
 
-    return response.json();
+    const parcel =
+      data.parcel ||
+      data;
 
-  })
+
+    result.innerHTML = `
+
+      <div class="parcel">
+
+        <div class="track">
+          📦
+          ${escapeHtml(
+            parcel.trackCode ||
+            parcel.track_code ||
+            track
+          )}
+        </div>
+
+        <div class="price">
+          👤 Клиент:
+          ${escapeHtml(
+            parcel.clientCode ||
+            parcel.client_code ||
+            ""
+          )}
+        </div>
+
+        <div class="price">
+          📊 Статус:
+          ${escapeHtml(
+            parcel.status ||
+            ""
+          )}
+        </div>
+
+        <div class="price">
+          💰 Сумма:
+          ${formatMoney(
+            parcel.totalSum ||
+            parcel.total_sum ||
+            parcel.price ||
+            0
+          )}
+        </div>
+
+      </div>
+
+    `;
+
+  }
+  catch(error){
+
+    result.innerHTML = `
+      <div class="status error">
+        ❌
+        ${escapeHtml(
+          error.message
+        )}
+      </div>
+    `;
+
+  }
+
+}
 
 
-  .then(function(data){
+/************************************************
+ 📷 QR SCANNER
+************************************************/
 
-    console.log(
-      "📦 ISSUE FROM SEARCH:",
-      data
+let qrScanner = null;
+
+
+function startQRScanner(){
+
+  if(
+    typeof Html5Qrcode ===
+    "undefined"
+  ){
+
+    console.error(
+      "QR library not loaded"
+    );
+
+    return;
+
+  }
+
+
+  if(qrScanner){
+
+    return;
+
+  }
+
+
+  qrScanner =
+    new Html5Qrcode(
+      "reader"
     );
 
 
-    if(
-      data.status === "ok"
-    ){
+  qrScanner.start(
 
-      const count =
-        data.issued_count || 0;
+    {
+      facingMode:"environment"
+    },
 
+    {
+      fps:10,
+      qrbox:250
+    },
 
-      result.innerHTML = `
+    function(decodedText){
 
-        <div class="status success">
-
-          ✅ ПОСЫЛКАЛАР БЕРИЛДИ
-
-          <br><br>
-
-          👤 Кардар:
-
-          <b>
-
-            ${escapeHtml(
-              clientCode
-            )}
-
-          </b>
-
-          <br>
-
-          📦 Берилди:
-
-          <b>
-
-            ${count}
-
-          </b>
-
-        </div>
-
-      `;
-
-
-      alert(
-
-        "✅ Даяр!\n\n" +
-
-        "Кардар: " +
-        clientCode +
-
-        "\nБерилген посылка: " +
-        count
-
+      console.log(
+        "QR:",
+        decodedText
       );
 
 
       const input =
         document.getElementById(
-          "trackSearchInput"
+          "clientCodeInput"
         );
 
 
       if(input){
 
-        input.value = "";
+        input.value =
+          decodedText;
+
+        searchClientByCode();
 
       }
 
-    }
 
-    else{
-
-      result.innerHTML = `
-
-        <div class="status error">
-
-          ❌
-
-          ${escapeHtml(
-            data.message ||
-            "Посылканы берүүдө ката кетти"
-          )}
-
-        </div>
-
-      `;
-
-    }
-
-  })
-
-
-  .catch(function(error){
-
-    console.error(
-      "❌ ISSUE ERROR:",
-      error
-    );
-
-
-    result.innerHTML = `
-
-      <div class="status error">
-
-        ❌ Сервер менен байланыш жок.
-
-        <br><br>
-
-        ${escapeHtml(
-          error.message
-        )}
-
-      </div>
-
-    `;
-
-  });
-
-}
-
-
-/************************************************
-🟢 ISSUE CLIENT
-************************************************/
-
-function issueClient(){
-
-  const clientCode =
-    document
-      .getElementById("clientCode")
-      .textContent
-      .trim();
-
-
-  if(!clientCode){
-
-    alert(
-      "❌ Клиент тандалган жок."
-    );
-
-    return;
-
-  }
-
-
-  if(!confirm(
-
-    "📦 " +
-    clientCode +
-    " кардардын офистеги бардык посылкаларын беребизби?"
-
-  )){
-
-    return;
-
-  }
-
-
-  const button =
-    document.getElementById(
-      "issueButton"
-    );
-
-
-  button.disabled = true;
-
-
-  button.textContent =
-    "⏳ ПОСЫЛКАЛАР БЕРИЛҮҮДӨ...";
-
-
-  /**********************************************
-  📡 ISSUE API
-  **********************************************/
-
-  fetch(
-
-    API_URL +
-
-    "?action=issue_client" +
-
-    "&client_code=" +
-
-    encodeURIComponent(
-      clientCode
-    )
-
-  )
-
-  .then(function(response){
-
-    if(!response.ok){
-
-      throw new Error(
-        "HTTP " +
-        response.status
-      );
-
-    }
-
-    return response.json();
-
-  })
-
-
-  .then(function(data){
-
-    console.log(
-      "📦 ISSUE CLIENT API:",
-      data
-    );
-
-
-    /********************************************
-    ✅ SUCCESS
-    ********************************************/
-
-    if(
-      data.status === "ok"
-    ){
-
-      const count =
-        Number(
-          data.issued_count || 0
+      const status =
+        document.getElementById(
+          "scannerStatus"
         );
 
 
-      button.textContent =
-        "✅ БЕРИЛДИ";
+      if(status){
 
+        status.textContent =
+          "✅ QR окулду: " +
+          decodedText;
 
-      /******************************************
-      🎉 SUCCESS MESSAGE
-      ******************************************/
+      }
 
-      alert(
+    },
 
-        "✅ ДАЯР!\n\n" +
+    function(errorMessage){
 
-        "👤 Кардар: " +
-        clientCode +
-
-        "\n📦 Берилген посылка: " +
-        count
-
-      );
-
-
-      /******************************************
-      🔄 CLIENT'ТИ КАЙРА ЖҮКТӨӨ
-      ******************************************/
-
-      loadClient(
-        clientCode
-      );
+      /*
+        QR табылбаган учурда
+        эч нерсе кылбайбыз
+      */
 
     }
 
-
-    /********************************************
-    ❌ API ERROR
-    ********************************************/
-
-    else{
-
-      alert(
-
-        "❌ " +
-
-        (
-          data.message ||
-          "Посылканы берүүдө ката кетти"
-        )
-
-      );
-
-
-      button.disabled =
-        false;
-
-
-      button.textContent =
-        "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
-
-    }
-
-  })
-
-
+  )
   .catch(function(error){
 
     console.error(
-      "❌ ISSUE CLIENT ERROR:",
+      "QR ERROR:",
       error
     );
 
-
-    alert(
-      "❌ Сервер менен байланыш жок."
-    );
-
-
-    button.disabled =
-      false;
+    const status =
+      document.getElementById(
+        "scannerStatus"
+      );
 
 
-    button.textContent =
-      "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
+    if(status){
+
+      status.innerHTML =
+        "❌ Камераны ачууга болбой жатат.";
+
+    }
 
   });
 
@@ -5286,955 +3866,127 @@ function issueClient(){
 
 
 /************************************************
-🔄 RESET CLIENT
+ 🔄 RESET CLIENT
 ************************************************/
 
 function resetClient(){
 
-  /**********************************************
-  ⛔ SCANNER STOP
-  **********************************************/
-
-  stopScanner();
-
-
-  /**********************************************
-  👤 CLIENT CARD HIDE
-  **********************************************/
-
-  const clientCard =
+  const card =
     document.getElementById(
-      "clientCard"
+      "clientDetailCard"
     );
 
 
-  if(clientCard){
+  if(card){
 
-    clientCard.style.display =
+    card.style.display =
       "none";
 
   }
 
 
-  /**********************************************
-  👤 CLEAR CLIENT CODE
-  **********************************************/
-
-  const clientCode =
+  const result =
     document.getElementById(
-      "clientCode"
+      "clientResult"
     );
 
 
-  if(clientCode){
+  if(result){
 
-    clientCode.textContent =
+    result.innerHTML =
       "";
 
   }
 
-
-  /**********************************************
-  📦 CLEAR PARCEL LIST
-  **********************************************/
-
-  const parcelList =
-    document.getElementById(
-      "parcelList"
-    );
+}
 
 
-  if(parcelList){
+/************************************************
+ 📅 PERIOD BUTTON
+************************************************/
 
-    parcelList.innerHTML =
-      "";
+function selectPeriod(
+  button
+){
 
-  }
+  document
+    .querySelectorAll(
+      ".period-btn"
+    )
+    .forEach(function(btn){
 
+      btn.classList.remove(
+        "active"
+      );
 
-  /**********************************************
-  📌 CLEAR STATUS
-  **********************************************/
-
-  const parcelStatus =
-    document.getElementById(
-      "parcelStatus"
-    );
-
-
-  if(parcelStatus){
-
-    parcelStatus.innerHTML =
-      "";
-
-  }
+    });
 
 
-  /**********************************************
-  🔘 RESET ISSUE BUTTON
-  **********************************************/
-
-  const button =
-    document.getElementById(
-      "issueButton"
-    );
+  button.classList.add(
+    "active"
+  );
 
 
-  if(button){
+  /*
+    Азыркы backend'де
+    week/month даяр.
 
-    button.disabled =
-      false;
+    30 күн жана Баары
+    кийинки Statistics
+    API этабында кошулат.
+  */
+
+}
 
 
-    button.textContent =
-      "🟢 БАРДЫК ПОСЫЛКАНЫ БЕРҮҮ";
+/************************************************
+ ⌨️ ENTER — CLIENT SEARCH
+************************************************/
 
-  }
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    if(
+      event.key !== "Enter"
+    ){
+
+      return;
+
+    }
 
 
-  /**********************************************
-  🔎 CLEAR TRACK SEARCH
-  **********************************************/
+    const active =
+      document.activeElement;
 
-  const searchInput =
-    document.getElementById(
+
+    if(
+      active &&
+      active.id ===
+      "clientCodeInput"
+    ){
+
+      searchClientByCode();
+
+    }
+
+
+    if(
+      active &&
+      active.id ===
       "trackSearchInput"
-    );
+    ){
 
-
-  if(searchInput){
-
-    searchInput.value =
-      "";
-
-  }
-
-
-  const searchResult =
-    document.getElementById(
-      "trackSearchResult"
-    );
-
-
-  if(searchResult){
-
-    searchResult.innerHTML =
-      "";
-
-  }
-
-
-  /**********************************************
-  🔓 QR PROCESS RESET
-  **********************************************/
-
-  isProcessingQR =
-    false;
-
-}
-
-
-/************************************************
-⌨️ ENTER → TRACK SEARCH
-************************************************/
-
-const trackInput =
-  document.getElementById(
-    "trackSearchInput"
-  );
-
-
-if(trackInput){
-
-  trackInput.addEventListener(
-    "keydown",
-    function(event){
-
-      if(
-        event.key === "Enter"
-      ){
-
-        event.preventDefault();
-
-        searchTrack();
-
-      }
-
-    }
-  );
-
-}
-
-
-/************************************************
-🛡️ ESCAPE HTML
-************************************************/
-
-function escapeHtml(text){
-
-  return String(
-    text
-  )
-
-  .replace(
-    /&/g,
-    "&amp;"
-  )
-
-  .replace(
-    /</g,
-    "&lt;"
-  )
-
-  .replace(
-    />/g,
-    "&gt;"
-  )
-
-  .replace(
-    /"/g,
-    "&quot;"
-  )
-
-  .replace(
-    /'/g,
-    "&#039;"
-  );
-
-}
-
-
-/************************************************
-📱 MOBILE BACK BUTTON SUPPORT
-************************************************/
-
-window.addEventListener(
-  "pageshow",
-  function(){
-
-    isProcessingQR =
-      false;
-
-  }
-);
-
-
-/************************************************
-🚀 ADMIN PANEL READY
-************************************************/
-
-console.log(
-  "================================"
-);
-
-console.log(
-  "🚀 TEZ KARGO ADMIN PANEL"
-);
-
-console.log(
-  "✅ QR SCANNER READY"
-);
-
-console.log(
-  "✅ TRACK SEARCH READY"
-);
-
-console.log(
-  "✅ ISSUE CLIENT READY"
-);
-
-console.log(
-  "📡 API:",
-  API_URL
-);
-
-console.log(
-  "================================"
-);/************************************************
-📊 LOAD DASHBOARD DATA
-************************************************/
-
-async function loadDashboardData(){
-
-  try{
-
-    console.log("📊 DASHBOARD LOADING...");
-
-    const response = await fetch(
-      API_URL + "?action=dashboard"
-    );
-
-    if(!response.ok){
-
-      throw new Error(
-        "HTTP " + response.status
-      );
+      searchTrack();
 
     }
 
-    const data =
-      await response.json();
-
-    console.log(
-      "📊 DASHBOARD DATA:",
-      data
-    );
-
-
-    if(data.status !== "ok"){
-
-      throw new Error(
-        data.message ||
-        "Dashboard API error"
-      );
-
-    }
-
-
-    /********************************************
-    📊 STATS
-    ********************************************/
-
-    const stats =
-      data.stats || {};
-
-
-    /********************************************
-    👥 CLIENTS
-    ********************************************/
-
-    setStatValue(
-      "totalClients",
-      stats.total_clients
-    );
-
-    setStatValue(
-      "activeClients",
-      stats.active_clients
-    );
-
-
-    /********************************************
-    📦 PARCELS
-    ********************************************/
-
-    setStatValue(
-      "totalParcels",
-      stats.total_parcels
-    );
-
-    setStatValue(
-      "inChina",
-      stats.in_china
-    );
-
-    setStatValue(
-      "inTransit",
-      stats.in_transit
-    );
-
-    setStatValue(
-      "inOffice",
-      stats.in_office
-    );
-
-    setStatValue(
-      "issued",
-      stats.issued
-    );
-
-
-    /********************************************
-    ⚖️ TOTAL KG
-    ********************************************/
-
-    setStatValue(
-      "totalKg",
-      formatNumber(
-        stats.total_kg
-      ) + " KG"
-    );
-
-
-    /********************************************
-    💰 FINANCE
-    ********************************************/
-
-    setStatValue(
-      "totalIncome",
-      formatMoney(
-        stats.income
-      )
-    );
-
-    setStatValue(
-      "totalExpenses",
-      formatMoney(
-        stats.expenses
-      )
-    );
-
-    setStatValue(
-      "totalProfit",
-      formatMoney(
-        stats.profit
-      )
-    );
-
-
-    /********************************************
-    🚚 PARTIES
-    ********************************************/
-
-    setStatValue(
-      "totalParties",
-      stats.total_parties
-    );
-
-
-    /********************************************
-    📅 WEEK
-    ********************************************/
-
-    renderPeriodData(
-      "week",
-      data.week || {}
-    );
-
-
-    /********************************************
-    📅 MONTH
-    ********************************************/
-
-    renderPeriodData(
-      "month",
-      data.month || {}
-    );
-
-
-    /********************************************
-    🚚 BATCH HISTORY
-    ********************************************/
-
-    renderBatchHistory(
-      data.parties || []
-    );
-
-
-    /********************************************
-    💰 FINANCE HISTORY
-    ********************************************/
-
-    renderFinance(
-      data.finance || []
-    );
-
-
-    console.log(
-      "✅ DASHBOARD LOADED"
-    );
-
   }
-
-  catch(error){
-
-    console.error(
-      "❌ DASHBOARD ERROR:",
-      error
-    );
-
-  }
-
-}
+);
 
 
 /************************************************
-🔢 SET STAT VALUE
-************************************************/
-
-function setStatValue(
-  id,
-  value
-){
-
-  const element =
-    document.getElementById(id);
-
-
-  if(!element){
-
-    console.warn(
-      "⚠️ Element not found:",
-      id
-    );
-
-    return;
-
-  }
-
-
-  element.textContent =
-    value == null
-      ? "0"
-      : value;
-
-}
-
-
-/************************************************
-💰 MONEY FORMAT
-************************************************/
-
-function formatMoney(
-  value
-){
-
-  const number =
-    Number(value || 0);
-
-
-  return (
-    number.toLocaleString(
-      "ru-RU"
-    ) +
-    " сом"
-  );
-
-}
-
-
-/************************************************
-🔢 NUMBER FORMAT
-************************************************/
-
-function formatNumber(
-  value
-){
-
-  return Number(
-    value || 0
-  ).toLocaleString(
-    "ru-RU",
-    {
-      maximumFractionDigits: 2
-    }
-  );
-
-}
-
-/************************************************
-📅 PERIOD DATA
-************************************************/
-
-function renderPeriodData(type, data){
-
-  data = data || {};
-
-  console.log(
-    "📊 PERIOD:",
-    type,
-    data
-  );
-
-
-  /********************************************
-  📦 PARCELS
-  ********************************************/
-
-  const parcelsId =
-    type === "week"
-      ? "weekParcels"
-      : "monthParcels";
-
-
-  setStatValue(
-    parcelsId,
-    data.parcels || 0
-  );
-
-
-  /********************************************
-  ⚖️ KG
-  ********************************************/
-
-  const kgId =
-    type === "week"
-      ? "weekKg"
-      : "monthKg";
-
-
-  setStatValue(
-    kgId,
-    formatNumber(data.kg) + " KG"
-  );
-
-
-  /********************************************
-  🚚 PARTIES
-  ********************************************/
-
-  const partiesId =
-    type === "week"
-      ? "weekParties"
-      : "monthParties";
-
-
-  setStatValue(
-    partiesId,
-    data.parties || 0
-  );
-
-
-  /********************************************
-  💰 INCOME / PROFIT
-  ********************************************/
-
-  if(type === "week"){
-
-    setStatValue(
-      "weekIncome",
-      formatMoney(data.income)
-    );
-
-  }
-
-
-  if(type === "month"){
-
-    setStatValue(
-      "monthProfit",
-      formatMoney(data.profit)
-    );
-
-  }
-
-}
-/************************************************
-🚚 BATCH HISTORY
-************************************************/
-
-function renderBatchHistory(
-  batches
-){
-
-  const container =
-    document.getElementById(
-      "batchHistory"
-    );
-
-
-  if(!container){
-
-    console.warn(
-      "⚠️ batchHistory element not found"
-    );
-
-    return;
-
-  }
-
-
-  if(
-    !batches ||
-    batches.length === 0
-  ){
-
-    container.innerHTML = `
-
-      <div class="empty">
-
-        🚚 Азырынча партия жок.
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  let html = "";
-
-
-  batches
-    .slice()
-    .reverse()
-    .forEach(
-      function(batch){
-
-        html += `
-
-          <div class="parcel">
-
-            <div class="track">
-
-              🚚 Партия
-
-            </div>
-
-
-            <div class="price">
-
-              📤 Жөнөтүлгөн:
-
-              ${escapeHtml(
-                batch.date_send || ""
-              )}
-
-            </div>
-
-
-            <div class="price">
-
-              📥 Келген:
-
-              ${escapeHtml(
-                batch.date_arrival || ""
-              )}
-
-            </div>
-
-
-            <div class="price">
-
-              📦 Партия:
-
-              <b>
-
-                ${batch.parties || 0}
-
-              </b>
-
-            </div>
-
-
-            <div class="price">
-
-              ⚖️ Салмак:
-
-              <b>
-
-                ${formatNumber(
-                  batch.kg
-                )}
-
-                KG
-
-              </b>
-
-            </div>
-
-
-            <div class="price">
-
-              📉 Чыгым:
-
-              ${formatMoney(
-                batch.expense
-              )}
-
-            </div>
-
-
-            <div class="price">
-
-              💰 Киреше:
-
-              ${formatMoney(
-                batch.income
-              )}
-
-            </div>
-
-
-            <div class="price">
-
-              💎 Таза пайда:
-
-              <b>
-
-                +${formatMoney(
-                  batch.profit
-                )}
-
-              </b>
-
-            </div>
-
-          </div>
-
-        `;
-
-      }
-    );
-
-
-  container.innerHTML =
-    html;
-
-}
-
-
-/************************************************
-💰 FINANCE
-************************************************/
-
-function renderFinance(
-  finance
-){
-
-  const container =
-    document.getElementById(
-      "financeHistory"
-    );
-
-
-  if(!container){
-
-    console.warn(
-      "⚠️ financeHistory element not found"
-    );
-
-    return;
-
-  }
-
-
-  if(
-    !finance ||
-    finance.length === 0
-  ){
-
-    container.innerHTML = `
-
-      <div class="empty">
-
-        💰 Финансы боюнча маалымат жок.
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  let html = "";
-
-
-  finance
-    .slice()
-    .reverse()
-    .forEach(
-      function(row){
-
-        html += `
-
-          <div class="parcel">
-
-            <div class="track">
-
-              💰 Финансы
-
-            </div>
-
-
-            <div class="price">
-
-              📤 Жөнөтүлгөн:
-
-              ${escapeHtml(
-                row.date_send || ""
-              )}
-
-            </div>
-
-
-            <div class="price">
-
-              📥 Келген:
-
-              ${escapeHtml(
-                row.date_arrival || ""
-              )}
-
-            </div>
-
-
-            <div class="price">
-
-              📦 Партия:
-
-              ${row.parties || 0}
-
-            </div>
-
-
-            <div class="price">
-
-              ⚖️ KG:
-
-              ${formatNumber(
-                row.kg
-              )}
-
-            </div>
-
-
-            <div class="price">
-
-              📉 Чыгым:
-
-              ${formatMoney(
-                row.expense
-              )}
-
-            </div>
-
-
-            <div class="price">
-
-              💰 Киреше:
-
-              ${formatMoney(
-                row.income
-              )}
-
-            </div>
-
-
-            <div class="price">
-
-              💎 Пайда:
-
-              <b>
-
-                +${formatMoney(
-                  row.profit
-                )}
-
-              </b>
-
-            </div>
-
-          </div>
-
-        `;
-
-      }
-    );
-
-
-  container.innerHTML =
-    html;
-
-}
-
-
-/************************************************
-🚀 AUTO LOAD DASHBOARD
+ 🚀 START
 ************************************************/
 
 document.addEventListener(
@@ -6242,16 +3994,88 @@ document.addEventListener(
   function(){
 
     console.log(
-      "🚀 ADMIN PANEL START"
+      "🚀 TEZ KARGO ADMIN START"
     );
 
 
+    /*
+      Dashboard
+    */
+
     loadDashboardData();
+
+
+    /*
+      Finance
+    */
+
+    loadFinanceAnalysis();
+
+
+    /*
+      QR Scanner
+    */
+
+    /*
+      Scanner бөлүмү ачылганда
+      startQRScanner() чакырылат.
+    */
 
   }
 );
 
+
+/************************************************
+ 📷 START SCANNER WHEN OPENED
+************************************************/
+
+const originalShowSection =
+  showSection;
+
+
+showSection =
+  function(
+    sectionId,
+    button
+  ){
+
+    originalShowSection(
+      sectionId,
+      button
+    );
+
+
+    if(
+      sectionId ===
+      "scannerSection"
+    ){
+
+      setTimeout(
+        function(){
+
+          startQRScanner();
+
+        },
+        300
+      );
+
+    }
+
+  };
+
+
 </script>
 
+
+<!-- =========================================
+     QR SCANNER LIBRARY
+========================================= -->
+
+<script
+  src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"
+></script>
+
+
 </body>
+
 </html>
