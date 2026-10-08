@@ -2178,6 +2178,8 @@ button:disabled{
   </div>
 
 </section>
+
+
 <!-- =====================================================
      CLIENTS
 ===================================================== -->
@@ -2212,7 +2214,7 @@ button:disabled{
         <div class="stat-icon">👥</div>
 
         <div class="stat-label">
-          Кардарлар
+          Баары
         </div>
 
         <div
@@ -2226,15 +2228,15 @@ button:disabled{
 
       <div class="stat-card">
 
-        <div class="stat-icon">📦</div>
+        <div class="stat-icon">🟢</div>
 
         <div class="stat-label">
-          Посылкалар
+          Активдүү
         </div>
 
         <div
           class="stat-value"
-          id="clientsTotalParcels">
+          id="activeClientsCount">
           —
         </div>
 
@@ -2243,15 +2245,15 @@ button:disabled{
 
       <div class="stat-card">
 
-        <div class="stat-icon">🏢</div>
+        <div class="stat-icon">🟡</div>
 
         <div class="stat-label">
-          Офисте
+          Активдүү эмес
         </div>
 
         <div
           class="stat-value"
-          id="clientsInOffice">
+          id="inactiveClientsCount">
           —
         </div>
 
@@ -2260,15 +2262,15 @@ button:disabled{
 
       <div class="stat-card">
 
-        <div class="stat-icon">✅</div>
+        <div class="stat-icon">⚪</div>
 
         <div class="stat-label">
-          Берилди
+          Заказ берген эмес
         </div>
 
         <div
           class="stat-value"
-          id="clientsIssued">
+          id="noOrderClientsCount">
           —
         </div>
 
@@ -2277,80 +2279,71 @@ button:disabled{
     </div>
 
 
-    <div class="feature-grid">
+    <div
+      class="client-search-box"
+      style="margin-top:20px;">
 
-      <div
-        class="feature-card"
-        onclick="showSection('scanner')">
+      <input
+        type="text"
+        id="clientSearchInput"
+        placeholder="🔎 Аты, телефон же клиенттик код..."
+        oninput="renderClients()">
 
-        <div class="feature-icon">
-          📷
-        </div>
-
-        <div class="feature-title">
-          QR Сканер
-        </div>
-
-        <div class="feature-text">
-          QR аркылуу кардарды табуу
-        </div>
-
-      </div>
+    </div>
 
 
-      <div
-        class="feature-card"
-        onclick="focusTrackSearch()">
+    <div
+      class="client-filters"
+      style="margin-top:15px;">
 
-        <div class="feature-icon">
-          🔎
-        </div>
+      <button
+        class="client-filter-btn active"
+        onclick="setClientFilter('all', this)">
 
-        <div class="feature-title">
-          Track издөө
-        </div>
+        👥 Баары
 
-        <div class="feature-text">
-          Track code аркылуу издөө
-        </div>
-
-      </div>
+      </button>
 
 
-      <div class="feature-card">
+      <button
+        class="client-filter-btn"
+        onclick="setClientFilter('active', this)">
 
-        <div class="feature-icon">
-          🏢
-        </div>
+        🟢 Активдүү
 
-        <div class="feature-title">
-          Офисте
-        </div>
-
-        <div class="feature-text">
-          Берүүгө даяр посылкалар
-        </div>
-
-      </div>
+      </button>
 
 
-      <div class="feature-card">
+      <button
+        class="client-filter-btn"
+        onclick="setClientFilter('inactive', this)">
 
-        <div class="feature-icon">
-          ✅
-        </div>
+        🟡 Активдүү эмес
 
-        <div class="feature-title">
-          Выдано
-        </div>
+      </button>
 
-        <div class="feature-text">
-          Мурун берилген посылкалар
-        </div>
 
+      <button
+        class="client-filter-btn"
+        onclick="setClientFilter('no_order', this)">
+
+        ⚪ Заказ жок
+
+      </button>
+
+    </div>
+
+
+    <div
+      id="clientsList"
+      style="margin-top:20px;">
+
+      <div class="empty">
+        👥 Кардарлар жүктөлүүдө...
       </div>
 
     </div>
+
 
   </div>
 
@@ -2360,6 +2353,9 @@ button:disabled{
 </div>
 
 
+<!-- =====================================================
+     BOTTOM NAV
+===================================================== -->
 <!-- =====================================================
      BOTTOM NAV
 ===================================================== -->
@@ -2519,10 +2515,17 @@ function showSection(name){
   }
 
 
-  /* Statistics ачылганда growth жаңыртуу */
+ /* Statistics ачылганда growth жаңыртуу */
 
   if(name === "statistics"){
     loadDashboardData();
+  }
+
+
+  /* Clients ачылганда кардарларды жүктөө */
+
+  if(name === "clients"){
+    loadClients();
   }
 
 }
@@ -2544,22 +2547,486 @@ function focusTrackSearch(){
         "trackSearchInput"
       );
 
+if(input){
 
-    if(input){
+  input.focus();
 
-      input.focus();
-
-      input.scrollIntoView({
-        behavior:"smooth",
-        block:"center"
-      });
-
-    }
-
-  },250);
+  input.scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
 
 }
 
+},250);
+
+}
+
+
+/************************************************
+👥 LOAD CLIENTS
+************************************************/
+
+window.__clientsData = [];
+window.__clientFilter = "all";
+
+function loadClients(){
+
+  const container =
+    document.getElementById("clientsList");
+
+
+  if(container){
+
+    container.innerHTML = `
+      <div class="empty">
+        👥 Кардарлар жүктөлүүдө...
+      </div>
+    `;
+
+  }
+
+
+  fetch(
+    API_URL + "?action=clients"
+  )
+
+  .then(function(response){
+
+    if(!response.ok){
+
+      throw new Error(
+        "HTTP " + response.status
+      );
+
+    }
+
+    return response.json();
+
+  })
+
+  .then(function(data){
+
+    if(data.status !== "ok"){
+
+      throw new Error(
+        data.message ||
+        "Clients API ката"
+      );
+
+    }
+
+
+    window.__clientsData =
+      data.clients || [];
+
+
+    const stats =
+      data.stats || {};
+
+
+    const total =
+      document.getElementById(
+        "totalClients"
+      );
+
+    const active =
+      document.getElementById(
+        "activeClientsCount"
+      );
+
+    const inactive =
+      document.getElementById(
+        "inactiveClientsCount"
+      );
+
+    const noOrder =
+      document.getElementById(
+        "noOrderClientsCount"
+      );
+
+
+    if(total){
+
+      total.textContent =
+        Number(
+          stats.total || 0
+        );
+
+    }
+
+
+    if(active){
+
+      active.textContent =
+        Number(
+          stats.active || 0
+        );
+
+    }
+
+
+    if(inactive){
+
+      inactive.textContent =
+        Number(
+          stats.inactive || 0
+        );
+
+    }
+
+
+    if(noOrder){
+
+      noOrder.textContent =
+        Number(
+          stats.no_order || 0
+        );
+
+    }
+
+
+    renderClients();
+
+  })
+
+  .catch(function(error){
+
+    console.error(
+      "❌ CLIENTS ERROR:",
+      error
+    );
+
+
+    if(container){
+
+      container.innerHTML = `
+        <div class="empty">
+          ❌ Кардарларды жүктөөдө ката чыкты.
+          <br><br>
+          ${escapeHtml(
+            error.message
+          )}
+        </div>
+      `;
+
+    }
+
+  });
+
+}
+
+
+/************************************************
+👥 CLIENT FILTER
+************************************************/
+
+function setClientFilter(
+  filter,
+  button
+){
+
+  window.__clientFilter =
+    filter;
+
+
+  document
+    .querySelectorAll(
+      ".client-filter-btn"
+    )
+    .forEach(function(btn){
+
+      btn.classList.remove(
+        "active"
+      );
+
+    });
+
+
+  if(button){
+
+    button.classList.add(
+      "active"
+    );
+
+  }
+
+
+  renderClients();
+
+}
+
+/************************************************
+👥 RENDER CLIENTS
+************************************************/
+function renderClients(){
+
+  const container =
+    document.getElementById(
+      "clientsList"
+    );
+
+
+  if(!container){
+    return;
+  }
+
+
+  const searchInput =
+    document.getElementById(
+      "clientSearchInput"
+    );
+
+
+  const search =
+    String(
+      searchInput
+        ? searchInput.value
+        : ""
+    )
+    .trim()
+    .toLowerCase();
+
+
+  const filter =
+    window.__clientFilter ||
+    "all";
+
+
+  let clients =
+    window.__clientsData || [];
+
+
+  /* FILTER */
+
+  if(filter !== "all"){
+
+    clients =
+      clients.filter(
+        function(client){
+
+          return (
+            client.category ===
+            filter
+          );
+
+        }
+      );
+
+  }
+
+
+  /* SEARCH */
+
+  if(search){
+
+    clients =
+      clients.filter(
+        function(client){
+
+          const text = [
+
+            client.name,
+
+            client.phone,
+
+            client.client_code
+
+          ]
+          .join(" ")
+          .toLowerCase();
+
+
+          return text.includes(
+            search
+          );
+
+        }
+      );
+
+  }
+
+
+  if(!clients.length){
+
+    container.innerHTML = `
+      <div class="empty">
+        👥 Кардар табылган жок.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  let html = "";
+
+
+  clients.forEach(
+    function(client){
+
+      let badge = "";
+
+
+      if(
+        client.category ===
+        "active"
+      ){
+
+        badge = `
+          <span class="badge badge-success">
+            🟢 Активдүү
+          </span>
+        `;
+
+      }
+
+      else if(
+        client.category ===
+        "inactive"
+      ){
+
+        badge = `
+          <span class="badge badge-warning">
+            🟡 Активдүү эмес
+          </span>
+        `;
+
+      }
+
+      else {
+
+        badge = `
+          <span class="badge">
+            ⚪ Заказ жок
+          </span>
+        `;
+
+      }
+
+
+      html += `
+
+        <div
+          class="parcel"
+          onclick="openClientFromList('${escapeHtml(
+            client.client_code || ""
+          )}')"
+          style="cursor:pointer;">
+
+          <div class="parcel-top">
+
+            <div class="track">
+              👤 ${escapeHtml(
+                client.name || "—"
+              )}
+            </div>
+
+            ${badge}
+
+          </div>
+
+
+          <div class="price">
+
+            🔑 Клиенттик код:
+
+            <b>
+              ${escapeHtml(
+                client.client_code || "—"
+              )}
+            </b>
+
+          </div>
+
+
+          <div class="price">
+
+            📞 Телефон:
+
+            <b>
+              ${escapeHtml(
+                client.phone || "—"
+              )}
+            </b>
+
+          </div>
+
+
+          <div class="price">
+
+            📦 Посылка:
+
+            <b>
+              ${Number(
+                client.order_count || 0
+              )}
+            </b>
+
+          </div>
+
+
+          <div class="price">
+
+            🏢 Офисте:
+
+            <b>
+              ${Number(
+                client.office_count || 0
+              )}
+            </b>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+  );
+
+
+  container.innerHTML =
+    html;
+
+}
+
+/************************************************
+👤 OPEN CLIENT
+************************************************/
+function openClientFromList(
+  clientCode
+){
+
+  clientCode =
+    String(
+      clientCode || ""
+    )
+    .trim()
+    .toUpperCase();
+
+
+  if(!clientCode){
+    return;
+  }
+
+
+  showSection("scanner");
+
+
+  setTimeout(
+    function(){
+
+      loadClient(
+        clientCode
+      );
+
+    },
+    200
+  );
+
+}
 
 /************************************************
 📊 PERIOD
