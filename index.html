@@ -4107,23 +4107,16 @@ function searchTrack(){
 function issueFromSearch(clientCode){
 
   clientCode =
-    String(
-      clientCode || ""
-    )
+    String(clientCode || "")
     .trim()
     .toUpperCase();
 
-
   if(!clientCode){
 
-    alert(
-      "❌ Клиенттик код жок."
-    );
+    alert("❌ Клиенттик код жок.");
 
     return;
-
   }
-
 
   if(!confirm(
     "📦 " +
@@ -4132,15 +4125,10 @@ function issueFromSearch(clientCode){
   )){
 
     return;
-
   }
 
-
   const result =
-    document.getElementById(
-      "trackSearchResult"
-    );
-
+    document.getElementById("trackSearchResult");
 
   result.innerHTML = `
     <div class="loading">
@@ -4148,23 +4136,21 @@ function issueFromSearch(clientCode){
     </div>
   `;
 
-
   fetch(
     API_URL +
     "?action=issue_client" +
     "&client_code=" +
-    encodeURIComponent(
-      clientCode
-    )
+    encodeURIComponent(clientCode)
   )
 
   .then(function(response){
 
     if(!response.ok){
+
       throw new Error(
-        "HTTP " +
-        response.status
+        "HTTP " + response.status
       );
+
     }
 
     return response.json();
@@ -4176,10 +4162,7 @@ function issueFromSearch(clientCode){
     if(data.status === "ok"){
 
       const count =
-        Number(
-          data.issued_count || 0
-        );
-
+        Number(data.issued_count || 0);
 
       result.innerHTML = `
 
@@ -4191,22 +4174,17 @@ function issueFromSearch(clientCode){
 
           👤 Кардар:
           <b>
-            ${escapeHtml(
-              clientCode
-            )}
+            ${escapeHtml(clientCode)}
           </b>
 
           <br>
 
           📦 Берилди:
-          <b>
-            ${count}
-          </b>
+          <b>${count}</b>
 
         </div>
 
       `;
-
 
       alert(
         "✅ Даяр!\n\n" +
@@ -4216,17 +4194,14 @@ function issueFromSearch(clientCode){
         count
       );
 
-
       const input =
         document.getElementById(
           "trackSearchInput"
         );
 
-
       if(input){
         input.value = "";
       }
-
 
       loadDashboardData();
 
@@ -4262,9 +4237,7 @@ function issueFromSearch(clientCode){
 
         <br><br>
 
-        ${escapeHtml(
-          error.message
-        )}
+        ${escapeHtml(error.message)}
 
       </div>
 
@@ -4283,12 +4256,9 @@ function issueClient(){
 
   const clientCode =
     document
-      .getElementById(
-        "clientCode"
-      )
+      .getElementById("clientCode")
       .textContent
       .trim();
-
 
   if(!clientCode){
 
@@ -4297,9 +4267,7 @@ function issueClient(){
     );
 
     return;
-
   }
-
 
   if(!confirm(
     "📦 " +
@@ -4308,38 +4276,33 @@ function issueClient(){
   )){
 
     return;
-
   }
-
 
   const button =
     document.getElementById(
       "issueButton"
     );
 
-
   button.disabled = true;
 
   button.textContent =
     "⏳ ПОСЫЛКАЛАР БЕРИЛҮҮДӨ...";
 
-
   fetch(
     API_URL +
     "?action=issue_client" +
     "&client_code=" +
-    encodeURIComponent(
-      clientCode
-    )
+    encodeURIComponent(clientCode)
   )
 
   .then(function(response){
 
     if(!response.ok){
+
       throw new Error(
-        "HTTP " +
-        response.status
+        "HTTP " + response.status
       );
+
     }
 
     return response.json();
@@ -4355,10 +4318,8 @@ function issueClient(){
           data.issued_count || 0
         );
 
-
       button.textContent =
         "✅ БЕРИЛДИ";
-
 
       alert(
         "✅ ДАЯР!\n\n" +
@@ -4368,11 +4329,7 @@ function issueClient(){
         count
       );
 
-
-      loadClient(
-        clientCode
-      );
-
+      loadClient(clientCode);
 
       loadDashboardData();
 
@@ -4387,7 +4344,6 @@ function issueClient(){
           "Посылканы берүүдө ката кетти"
         )
       );
-
 
       button.disabled = false;
 
@@ -4405,11 +4361,9 @@ function issueClient(){
       error
     );
 
-
     alert(
       "❌ Сервер менен байланыш жок."
     );
-
 
     button.disabled = false;
 
@@ -4429,57 +4383,46 @@ function resetClient(){
 
   stopScanner();
 
-
   const clientCard =
     document.getElementById(
       "clientCard"
     );
 
-
   if(clientCard){
-    clientCard.style.display =
-      "none";
+    clientCard.style.display = "none";
   }
-
 
   const clientCode =
     document.getElementById(
       "clientCode"
     );
 
-
   if(clientCode){
     clientCode.textContent = "";
   }
-
 
   const parcelList =
     document.getElementById(
       "parcelList"
     );
 
-
   if(parcelList){
     parcelList.innerHTML = "";
   }
-
 
   const parcelStatus =
     document.getElementById(
       "parcelStatus"
     );
 
-
   if(parcelStatus){
     parcelStatus.innerHTML = "";
   }
-
 
   const button =
     document.getElementById(
       "issueButton"
     );
-
 
   if(button){
 
@@ -4490,28 +4433,23 @@ function resetClient(){
 
   }
 
-
   const searchInput =
     document.getElementById(
       "trackSearchInput"
     );
 
-
   if(searchInput){
     searchInput.value = "";
   }
-
 
   const searchResult =
     document.getElementById(
       "trackSearchResult"
     );
 
-
   if(searchResult){
     searchResult.innerHTML = "";
   }
-
 
   isProcessingQR = false;
 
@@ -4524,305 +4462,508 @@ function resetClient(){
 
 function escapeHtml(text){
 
-  return String(
-    text
-  )
+  return String(text)
 
-  .replace(
-    /&/g,
-    "&amp;"
-  )
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
-  .replace(
-    /</g,
-    "&lt;"
-  )
+}
 
-  .replace(
-    />/g,
-    "&gt;"
-  )
 
-  .replace(
-    /"/g,
-    "&quot;"
-  )
+/************************************************
+🔢 SAFE NUMBER
+************************************************/
 
-  .replace(
-    /'/g,
-    "&#039;"
+function toNumber(value){
+
+  if(
+    value === null ||
+    value === undefined ||
+    value === ""
+  ){
+
+    return 0;
+
+  }
+
+  if(typeof value === "number"){
+
+    return isNaN(value) ? 0 : value;
+
+  }
+
+  let text =
+    String(value)
+      .trim()
+      .replace(/\s/g,"")
+      .replace(",",".")
+      .replace(/[^\d.-]/g,"");
+
+  const number =
+    Number(text);
+
+  return isNaN(number)
+    ? 0
+    : number;
+
+}
+
+
+/************************************************
+💰 FINANCE VALUE HELPERS
+************************************************/
+
+/*
+  Dashboard finance'те айрым версияларда
+  киреше income эмес profit болуп келет.
+
+  Ошондуктан:
+
+  1. income
+  2. оплата клиентов
+  3. profit
+
+  тартибинде текшеребиз.
+*/
+
+function getFinanceRevenue(row){
+
+  if(!row){
+    return 0;
+  }
+
+  const income =
+    toNumber(
+      row.income
+    );
+
+  if(income !== 0){
+    return income;
+  }
+
+  const payment =
+    toNumber(
+      row["оплата клиентов"] ??
+      row["оплата_клиентов"] ??
+      row.payment
+    );
+
+  if(payment !== 0){
+    return payment;
+  }
+
+  return toNumber(
+    row.profit
   );
 
 }
 
 
 /************************************************
-💰 FINANCE ANALYSIS
+📉 LOGISTICS
 ************************************************/
 
-async function loadFinanceAnalysis(){
+function getFinanceLogistics(row){
 
-  try{
+  if(!row){
+    return 0;
+  }
 
-    const status =
-      document.getElementById(
-        "financeStatus"
-      );
+  return toNumber(
+    row.logistics ??
+    row.logistic ??
+    row.expense ??
+    row["расход"]
+  );
 
-
-    if(status){
-
-      status.textContent =
-        "⏳ Финансы жүктөлүүдө...";
-
-    }
+}
 
 
-    const response =
-      await fetch(
-        API_URL +
-        "?action=finance_analysis"
-      );
+/************************************************
+🏠 OTHER EXPENSE
+************************************************/
+
+function getFinanceOtherExpense(row){
+
+  if(!row){
+    return 0;
+  }
+
+  return toNumber(
+    row.otherExpense ??
+    row.other_expense ??
+    row.other_expenses ??
+    row["башка чыгым"] ??
+    row["башка чыгымдар"]
+  );
+
+}
 
 
-    if(!response.ok){
+/************************************************
+📦 PIECES
+************************************************/
 
-      throw new Error(
-        "HTTP " +
-        response.status
-      );
+function getFinancePieces(row){
 
-    }
+  if(!row){
+    return 0;
+  }
 
+  return toNumber(
+    row.pieces ??
+    row.parcels ??
+    row["штук"] ??
+    row["посылки"]
+  );
 
-    const data =
-      await response.json();
-
-
-    console.log(
-      "💰 FINANCE DATA:",
-      data
-    );
-
-
-    if(data.status === "error"){
-
-      throw new Error(
-        data.message ||
-        "Finance API error"
-      );
-
-    }
+}
 
 
-    /****************************************
-    💰 MAIN
-    ****************************************/
+/************************************************
+📅 FINANCE DATE
+************************************************/
+
+function getFinanceDate(row){
+
+  if(!row){
+    return "";
+  }
+
+  return (
+    row.date_send ||
+    row.date_arrival ||
+    row["дата отправки"] ||
+    row["дата_отправки"] ||
+    row["дата прихода"] ||
+    ""
+  );
+
+}
+
+
+/************************************************
+💰 FINANCE CALC
+************************************************/
+
+function normalizeFinanceRow(row){
+
+  row =
+    row || {};
+
+  const revenue =
+    getFinanceRevenue(row);
+
+  const logistics =
+    getFinanceLogistics(row);
+
+  const otherExpense =
+    getFinanceOtherExpense(row);
+
+  const totalExpense =
+    logistics +
+    otherExpense;
+
+  const profit =
+    revenue -
+    totalExpense;
+
+  return {
+
+    date_send:
+      row.date_send ||
+      row["дата отправки"] ||
+      row["дата_отправки"] ||
+      "",
+
+    date_arrival:
+      row.date_arrival ||
+      row["дата прихода"] ||
+      row["дата_прихода"] ||
+      "",
+
+    parties:
+      toNumber(
+        row.parties ??
+        row.party ??
+        1
+      ),
+
+    pieces:
+      getFinancePieces(row),
+
+    kg:
+      toNumber(row.kg),
+
+    revenue:
+      revenue,
+
+    logistics:
+      logistics,
+
+    otherExpense:
+      otherExpense,
+
+    totalExpense:
+      totalExpense,
+
+    profit:
+      profit
+
+  };
+
+}
+
+
+/************************************************
+💰 FINANCE SUMMARY
+************************************************/
+
+function renderFinanceSummary(
+  finance
+){
+
+  finance =
+    finance || [];
+
+  let income = 0;
+  let logistics = 0;
+  let otherExpense = 0;
+  let kg = 0;
+  let parties = 0;
+  let pieces = 0;
+
+  finance.forEach(function(row){
+
+    const item =
+      normalizeFinanceRow(row);
+
+    income +=
+      item.revenue;
+
+    logistics +=
+      item.logistics;
+
+    otherExpense +=
+      item.otherExpense;
+
+    kg +=
+      item.kg;
+
+    parties +=
+      item.parties;
+
+    pieces +=
+      item.pieces;
+
+  });
+
+  const totalExpense =
+    logistics +
+    otherExpense;
+
+  const profit =
+    income -
+    totalExpense;
+
+
+  /****************************************
+  💰 MAIN
+  ****************************************/
+
+  setStatValue(
+    "financeIncome",
+    formatMoney(income)
+  );
+
+  setStatValue(
+    "financeExpense",
+    formatMoney(totalExpense)
+  );
+
+  setStatValue(
+    "financeProfit",
+    formatMoney(profit)
+  );
+
+  setStatValue(
+    "financeKg",
+    formatNumber(kg) +
+    " KG"
+  );
+
+
+  /****************************************
+  📊 DETAILS
+  ****************************************/
+
+  setStatValue(
+    "financeParties",
+    formatNumber(parties)
+  );
+
+  setStatValue(
+    "financePieces",
+    formatNumber(pieces)
+  );
+
+  setStatValue(
+    "financeKgDetails",
+    formatNumber(kg) +
+    " KG"
+  );
+
+  setStatValue(
+    "financeLogistics",
+    formatMoney(logistics)
+  );
+
+  setStatValue(
+    "financeOtherExpense",
+    formatMoney(otherExpense)
+  );
+
+  setStatValue(
+    "financeTotalExpense",
+    formatMoney(totalExpense)
+  );
+
+
+  /****************************************
+  ⚖️ PER KG
+  ****************************************/
+
+  if(kg > 0){
 
     setStatValue(
-      "financeIncome",
+      "financeIncomePerKg",
       formatMoney(
-        data.income
+        income / kg
       )
     );
 
-
     setStatValue(
-      "financeExpense",
+      "financeLogisticsPerKg",
       formatMoney(
-        data.totalExpense
+        logistics / kg
       )
     );
 
-
     setStatValue(
-      "financeProfit",
+      "financeExpensePerKg",
       formatMoney(
-        data.profit
+        totalExpense / kg
       )
     );
 
-
     setStatValue(
-      "financeKg",
-      formatNumber(
-        data.kg
-      ) + " KG"
-    );
-
-
-    /****************************************
-    📊 DETAILS
-    ****************************************/
-
-    setStatValue(
-      "financeParties",
-      formatNumber(
-        data.parties
-      )
-    );
-
-
-    setStatValue(
-      "financePieces",
-      formatNumber(
-        data.pieces
-      )
-    );
-
-
-    setStatValue(
-      "financeKgDetails",
-      formatNumber(
-        data.kg
-      ) + " KG"
-    );
-
-
-    setStatValue(
-      "financeLogistics",
+      "financeProfitPerKg",
       formatMoney(
-        data.logistics
+        profit / kg
       )
     );
-
-
-    setStatValue(
-      "financeOtherExpense",
-      formatMoney(
-        data.expense
-      )
-    );
-
-
-    setStatValue(
-      "financeTotalExpense",
-      formatMoney(
-        data.totalExpense
-      )
-    );
-
-
-    /****************************************
-    ⚖️ PER KG
-    ****************************************/
-
-    const kg =
-      Number(
-        data.kg || 0
-      );
-
-
-    if(kg > 0){
-
-      setStatValue(
-        "financeIncomePerKg",
-        formatMoney(
-          data.income / kg
-        )
-      );
-
-
-      setStatValue(
-        "financeLogisticsPerKg",
-        formatMoney(
-          data.logistics / kg
-        )
-      );
-
-
-      setStatValue(
-        "financeExpensePerKg",
-        formatMoney(
-          data.totalExpense / kg
-        )
-      );
-
-
-      setStatValue(
-        "financeProfitPerKg",
-        formatMoney(
-          data.profit / kg
-        )
-      );
-
-    }
-
-
-    if(status){
-
-      status.className =
-        "status success";
-
-      status.textContent =
-        "✅ Финансы Google Sheets'тен ийгиликтүү алынды.";
-
-    }
-
-
-    const chart =
-      document.getElementById(
-        "financeChart"
-      );
-
-
-    if(chart){
-
-      chart.innerHTML = `
-
-        <div>
-
-          💰 Киреше:
-          <b>
-            ${formatMoney(data.income)}
-          </b>
-
-          <br><br>
-
-          🔴 Чыгым:
-          <b>
-            ${formatMoney(data.totalExpense)}
-          </b>
-
-          <br><br>
-
-          🟢 Таза пайда:
-          <b>
-            ${formatMoney(data.profit)}
-          </b>
-
-        </div>
-
-      `;
-
-    }
 
   }
 
-  catch(error){
+  else{
 
-    console.error(
-      "❌ FINANCE ERROR:",
-      error
+    setStatValue(
+      "financeIncomePerKg",
+      formatMoney(0)
     );
 
+    setStatValue(
+      "financeLogisticsPerKg",
+      formatMoney(0)
+    );
 
-    const status =
-      document.getElementById(
-        "financeStatus"
-      );
+    setStatValue(
+      "financeExpensePerKg",
+      formatMoney(0)
+    );
+
+    setStatValue(
+      "financeProfitPerKg",
+      formatMoney(0)
+    );
+
+  }
 
 
-    if(status){
+  /****************************************
+  📊 STATUS
+  ****************************************/
 
-      status.className =
-        "status error";
+  const status =
+    document.getElementById(
+      "financeStatus"
+    );
 
-      status.textContent =
-        "❌ Финансы жүктөлгөн жок: " +
-        error.message;
+  if(status){
 
-    }
+    status.className =
+      "status success";
+
+    status.textContent =
+      "✅ Финансы dashboard маалыматынан жаңыртылды.";
+
+  }
+
+
+  /****************************************
+  📈 SIMPLE CHART
+  ****************************************/
+
+  const chart =
+    document.getElementById(
+      "financeChart"
+    );
+
+  if(chart){
+
+    chart.innerHTML = `
+
+      <div>
+
+        💰 Киреше:
+        <b>
+          ${formatMoney(income)}
+        </b>
+
+        <br><br>
+
+        🚚 Логистика:
+        <b>
+          ${formatMoney(logistics)}
+        </b>
+
+        <br><br>
+
+        🏠 Башка чыгым:
+        <b>
+          ${formatMoney(otherExpense)}
+        </b>
+
+        <br><br>
+
+        🔴 Жалпы чыгым:
+        <b>
+          ${formatMoney(totalExpense)}
+        </b>
+
+        <br><br>
+
+        🟢 Таза пайда:
+        <b>
+          ${formatMoney(profit)}
+        </b>
+
+      </div>
+
+    `;
 
   }
 
@@ -4841,13 +4982,11 @@ async function loadDashboardData(){
       "📊 DASHBOARD LOADING..."
     );
 
-
     const response =
       await fetch(
         API_URL +
         "?action=dashboard"
       );
-
 
     if(!response.ok){
 
@@ -4858,10 +4997,8 @@ async function loadDashboardData(){
 
     }
 
-
     const data =
       await response.json();
-
 
     if(data.status !== "ok"){
 
@@ -4873,7 +5010,9 @@ async function loadDashboardData(){
     }
 
 
-    /* Маалыматты глобал сактайбыз */
+    /****************************************
+    💾 GLOBAL DATA
+    ****************************************/
 
     window.__dashboardData =
       data;
@@ -4892,18 +5031,15 @@ async function loadDashboardData(){
       stats.total_parcels
     );
 
-
     setStatValue(
       "inOffice",
       stats.in_office
     );
 
-
     setStatValue(
       "issued",
       stats.issued
     );
-
 
     setStatValue(
       "totalKg",
@@ -4922,18 +5058,15 @@ async function loadDashboardData(){
       stats.total_clients
     );
 
-
     setStatValue(
       "clientsTotalParcels",
       stats.total_parcels
     );
 
-
     setStatValue(
       "clientsInOffice",
       stats.in_office
     );
-
 
     setStatValue(
       "clientsIssued",
@@ -4980,13 +5113,25 @@ async function loadDashboardData(){
 
 
     /****************************************
-    💰 FINANCE HISTORY
+    💰 FINANCE
     ****************************************/
 
-    renderFinance(
-      data.finance || []
+    const finance =
+      data.finance || [];
+
+    renderFinanceSummary(
+      finance
     );
 
+    renderFinance(
+      finance
+    );
+
+
+    console.log(
+      "💰 FINANCE ROWS:",
+      finance.length
+    );
 
     console.log(
       "✅ DASHBOARD LOADED"
@@ -5000,6 +5145,22 @@ async function loadDashboardData(){
       "❌ DASHBOARD ERROR:",
       error
     );
+
+    const financeStatus =
+      document.getElementById(
+        "financeStatus"
+      );
+
+    if(financeStatus){
+
+      financeStatus.className =
+        "status error";
+
+      financeStatus.textContent =
+        "❌ Маалымат жүктөлгөн жок: " +
+        error.message;
+
+    }
 
   }
 
@@ -5016,15 +5177,11 @@ function setStatValue(
 ){
 
   const element =
-    document.getElementById(
-      id
-    );
-
+    document.getElementById(id);
 
   if(!element){
     return;
   }
-
 
   element.textContent =
     value == null
@@ -5041,14 +5198,14 @@ function setStatValue(
 function formatMoney(value){
 
   const number =
-    Number(
-      value || 0
-    );
-
+    toNumber(value);
 
   return (
     number.toLocaleString(
-      "ru-RU"
+      "ru-RU",
+      {
+        maximumFractionDigits:2
+      }
     ) +
     " сом"
   );
@@ -5062,8 +5219,8 @@ function formatMoney(value){
 
 function formatNumber(value){
 
-  return Number(
-    value || 0
+  return toNumber(
+    value
   ).toLocaleString(
     "ru-RU",
     {
@@ -5085,6 +5242,14 @@ function renderPeriodData(
 
   data =
     data || {};
+
+
+  const dashboard =
+    window.__dashboardData || {};
+
+
+  const finance =
+    dashboard.finance || [];
 
 
   const parcelsId =
@@ -5127,11 +5292,58 @@ function renderPeriodData(
 
   if(type === "week"){
 
+    let income =
+      toNumber(
+        data.income
+      );
+
+
+    if(income === 0){
+
+      finance.forEach(function(row){
+
+        const item =
+          normalizeFinanceRow(row);
+
+        const timestamp =
+          parseCargoDate(
+            item.date_send ||
+            item.date_arrival
+          );
+
+        if(!timestamp){
+          return;
+        }
+
+        const now =
+          new Date();
+
+        const weekStart =
+          new Date(
+            now.getTime() -
+            7 * 24 * 60 * 60 * 1000
+          );
+
+        if(
+          timestamp >=
+          weekStart.getTime() &&
+          timestamp <=
+          now.getTime()
+        ){
+
+          income +=
+            item.revenue;
+
+        }
+
+      });
+
+    }
+
+
     setStatValue(
       "weekIncome",
-      formatMoney(
-        data.income
-      )
+      formatMoney(income)
     );
 
   }
@@ -5139,11 +5351,69 @@ function renderPeriodData(
 
   if(type === "month"){
 
+    let profit =
+      toNumber(
+        data.profit
+      );
+
+
+    if(profit === 0){
+
+      let income = 0;
+      let expense = 0;
+
+      finance.forEach(function(row){
+
+        const item =
+          normalizeFinanceRow(row);
+
+        const timestamp =
+          parseCargoDate(
+            item.date_send ||
+            item.date_arrival
+          );
+
+        if(!timestamp){
+          return;
+        }
+
+        const now =
+          new Date();
+
+        const monthStart =
+          new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            1
+          );
+
+        if(
+          timestamp >=
+          monthStart.getTime() &&
+          timestamp <=
+          now.getTime()
+        ){
+
+          income +=
+            item.revenue;
+
+          expense +=
+            item.totalExpense;
+
+        }
+
+      });
+
+      profit =
+        income -
+        expense;
+
+    }
+
+
     setStatValue(
       "monthProfit",
-      formatMoney(
-        data.profit
-      )
+      formatMoney(profit)
     );
 
 
@@ -5186,21 +5456,17 @@ function renderCustom30Days(data){
   const finance =
     data.finance || [];
 
-
   const parties =
     data.parties || [];
 
-
   const now =
     new Date();
-
 
   const start =
     new Date(
       now.getTime() -
       30 * 24 * 60 * 60 * 1000
     );
-
 
   let kg = 0;
   let parcels = 0;
@@ -5212,9 +5478,9 @@ function renderCustom30Days(data){
 
     const date =
       parseCargoDate(
-        row.date_send
+        row.date_send ||
+        row.date_arrival
       );
-
 
     if(
       date >= start.getTime() &&
@@ -5224,13 +5490,11 @@ function renderCustom30Days(data){
       partyCount++;
 
       kg +=
-        Number(
-          row.kg || 0
-        );
+        toNumber(row.kg);
 
       parcels +=
-        Number(
-          row.parcels || 0
+        toNumber(
+          row.parcels
         );
 
     }
@@ -5240,12 +5504,14 @@ function renderCustom30Days(data){
 
   finance.forEach(function(row){
 
+    const item =
+      normalizeFinanceRow(row);
+
     const date =
       parseCargoDate(
-        row.date_send ||
-        row.date_arrival
+        item.date_send ||
+        item.date_arrival
       );
-
 
     if(
       date >= start.getTime() &&
@@ -5253,9 +5519,7 @@ function renderCustom30Days(data){
     ){
 
       income +=
-        Number(
-          row.income || 0
-        );
+        item.revenue;
 
     }
 
@@ -5267,19 +5531,16 @@ function renderCustom30Days(data){
     parcels
   );
 
-
   setStatValue(
     "periodKg",
     formatNumber(kg) +
     " KG"
   );
 
-
   setStatValue(
     "periodParties",
     partyCount
   );
-
 
   setStatValue(
     "periodIssued",
@@ -5298,10 +5559,8 @@ function renderAllPeriod(data){
   const finance =
     data.finance || [];
 
-
   const parties =
     data.parties || [];
-
 
   let kg = 0;
   let parcels = 0;
@@ -5311,14 +5570,10 @@ function renderAllPeriod(data){
   parties.forEach(function(row){
 
     kg +=
-      Number(
-        row.kg || 0
-      );
+      toNumber(row.kg);
 
     parcels +=
-      Number(
-        row.parcels || 0
-      );
+      toNumber(row.parcels);
 
   });
 
@@ -5326,9 +5581,7 @@ function renderAllPeriod(data){
   finance.forEach(function(row){
 
     income +=
-      Number(
-        row.income || 0
-      );
+      getFinanceRevenue(row);
 
   });
 
@@ -5338,19 +5591,16 @@ function renderAllPeriod(data){
     parcels
   );
 
-
   setStatValue(
     "periodKg",
     formatNumber(kg) +
     " KG"
   );
 
-
   setStatValue(
     "periodParties",
     parties.length
   );
-
 
   setStatValue(
     "periodIssued",
@@ -5369,22 +5619,17 @@ function calculateMonthlyGrowth(data){
   const finance =
     data.finance || [];
 
-
   const parties =
     data.parties || [];
-
 
   const now =
     new Date();
 
-
   const currentMonth =
     now.getMonth();
 
-
   const currentYear =
     now.getFullYear();
-
 
   const previousDate =
     new Date(
@@ -5393,28 +5638,30 @@ function calculateMonthlyGrowth(data){
       1
     );
 
-
   const previousMonth =
     previousDate.getMonth();
-
 
   const previousYear =
     previousDate.getFullYear();
 
 
   let current = {
+
     parcels:0,
     kg:0,
     parties:0,
     income:0
+
   };
 
 
   let previous = {
+
     parcels:0,
     kg:0,
     parties:0,
     income:0
+
   };
 
 
@@ -5430,34 +5677,24 @@ function calculateMonthlyGrowth(data){
         row.date_arrival
       );
 
-
     if(!timestamp){
       return;
     }
 
-
     const date =
       new Date(timestamp);
-
 
     const month =
       date.getMonth();
 
-
     const year =
       date.getFullYear();
 
-
     const kg =
-      Number(
-        row.kg || 0
-      );
-
+      toNumber(row.kg);
 
     const parcels =
-      Number(
-        row.parcels || 0
-      );
+      toNumber(row.parcels);
 
 
     if(
@@ -5472,7 +5709,6 @@ function calculateMonthlyGrowth(data){
       current.parcels += parcels;
 
     }
-
 
     else if(
       month === previousMonth &&
@@ -5496,34 +5732,30 @@ function calculateMonthlyGrowth(data){
 
   finance.forEach(function(row){
 
+    const item =
+      normalizeFinanceRow(row);
+
     const timestamp =
       parseCargoDate(
-        row.date_send ||
-        row.date_arrival
+        item.date_send ||
+        item.date_arrival
       );
-
 
     if(!timestamp){
       return;
     }
 
-
     const date =
       new Date(timestamp);
-
 
     const month =
       date.getMonth();
 
-
     const year =
       date.getFullYear();
 
-
     const income =
-      Number(
-        row.income || 0
-      );
+      item.revenue;
 
 
     if(
@@ -5535,7 +5767,6 @@ function calculateMonthlyGrowth(data){
         income;
 
     }
-
 
     else if(
       month === previousMonth &&
@@ -5596,7 +5827,6 @@ function calculateMonthlyGrowth(data){
       "growthSummary"
     );
 
-
   if(!summary){
     return;
   }
@@ -5624,7 +5854,6 @@ function calculateMonthlyGrowth(data){
     summary.className =
       "status success";
 
-
     summary.innerHTML = `
       🚀 <b>Бизнес өсүп жатат!</b>
 
@@ -5641,7 +5870,6 @@ function calculateMonthlyGrowth(data){
 
   }
 
-
   else if(
     kgGrowth < 0 ||
     incomeGrowth < 0
@@ -5649,7 +5877,6 @@ function calculateMonthlyGrowth(data){
 
     summary.className =
       "status warning";
-
 
     summary.innerHTML = `
       ⚠️ Өткөн айга салыштырмалуу
@@ -5672,12 +5899,10 @@ function calculateMonthlyGrowth(data){
 
   }
 
-
   else{
 
     summary.className =
       "status info";
-
 
     summary.innerHTML = `
       📊 Өсүү азырынча
@@ -5700,15 +5925,10 @@ function calculateGrowth(
 ){
 
   current =
-    Number(
-      current || 0
-    );
-
+    toNumber(current);
 
   previous =
-    Number(
-      previous || 0
-    );
+    toNumber(previous);
 
 
   if(previous === 0){
@@ -5750,15 +5970,16 @@ function setGrowth(
       valueId
     );
 
-
   const changeElement =
     document.getElementById(
       changeId
     );
 
 
-  if(!valueElement ||
-     !changeElement){
+  if(
+    !valueElement ||
+    !changeElement
+  ){
 
     return;
 
@@ -5766,19 +5987,13 @@ function setGrowth(
 
 
   const currentNumber =
-    Number(
-      current || 0
-    );
+    toNumber(current);
 
 
   valueElement.textContent =
     money
-      ? formatMoney(
-          currentNumber
-        )
-      : formatNumber(
-          currentNumber
-        );
+      ? formatMoney(currentNumber)
+      : formatNumber(currentNumber);
 
 
   const growth =
@@ -5789,7 +6004,7 @@ function setGrowth(
 
 
   if(
-    Number(previous || 0) === 0 &&
+    toNumber(previous) === 0 &&
     currentNumber > 0
   ){
 
@@ -5811,12 +6026,10 @@ function setGrowth(
       growth.toFixed(1) +
       "%";
 
-
     changeElement.className =
       "growth-change growth-up";
 
   }
-
 
   else if(growth < 0){
 
@@ -5825,18 +6038,15 @@ function setGrowth(
       growth.toFixed(1) +
       "%";
 
-
     changeElement.className =
       "growth-change growth-down";
 
   }
 
-
   else{
 
     changeElement.textContent =
       "→ 0%";
-
 
     changeElement.className =
       "growth-change growth-neutral";
@@ -5853,10 +6063,7 @@ function setGrowth(
 function formatPercent(value){
 
   const number =
-    Number(
-      value || 0
-    );
-
+    toNumber(value);
 
   if(number > 0){
 
@@ -5868,7 +6075,6 @@ function formatPercent(value){
 
   }
 
-
   if(number < 0){
 
     return (
@@ -5878,7 +6084,6 @@ function formatPercent(value){
     );
 
   }
-
 
   return "→ 0%";
 
@@ -5897,7 +6102,6 @@ function renderBatchHistory(
     document.getElementById(
       "batchHistory"
     );
-
 
   if(!container){
     return;
@@ -5936,14 +6140,12 @@ function renderBatchHistory(
             🚚 Партия
           </div>
 
-
           <div class="price">
             📤 Жөнөтүлгөн:
             ${escapeHtml(
               batch.date_send || ""
             )}
           </div>
-
 
           <div class="price">
             📥 Келген:
@@ -5952,7 +6154,6 @@ function renderBatchHistory(
             )}
           </div>
 
-
           <div class="price">
             📦 Посылка:
             <b>
@@ -5960,31 +6161,26 @@ function renderBatchHistory(
             </b>
           </div>
 
-
           <div class="price">
             ⚖️ Салмак:
             <b>
-              ${formatNumber(
-                batch.kg
-              )}
+              ${formatNumber(batch.kg)}
               KG
             </b>
           </div>
 
-
           <div class="price">
             💰 Киреше:
             ${formatMoney(
-              batch.income
+              getFinanceRevenue(batch)
             )}
           </div>
-
 
           <div class="price">
             💎 Таза пайда:
             <b>
               +${formatMoney(
-                batch.profit
+                toNumber(batch.profit)
               )}
             </b>
           </div>
@@ -6045,6 +6241,10 @@ function renderFinance(
     .reverse()
     .forEach(function(row){
 
+      const item =
+        normalizeFinanceRow(row);
+
+
       html += `
 
         <div class="parcel">
@@ -6057,7 +6257,7 @@ function renderFinance(
           <div class="price">
             📤 Жөнөтүлгөн:
             ${escapeHtml(
-              row.date_send || ""
+              item.date_send || ""
             )}
           </div>
 
@@ -6065,46 +6265,74 @@ function renderFinance(
           <div class="price">
             📥 Келген:
             ${escapeHtml(
-              row.date_arrival || ""
+              item.date_arrival || ""
             )}
           </div>
 
 
           <div class="price">
             📦 Партия:
-            ${row.parties || 0}
+            ${formatNumber(
+              item.parties
+            )}
+          </div>
+
+
+          <div class="price">
+            📦 Штук:
+            ${formatNumber(
+              item.pieces
+            )}
           </div>
 
 
           <div class="price">
             ⚖️ KG:
             ${formatNumber(
-              row.kg
+              item.kg
             )}
           </div>
 
 
           <div class="price">
-            📉 Чыгым:
+            🚚 Логистика:
             ${formatMoney(
-              row.expense
+              item.logistics
+            )}
+          </div>
+
+
+          <div class="price">
+            🏠 Башка чыгым:
+            ${formatMoney(
+              item.otherExpense
+            )}
+          </div>
+
+
+          <div class="price">
+            🔴 Жалпы чыгым:
+            ${formatMoney(
+              item.totalExpense
             )}
           </div>
 
 
           <div class="price">
             💰 Киреше:
-            ${formatMoney(
-              row.income
-            )}
+            <b>
+              ${formatMoney(
+                item.revenue
+              )}
+            </b>
           </div>
 
 
           <div class="price">
-            💎 Пайда:
+            💎 Таза пайда:
             <b>
-              +${formatMoney(
-                row.profit
+              ${formatMoney(
+                item.profit
               )}
             </b>
           </div>
@@ -6205,7 +6433,6 @@ document.addEventListener(
     console.log(
       "================================"
     );
-
 
     loadDashboardData();
 
