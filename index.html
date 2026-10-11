@@ -936,21 +936,22 @@ button:disabled{
     </div>
 
 
-    <div class="stat-card">
-
-      <div class="stat-icon">🏢</div>
-
-      <div class="stat-label">
-        Офисте
-      </div>
-
-      <div
-        class="stat-value"
-        id="inOffice">
-        —
-      </div>
-
-    </div>
+   <div
+  class="stat-card"
+  onclick="showOfficeSum()"
+  style="cursor:pointer;">  <div class="stat-icon">🏢</div>  <div class="stat-label">
+    Офисте
+  </div>  <div
+    class="stat-value"
+    id="inOffice">
+    —
+  </div>  <div style="
+    margin-top:7px;
+    font-size:10px;
+    color:#dc2626;
+    font-weight:800;">
+    💰 Жалпы сумманы көрүү
+  </div></div>
 
 
     <div class="stat-card">
@@ -6825,16 +6826,36 @@ document.addEventListener(
       API_URL
     );
 
-    console.log(
-      "================================"
-    );
-
-    loadDashboardData();
-
-  }
+   console.log(
+  "================================"
 );
 
+loadDashboardData();
+
+}
+);
+</script>
+
+<script>
+function showOfficeSum() {
+  const dashboard = window.__dashboardData || {};
+  const stats = dashboard.stats || {};
+
+  const sum = Number(stats.in_office_sum || 0);
+  const count = Number(stats.in_office || 0);
+
+  alert(
+    "🏢 ОФИСТЕГИ ПОСЫЛКАЛАР\n\n" +
+    "📦 Посылка саны: " + count +
+    "\n💰 Жалпы сумма: " +
+    sum.toLocaleString("ru-RU", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }) + " сом"
+  );
+}
 </script>
 
 </body>
-</html>
+</html>      
+
