@@ -1930,7 +1930,62 @@ button:disabled{
 
 </section>
 
+<!-- =====================================================
+     ЖЕТПЕЙ КАЛГАН ТОВАРЛАР
+===================================================== -->
 
+<section class="section" id="missingSection">
+
+  <div class="card">
+
+    <div class="card-head">
+      <div>
+        <div class="card-title">
+          📦 Жетпей калган товарлар
+        </div>
+
+        <div class="card-subtitle">
+          Кытайдан жөнөтүлгөн жана келген товарларды салыштыруу
+        </div>
+      </div>
+    </div>
+
+    <label for="missingDate">
+      📅 Кытайдан жөнөтүлгөн дата
+    </label>
+
+    <input
+      type="date"
+      id="missingDate"
+      style="
+        width:100%;
+        padding:14px;
+        margin-top:10px;
+        border:1px solid #ddd;
+        border-radius:12px;
+        font-size:16px;
+        box-sizing:border-box;
+      "
+    >
+
+    <button
+      class="btn btn-primary"
+      onclick="checkMissingPackages()"
+      style="width:100%;margin-top:15px;"
+    >
+      🔍 ТОВАРЛАРДЫ ТЕКШЕРҮҮ
+    </button>
+
+  </div>
+
+  <div id="missingMessage"></div>
+
+  <div
+    id="missingResults"
+    style="margin-top:15px;"
+  ></div>
+
+</section>
 <!-- =====================================================
      FINANCE
 ===================================================== -->
@@ -2400,7 +2455,15 @@ button:disabled{
     Партия
 
   </button>
+<button
+class="bottom-btn"
+id="navMissing"
+onclick="showSection('missing')">
 
+<span>📦</span>
+Жетпей калган
+
+</button>
 
   <button
     class="bottom-btn"
@@ -2462,14 +2525,14 @@ let isProcessingQR = false;
 function showSection(name){
 
   const sections = [
-    "dashboard",
-    "scanner",
-    "batches",
-    "statistics",
-    "finance",
-    "clients"
-  ];
-
+"dashboard",
+"scanner",
+"batches",
+"missing",
+"statistics",
+"finance",
+"clients"
+];
 
   sections.forEach(function(section){
 
@@ -6862,7 +6925,211 @@ function showOfficeSum() {
     }) + " сом"
   );
 }
-</script>
+// ================================================
+// 📦 ЖЕТПЕЙ КАЛГАН ТОВАРЛАРДЫ ТЕКШЕРҮҮ
+// ================================================
+
+async function checkMissingPackages() {
+
+const dateInput = document.getElementById("missingDate");
+const message = document.getElementById("missingMessage");
+const results = document.getElementById("missingResults");
+
+const selectedDate = dateInput.value;
+
+if (!selectedDate) {
+message.innerHTML = "<div class="card" style="color:#c62828"> 📅 Кытайдан жөнөтүлгөн датаны тандаңыз! </div>";
+results.innerHTML = "";
+return;
+}
+
+message.innerHTML = "<div class="card"> ⏳ Маалыматтар текшерилип жатат... </div>";
+
+results.innerHTML = "";
+
+try {
+
+const url =
+  API_URL +
+  "?action=missing_packages&date=" +
+  encodeURIComponent(selectedDate);
+
+const response = await fetch(url);
+
+if (!response.ok) {
+  throw new Error("Серверден маалымат алуу мүмкүн болгон жок");
+}
+
+const data = await response.json();
+
+if (data.status !== "success") {
+  throw new Error(data.message || "Маалымат табылган жок");
+}
+
+message.innerHTML = `
+  <div class="card">
+
+    <div class="card-title">
+      📊 ПАРТИЯНЫН ЖЫЙЫНТЫГЫ
+    </div>
+
+    <div style="margin-top:15px;line-height:2">
+
+      <div>
+        📅 Жөнөтүлгөн дата:
+        <b>${selectedDate}</b>
+      </div>
+
+      <div>
+        📦 Жалпы жөнөтүлгөн:
+        <b>${data.total_sent}</b>
+      </div>
+
+      <div style="color:#16803d">
+        ✅ Келген товарлар:
+        <b>${data.total_received}</b>
+      </div>
+
+      <div style="color:#c62828;font-size:18px">
+        ❌ Жетпей калган:
+        <b>${data.total_missing}</b>
+      </div>
+
+    </div>
+
+  </div>
+`;
+
+if (!data.missing || data.missing.length === 0) {
+
+  results.innerHTML = `
+    <div class="card" style="text-align:center;padding:25px">
+      <div style="font-size:35px">✅</div>
+      <h3>Бардык товарлар келген!</h3>
+      <p>Бул партиядан жетпей калган товар табылган жок.</p>
+    </div>
+  `;
+
+  return;
+}
+
+let html = `
+  <div class="card">
+
+    <div class="card-title">
+      ❌ ЖЕТПЕЙ КАЛГАН ТОВАРЛАРДЫН ТИЗМЕСИ
+    </div>
+
+    <div class="card-subtitle">
+      Жалпы ${data.missing.length} товар
+    </div>
+
+  </div>
+`;
+
+data.missing.forEach(function(item, index) {
+
+  const track = escapeHtml(String(item.track_code || ""));
+  const clientCode = escapeHtml(String(item.client_code || ""));
+  const clientName = escapeHtml(String(item.client_name || ""));
+  const phone = escapeHtml(String(item.phone || ""));
+  const status = escapeHtml(String(item.status || ""));
+
+  html += `
+    <div class="card" style="margin-bottom:12px">
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:10px;
+        margin-bottom:12px;
+      ">
+
+        <b style="font-size:16px">
+          📦 ${index + 1}. ${track}
+        </b>
+
+        <span style="
+          color:#c62828;
+          background:#ffebee;
+          padding:5px 9px;
+          border-radius:8px;
+          font-size:12px;
+          white-space:nowrap;
+        ">
+          Жеткен жок
+        </span>
+
+      </div>
+
+      <div style="line-height:1.9">
+
+        <div>
+          👤 Кардар:
+          <b>${clientName}</b>
+        </div>
+
+        <div>
+          🆔 Кардардын коду:
+          <b>${clientCode}</b>
+        </div>
+
+        <div>
+          📞 Телефон:
+          <b>${phone || "Көрсөтүлгөн эмес"}</b>
+        </div>
+
+        <div>
+          📋 Азыркы статус:
+          <b>${status || "Белгисиз"}</b>
+        </div>
+
+      </div>
+
+      ${
+        phone
+          ? `<a
+              href="tel:${phone.replace(/[^\d+]/g, "")}"
+              class="btn btn-primary"
+              style="
+                display:block;
+                text-align:center;
+                text-decoration:none;
+                margin-top:12px;
+              "
+            >📞 Кардарга чалуу</a>`
+          : ""
+      }
+
+    </div>
+  `;
+
+});
+
+results.innerHTML = html;
+
+} catch (error) {
+
+message.innerHTML = `
+  <div class="card" style="color:#c62828">
+
+    <h3>❌ Ката чыкты</h3>
+
+    <p>${escapeHtml(String(error.message || error))}</p>
+
+    <p>Интернетти жана сервердин иштешин текшериңиз.</p>
+
+  </div>
+`;
+
+results.innerHTML = "";
+
+console.error("checkMissingPackages error:", error);
+
+}
+
+}</script>
 
 </body>
 </html>      
