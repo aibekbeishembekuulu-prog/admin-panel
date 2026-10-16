@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>e
 <html lang="ky">
 <head>
 
@@ -6908,21 +6908,31 @@ loadDashboardData();
 </script>
 
 <script>
+// ================================================
+// 💰 ОФИСТЕГИ ПОСЫЛКАЛАРДЫН ЖАЛПЫ СУММАСЫ
+// ================================================
+
 function showOfficeSum() {
   const dashboard = window.__dashboardData || {};
   const stats = dashboard.stats || {};
 
-  const sum = Number(stats.in_office_sum || 0);
+  console.log("📊 DASHBOARD DATA:", dashboard);
+  console.log("📦 ОФИСТЕГИ ПОСЫЛКАЛАР:", stats.in_office);
+  console.log("💰 ОФИСТЕГИ ЖАЛПЫ СУММА:", stats.in_office_sum);
+
   const count = Number(stats.in_office || 0);
+  const sum = Number(stats.in_office_sum || 0);
 
   alert(
     "🏢 ОФИСТЕГИ ПОСЫЛКАЛАР\n\n" +
-    "📦 Посылка саны: " + count +
+    "📦 Посылка саны: " +
+    count.toLocaleString("ru-RU") +
     "\n💰 Жалпы сумма: " +
     sum.toLocaleString("ru-RU", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
-    }) + " сом"
+    }) +
+    " сом"
   );
 }
 // ================================================
@@ -6938,17 +6948,24 @@ const results = document.getElementById("missingResults");
 const selectedDate = dateInput.value;
 
 if (!selectedDate) {
-message.innerHTML = "<div class="card" style="color:#c62828"> 📅 Кытайдан жөнөтүлгөн датаны тандаңыз! </div>";
-results.innerHTML = "";
-return;
+  message.innerHTML = `
+    <div class="card" style="color:#c62828">
+      📅 Кытайдан жөнөтүлгөн датаны тандаңыз!
+    </div>
+  `;
+  results.innerHTML = "";
+  return;
 }
 
-message.innerHTML = "<div class="card"> ⏳ Маалыматтар текшерилип жатат... </div>";
+message.innerHTML = `
+  <div class="card">
+    ⏳ Маалыматтар текшерилип жатат...
+  </div>
+`;
 
 results.innerHTML = "";
 
 try {
-
 const url =
   API_URL +
   "?action=missing_packages&date=" +
