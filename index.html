@@ -5262,58 +5262,92 @@ function normalizeFinanceRow(row){
   };
 
 }
-
-
 /************************************************
-💰 FINANCE SUMMARY
+💰 FINANCE SUMMARY — TEZ KARGO
 ************************************************/
 
-function renderFinanceSummary(
-  finance
-){
+async function renderFinanceSummary(finance) {
 
-  finance =
-    finance || [];
+  try {
 
-  let income = 0;
-  let logistics = 0;
-  let otherExpense = 0;
-  let kg = 0;
-  let parties = 0;
-  let pieces = 0;
+    const response = await fetch(
+      API_URL + "?action=finance_analysis"
+    );
 
-  finance.forEach(function(row){
+    const data = await response.json();
 
-    const item =
-      normalizeFinanceRow(row);
+    if (data.status !== "ok") {
+      throw new Error(data.message || "Финансы маалыматы алынган жок");
+    }
 
-    income +=
-      item.revenue;
+    const income = Number(data.income) || 0;
+    const logistics = Number(data.logistics) || 0;
+    const otherExpense = Number(data.expense) || 0;
+    const totalExpense = Number(data.totalExpense) || 0;
+    const totalPartyProfit = Number(data.totalPartyProfit) || 0;
+    const profit = Number(data.profit) || 0;
+    const kg = Number(data.kg) || 0;
+    const parties = Number(data.parties) || 0;
+    const pieces = Number(data.pieces) || 0;
 
-    logistics +=
-      item.logistics;
+    // Негизги көрсөткүчтөр
+    setStatValue("financeIncome", formatMoney(income));
+    setStatValue("financeExpense", formatMoney(totalExpense));
+    setStatValue("financeProfit", formatMoney(profit));
 
-    otherExpense +=
-      item.otherExpense;
+    // Партия жана салмак
+    setStatValue("financeKg", formatNumber(kg) + " KG");
+    setStatValue("financeParties", formatNumber(parties));
+    setStatValue("financePieces", formatNumber(pieces));
+    setStatValue("financeKgDetails", formatNumber(kg) + " KG");
 
-    kg +=
-      item.kg;
+    // Чыгымдар
+    setStatValue("financeLogistics", formatMoney(logistics));
+    setStatValue("financeOtherExpense", formatMoney(otherExpense));
+    setStatValue("financeTotalExpense", formatMoney(totalExpense));
 
-    parties +=
-      item.parties;
+    // Бир килограммга эсептегенде
+    setStatValue(
+      "financeIncomePerKg",
+      formatMoney(kg ? income / kg : 0)
+    );
 
-    pieces +=
-      item.pieces;
+    setStatValue(
+      "financeLogisticsPerKg",
+      formatMoney(kg ? logistics / kg : 0)
+    );
 
-  });
+    setStatValue(
+      "financeExpensePerKg",
+      formatMoney(kg ? totalExpense / kg : 0)
+    );
 
-  const totalExpense =
-    logistics +
-    otherExpense;
+    setStatValue(
+      "financeProfitPerKg",
+      formatMoney(kg ? profit / kg : 0)
+    );
 
-  const profit =
-    income -
-    totalExpense;
+    setStatValue(
+      "financeStatus",
+      "✅ Финансы Google Таблицадан жаңыртылды"
+    );
+
+    window.__financeAnalysis = data;
+
+    console.log("TEZ KARGO FINANCE:", data);
+
+  } catch (error) {
+
+    console.error("Finance error:", error);
+
+    setStatValue(
+      "financeStatus",
+      "❌ Финансы катасы: " + error.message
+    );
+
+  }
+
+}
 
 
   /****************************************
@@ -6815,7 +6849,67 @@ function renderFinance(
     html;
 
 }
+/************************************************
+💰 TEZ KARGO — ТУУРА ФИНАНСЫНЫ ЖҮКТӨӨ
+************************************************/
 
+async function loadFinanceAnalysis() {
+
+try {
+
+console.log("💰 Финансы жүктөлүп жатат...");  
+
+const response = await fetch(  
+  API_URL + "?action=finance_analysis"  
+);  
+
+if (!response.ok) {  
+  throw new Error("HTTP " + response.status);  
+}  
+
+const data = await response.json();  
+
+if (data.status !== "ok") {  
+  throw new Error(  
+    data.message || "Финансы API катасы"  
+  );  
+}  
+
+// API түз берген эсептөөлөр  
+const financeData = data.data || data;  
+
+window.__financeAnalysis = financeData;  
+
+console.log("💰 ФИНАНСЫНЫН ТУУРА МААЛЫМАТЫ:", financeData);  
+
+// Каржы карточкаларын жаңыртуу  
+const values = {  
+  income: financeData.income,  
+  logistics: financeData.logistics,  
+  otherExpense: financeData.expense,  
+  totalExpense: financeData.totalExpense,  
+  profit: financeData.profit  
+};  
+
+console.log("Жалпы киреше:", values.income);  
+console.log("Логистика:", values.logistics);  
+console.log("Башка чыгым:", values.otherExpense);  
+console.log("Жалпы чыгым:", values.totalExpense);  
+console.log("Таза пайда:", values.profit);  
+
+return financeData;
+
+} catch (error) {
+
+console.error(  
+  "❌ FINANCE ANALYSIS ERROR:",  
+  error  
+);  
+
+return null;
+
+}
+} 
 
 /************************************************
 📱 PAGE SHOW
