@@ -11,14 +11,6 @@
       user-scalable=no">
 
 <title>Tez Kargo — Premium Admin</title>
-      <meta property="og:title" content="Tez Kargo — Premium Admin">
-<meta property="og:description" content="Tez Kargo карго башкаруу системасы. Посылкалар, кардарлар, статистика жана финансы.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://aibekbeishembekuulu-prog.github.io/admin-panel/">
-<meta property="og:image" content="https://aibekbeishembekuulu-prog.github.io/admin-panel/logo.png">
-<meta property="og:image:width" content="512">
-<meta property="og:image:height" content="512">
-<meta name="twitter:card" content="summary">
 
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
@@ -944,22 +936,21 @@ button:disabled{
     </div>
 
 
-   <div
-  class="stat-card"
-  onclick="showOfficeSum()"
-  style="cursor:pointer;">  <div class="stat-icon">🏢</div>  <div class="stat-label">
-    Офисте
-  </div>  <div
-    class="stat-value"
-    id="inOffice">
-    —
-  </div>  <div style="
-    margin-top:7px;
-    font-size:10px;
-    color:#dc2626;
-    font-weight:800;">
-    💰 Жалпы сумманы көрүү
-  </div></div>
+    <div class="stat-card">
+
+      <div class="stat-icon">🏢</div>
+
+      <div class="stat-label">
+        Офисте
+      </div>
+
+      <div
+        class="stat-value"
+        id="inOffice">
+        —
+      </div>
+
+    </div>
 
 
     <div class="stat-card">
@@ -1285,7 +1276,492 @@ button:disabled{
   </div>
 
 </section>
+
+
 <!-- =====================================================
+     STATISTICS
+===================================================== -->
+
+<section
+  class="section"
+  id="statisticsSection">
+
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          📈 Статистика
+        </div>
+
+        <div class="card-subtitle">
+          Cargo ишинин негизги көрсөткүчтөрү
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="period-row">
+
+      <button
+        class="period-btn active"
+        onclick="selectPeriod(this,'week')">
+
+        7 күн
+
+      </button>
+
+
+      <button
+        class="period-btn"
+        onclick="selectPeriod(this,'30')">
+
+        30 күн
+
+      </button>
+
+
+      <button
+        class="period-btn"
+        onclick="selectPeriod(this,'month')">
+
+        Бул ай
+
+      </button>
+
+
+      <button
+        class="period-btn"
+        onclick="selectPeriod(this,'all')">
+
+        Баары
+
+      </button>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+
+        <div class="stat-icon">📦</div>
+
+        <div class="stat-label">
+          Посылкалар
+        </div>
+
+        <div
+          class="stat-value"
+          id="periodParcels">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">⚖️</div>
+
+        <div class="stat-label">
+          KG
+        </div>
+
+        <div
+          class="stat-value"
+          id="periodKg">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">🚚</div>
+
+        <div class="stat-label">
+          Партия
+        </div>
+
+        <div
+          class="stat-value"
+          id="periodParties">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">✅</div>
+
+        <div class="stat-label">
+          Берилди
+        </div>
+
+        <div
+          class="stat-value"
+          id="periodIssued">
+          —
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="chart-placeholder">
+
+      <div>
+
+        📊
+
+        <br><br>
+
+        Статистика автоматтык
+        түрдө Google Sheets маалыматынан
+        эсептелет.
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- WEEK -->
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          📅 1 жумалык отчет
+        </div>
+
+        <div class="card-subtitle">
+          Акыркы 7 күн
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+      <div class="feature-card">
+
+        <div class="feature-icon">📦</div>
+
+        <div class="feature-title">
+          Посылка
+        </div>
+
+        <div
+          class="feature-text"
+          id="weekParcels">
+          0
+        </div>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">⚖️</div>
+
+        <div class="feature-title">
+          KG
+        </div>
+
+        <div
+          class="feature-text"
+          id="weekKg">
+          0 KG
+        </div>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">🚚</div>
+
+        <div class="feature-title">
+          Партия
+        </div>
+
+        <div
+          class="feature-text"
+          id="weekParties">
+          0
+        </div>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">💰</div>
+
+        <div class="feature-title">
+          Түшүм
+        </div>
+
+        <div
+          class="feature-text"
+          id="weekIncome">
+          0 сом
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- MONTH -->
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          📆 Айлык отчет
+        </div>
+
+        <div class="card-subtitle">
+          Бул айдын көрсөткүчтөрү
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+      <div class="feature-card">
+
+        <div class="feature-icon">📦</div>
+
+        <div class="feature-title">
+          Посылка
+        </div>
+
+        <div
+          class="feature-text"
+          id="monthParcels">
+          0
+        </div>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">⚖️</div>
+
+        <div class="feature-title">
+          Жалпы KG
+        </div>
+
+        <div
+          class="feature-text"
+          id="monthKg">
+          0 KG
+        </div>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">🚚</div>
+
+        <div class="feature-title">
+          Партия
+        </div>
+
+        <div
+          class="feature-text"
+          id="monthParties">
+          0
+        </div>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">💎</div>
+
+        <div class="feature-title">
+          Таза пайда
+        </div>
+
+        <div
+          class="feature-text"
+          id="monthProfit">
+          0 сом
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- MONTH GROWTH -->
+
+  <div class="growth-card">
+
+    <div class="growth-title">
+      📈 Өсүү — өткөн айга салыштырмалуу
+    </div>
+
+    <div class="growth-subtitle">
+      Бул айды мурунку ай менен салыштыруу
+    </div>
+
+
+    <div class="growth-grid">
+
+      <div class="growth-item">
+
+        <div class="growth-item-label">
+          📦 Посылка
+        </div>
+
+        <div
+          class="growth-current"
+          id="growthParcels">
+          —
+        </div>
+
+        <div
+          class="growth-change"
+          id="growthParcelsChange">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="growth-item">
+
+        <div class="growth-item-label">
+          ⚖️ KG
+        </div>
+
+        <div
+          class="growth-current"
+          id="growthKg">
+          —
+        </div>
+
+        <div
+          class="growth-change"
+          id="growthKgChange">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="growth-item">
+
+        <div class="growth-item-label">
+          🚚 Партия
+        </div>
+
+        <div
+          class="growth-current"
+          id="growthParties">
+          —
+        </div>
+
+        <div
+          class="growth-change"
+          id="growthPartiesChange">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="growth-item">
+
+        <div class="growth-item-label">
+          💰 Киреше
+        </div>
+
+        <div
+          class="growth-current"
+          id="growthIncome">
+          —
+        </div>
+
+        <div
+          class="growth-change"
+          id="growthIncomeChange">
+          —
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+
+        <div class="card-title">
+          🎯 Өсүү көрсөткүчү
+        </div>
+
+        <div class="card-subtitle">
+          Бизнес кайсы багытта өсүп жатканын көрүү
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="status info"
+      id="growthSummary">
+
+      📊 Маалымат эсептелүүдө...
+
+    </div>
+
+  </div>
+
+</section>
+
+     <!-- =====================================================
      BATCHES
 ===================================================== -->
 
@@ -1444,62 +1920,7 @@ button:disabled{
 
 </section>
 
-<!-- =====================================================
-     ЖЕТПЕЙ КАЛГАН ТОВАРЛАР
-===================================================== -->
 
-<section class="section" id="missingSection">
-
-  <div class="card">
-
-    <div class="card-head">
-      <div>
-        <div class="card-title">
-          📦 Жетпей калган товарлар
-        </div>
-
-        <div class="card-subtitle">
-          Кытайдан жөнөтүлгөн жана келген товарларды салыштыруу
-        </div>
-      </div>
-    </div>
-
-    <label for="missingDate">
-      📅 Кытайдан жөнөтүлгөн дата
-    </label>
-
-    <input
-      type="date"
-      id="missingDate"
-      style="
-        width:100%;
-        padding:14px;
-        margin-top:10px;
-        border:1px solid #ddd;
-        border-radius:12px;
-        font-size:16px;
-        box-sizing:border-box;
-      "
-    >
-
-    <button
-      class="btn btn-primary"
-      onclick="checkMissingPackages()"
-      style="width:100%;margin-top:15px;"
-    >
-      🔍 ТОВАРЛАРДЫ ТЕКШЕРҮҮ
-    </button>
-
-  </div>
-
-  <div id="missingMessage"></div>
-
-  <div
-    id="missingResults"
-    style="margin-top:15px;"
-  ></div>
-
-</section>
 <!-- =====================================================
      FINANCE
 ===================================================== -->
@@ -1969,15 +2390,7 @@ button:disabled{
     Партия
 
   </button>
-<button
-class="bottom-btn"
-id="navMissing"
-onclick="showSection('missing')">
 
-<span>📦</span>
-Жетпей калган
-
-</button>
 
   <button
     class="bottom-btn"
@@ -2039,14 +2452,14 @@ let isProcessingQR = false;
 function showSection(name){
 
   const sections = [
-"dashboard",
-"scanner",
-"batches",
-"missing",
-"statistics",
-"finance",
-"clients"
-];
+    "dashboard",
+    "scanner",
+    "batches",
+    "statistics",
+    "finance",
+    "clients"
+  ];
+
 
   sections.forEach(function(section){
 
@@ -3331,9 +3744,7 @@ async function handleQR(qrText){
   );
 
 }
-
-
-/************************************************
+    /************************************************
 👤 LOAD CLIENT
 ************************************************/
 
@@ -3732,7 +4143,9 @@ function renderOfficeParcels(parcels){
     html;
 
 }
- /************************************************
+
+
+/************************************************
 📦 ISSUED
 ************************************************/
 
@@ -4774,92 +5187,58 @@ function normalizeFinanceRow(row){
   };
 
 }
+
+
 /************************************************
-💰 FINANCE SUMMARY — TEZ KARGO
+💰 FINANCE SUMMARY
 ************************************************/
 
-async function renderFinanceSummary(finance) {
+function renderFinanceSummary(
+  finance
+){
 
-  try {
+  finance =
+    finance || [];
 
-    const response = await fetch(
-      API_URL + "?action=finance_analysis"
-    );
+  let income = 0;
+  let logistics = 0;
+  let otherExpense = 0;
+  let kg = 0;
+  let parties = 0;
+  let pieces = 0;
 
-    const data = await response.json();
+  finance.forEach(function(row){
 
-    if (data.status !== "ok") {
-      throw new Error(data.message || "Финансы маалыматы алынган жок");
-    }
+    const item =
+      normalizeFinanceRow(row);
 
-    const income = Number(data.income) || 0;
-    const logistics = Number(data.logistics) || 0;
-    const otherExpense = Number(data.expense) || 0;
-    const totalExpense = Number(data.totalExpense) || 0;
-    const totalPartyProfit = Number(data.totalPartyProfit) || 0;
-    const profit = Number(data.profit) || 0;
-    const kg = Number(data.kg) || 0;
-    const parties = Number(data.parties) || 0;
-    const pieces = Number(data.pieces) || 0;
+    income +=
+      item.revenue;
 
-    // Негизги көрсөткүчтөр
-    setStatValue("financeIncome", formatMoney(income));
-    setStatValue("financeExpense", formatMoney(totalExpense));
-    setStatValue("financeProfit", formatMoney(profit));
+    logistics +=
+      item.logistics;
 
-    // Партия жана салмак
-    setStatValue("financeKg", formatNumber(kg) + " KG");
-    setStatValue("financeParties", formatNumber(parties));
-    setStatValue("financePieces", formatNumber(pieces));
-    setStatValue("financeKgDetails", formatNumber(kg) + " KG");
+    otherExpense +=
+      item.otherExpense;
 
-    // Чыгымдар
-    setStatValue("financeLogistics", formatMoney(logistics));
-    setStatValue("financeOtherExpense", formatMoney(otherExpense));
-    setStatValue("financeTotalExpense", formatMoney(totalExpense));
+    kg +=
+      item.kg;
 
-    // Бир килограммга эсептегенде
-    setStatValue(
-      "financeIncomePerKg",
-      formatMoney(kg ? income / kg : 0)
-    );
+    parties +=
+      item.parties;
 
-    setStatValue(
-      "financeLogisticsPerKg",
-      formatMoney(kg ? logistics / kg : 0)
-    );
+    pieces +=
+      item.pieces;
 
-    setStatValue(
-      "financeExpensePerKg",
-      formatMoney(kg ? totalExpense / kg : 0)
-    );
+  });
 
-    setStatValue(
-      "financeProfitPerKg",
-      formatMoney(kg ? profit / kg : 0)
-    );
+  const totalExpense =
+    logistics +
+    otherExpense;
 
-    setStatValue(
-      "financeStatus",
-      "✅ Финансы Google Таблицадан жаңыртылды"
-    );
-
-    window.__financeAnalysis = data;
-
-    console.log("TEZ KARGO FINANCE:", data);
-
-  } catch (error) {
-
-    console.error("Finance error:", error);
-
-    setStatValue(
-      "financeStatus",
-      "❌ Финансы катасы: " + error.message
-    );
-
-  }
-
-}
+  const profit =
+    income -
+    totalExpense;
 
 
   /****************************************
@@ -5703,51 +6082,57 @@ function renderAllPeriod(data){
 
 
 /************************************************
-📈 MONTHLY GROWTH — FIX
+📈 MONTHLY GROWTH
 ************************************************/
 
-function calculateMonthlyGrowth(data) {
+function calculateMonthlyGrowth(data){
 
-  data = data || {};
+  const finance =
+    data.finance || [];
 
-  const finance = data.finance || [];
-  const parties = data.parties || [];
+  const parties =
+    data.parties || [];
 
-  const now = new Date();
+  const now =
+    new Date();
 
-  // Ушул айдын башы
-  const currentStart = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    1
-  );
+  const currentMonth =
+    now.getMonth();
 
-  // Өткөн айдын башы
-  const previousStart = new Date(
-    now.getFullYear(),
-    now.getMonth() - 1,
-    1
-  );
+  const currentYear =
+    now.getFullYear();
 
-  // Өткөн айдын ушул күнүнө чейинки мезгил
-  const previousEnd = new Date(
-    now.getFullYear(),
-    now.getMonth() - 1,
-    now.getDate() + 1
-  );
+  const previousDate =
+    new Date(
+      currentYear,
+      currentMonth - 1,
+      1
+    );
+
+  const previousMonth =
+    previousDate.getMonth();
+
+  const previousYear =
+    previousDate.getFullYear();
+
 
   let current = {
-    parcels: 0,
-    kg: 0,
-    parties: 0,
-    income: 0
+
+    parcels:0,
+    kg:0,
+    parties:0,
+    income:0
+
   };
 
+
   let previous = {
-    parcels: 0,
-    kg: 0,
-    parties: 0,
-    income: 0
+
+    parcels:0,
+    kg:0,
+    parties:0,
+    income:0
+
   };
 
 
@@ -5755,32 +6140,56 @@ function calculateMonthlyGrowth(data) {
   🚚 PARTIES
   ****************************************/
 
-  parties.forEach(function(row) {
+  parties.forEach(function(row){
 
-    const timestamp = parseCargoDate(
-      row.date_arrival || row.date_send
-    );
+    const timestamp =
+      parseCargoDate(
+        row.date_send ||
+        row.date_arrival
+      );
 
-    if (!timestamp) return;
+    if(!timestamp){
+      return;
+    }
 
-    const date = new Date(timestamp);
+    const date =
+      new Date(timestamp);
 
-    const kg = toNumber(row.kg);
-    const parcels = toNumber(row.parcels);
+    const month =
+      date.getMonth();
 
-    if (date >= currentStart && date <= now) {
+    const year =
+      date.getFullYear();
+
+    const kg =
+      toNumber(row.kg);
+
+    const parcels =
+      toNumber(row.parcels);
+
+
+    if(
+      month === currentMonth &&
+      year === currentYear
+    ){
 
       current.parties++;
+
       current.kg += kg;
+
       current.parcels += parcels;
 
-    } else if (
-      date >= previousStart &&
-      date < previousEnd
-    ) {
+    }
+
+    else if(
+      month === previousMonth &&
+      year === previousYear
+    ){
 
       previous.parties++;
+
       previous.kg += kg;
+
       previous.parcels += parcels;
 
     }
@@ -5792,29 +6201,51 @@ function calculateMonthlyGrowth(data) {
   💰 FINANCE
   ****************************************/
 
-  finance.forEach(function(row) {
+  finance.forEach(function(row){
 
-    const item = normalizeFinanceRow(row);
+    const item =
+      normalizeFinanceRow(row);
 
-    const timestamp = parseCargoDate(
-      item.date_arrival || item.date_send
-    );
+    const timestamp =
+      parseCargoDate(
+        item.date_send ||
+        item.date_arrival
+      );
 
-    if (!timestamp) return;
+    if(!timestamp){
+      return;
+    }
 
-    const date = new Date(timestamp);
-    const income = toNumber(item.revenue);
+    const date =
+      new Date(timestamp);
 
-    if (date >= currentStart && date <= now) {
+    const month =
+      date.getMonth();
 
-      current.income += income;
+    const year =
+      date.getFullYear();
 
-    } else if (
-      date >= previousStart &&
-      date < previousEnd
-    ) {
+    const income =
+      item.revenue;
 
-      previous.income += income;
+
+    if(
+      month === currentMonth &&
+      year === currentYear
+    ){
+
+      current.income +=
+        income;
+
+    }
+
+    else if(
+      month === previousMonth &&
+      year === previousYear
+    ){
+
+      previous.income +=
+        income;
 
     }
 
@@ -5822,13 +6253,8 @@ function calculateMonthlyGrowth(data) {
 
 
   /****************************************
-  📊 КӨРСӨТКҮЧТӨР
+  📊 SHOW
   ****************************************/
-
-  console.log("📈 Ушул ай:", current);
-  console.log("📉 Өткөн ай:", previous);
-  console.log("🚚 Партиялар:", parties.length);
-  console.log("💰 Финансы:", finance.length);
 
   setGrowth(
     "growthParcels",
@@ -5837,6 +6263,7 @@ function calculateMonthlyGrowth(data) {
     previous.parcels
   );
 
+
   setGrowth(
     "growthKg",
     "growthKgChange",
@@ -5844,12 +6271,14 @@ function calculateMonthlyGrowth(data) {
     previous.kg
   );
 
+
   setGrowth(
     "growthParties",
     "growthPartiesChange",
     current.parties,
     previous.parties
   );
+
 
   setGrowth(
     "growthIncome",
@@ -5861,73 +6290,102 @@ function calculateMonthlyGrowth(data) {
 
 
   /****************************************
-  📝 ЖЫЙЫНТЫК
+  📝 SUMMARY
   ****************************************/
 
-  const summary = document.getElementById(
-    "growthSummary"
-  );
+  const summary =
+    document.getElementById(
+      "growthSummary"
+    );
 
-  if (!summary) return;
-
-  const hasPreviousData =
-    previous.parcels > 0 ||
-    previous.kg > 0 ||
-    previous.parties > 0 ||
-    previous.income > 0;
-
-  if (!hasPreviousData) {
-
-    summary.className = "status info";
-
-    summary.innerHTML = `
-      📊 Өткөн айдын ушул мезгилине
-      салыштыруу үчүн маалымат табылган жок.
-      <br><br>
-      Өткөн айдагы партиялардын даталарын
-      жана финансы маалыматтарын текшерүү керек.
-    `;
-
+  if(!summary){
     return;
   }
 
-  const kgGrowth = calculateGrowth(
-    current.kg,
-    previous.kg
-  );
 
-  const incomeGrowth = calculateGrowth(
-    current.income,
-    previous.income
-  );
+  const kgGrowth =
+    calculateGrowth(
+      current.kg,
+      previous.kg
+    );
 
-  if (kgGrowth > 0 || incomeGrowth > 0) {
 
-    summary.className = "status success";
+  const incomeGrowth =
+    calculateGrowth(
+      current.income,
+      previous.income
+    );
+
+
+  if(
+    kgGrowth > 0 &&
+    incomeGrowth > 0
+  ){
+
+    summary.className =
+      "status success";
 
     summary.innerHTML = `
-      🚀 <b>Өсүү көрсөткүчтөрү</b>
+      🚀 <b>Бизнес өсүп жатат!</b>
+
       <br><br>
-      KG: <b>${formatPercent(kgGrowth)}</b>
+
+      KG:
+      <b>+${kgGrowth.toFixed(1)}%</b>
+
       <br>
-      Киреше: <b>${formatPercent(incomeGrowth)}</b>
+
+      Киреше:
+      <b>+${incomeGrowth.toFixed(1)}%</b>
     `;
 
-  } else {
+  }
 
-    summary.className = "status warning";
+  else if(
+    kgGrowth < 0 ||
+    incomeGrowth < 0
+  ){
+
+    summary.className =
+      "status warning";
 
     summary.innerHTML = `
-      📊 Өткөн айдын ушул мезгили менен салыштыруу
+      ⚠️ Өткөн айга салыштырмалуу
+      айрым көрсөткүчтөр төмөндөгөн.
+
       <br><br>
-      KG: <b>${formatPercent(kgGrowth)}</b>
+
+      KG:
+      <b>${formatPercent(
+        kgGrowth
+      )}</b>
+
       <br>
-      Киреше: <b>${formatPercent(incomeGrowth)}</b>
+
+      Киреше:
+      <b>${formatPercent(
+        incomeGrowth
+      )}</b>
+    `;
+
+  }
+
+  else{
+
+    summary.className =
+      "status info";
+
+    summary.innerHTML = `
+      📊 Өсүү азырынча
+      салыштыруу үчүн жетиштүү
+      маалымат топтолгон жок.
     `;
 
   }
 
 }
+
+
 /************************************************
 📈 GROWTH CALC
 ************************************************/
@@ -6361,67 +6819,7 @@ function renderFinance(
     html;
 
 }
-/************************************************
-💰 TEZ KARGO — ТУУРА ФИНАНСЫНЫ ЖҮКТӨӨ
-************************************************/
 
-async function loadFinanceAnalysis() {
-
-try {
-
-console.log("💰 Финансы жүктөлүп жатат...");  
-
-const response = await fetch(  
-  API_URL + "?action=finance_analysis"  
-);  
-
-if (!response.ok) {  
-  throw new Error("HTTP " + response.status);  
-}  
-
-const data = await response.json();  
-
-if (data.status !== "ok") {  
-  throw new Error(  
-    data.message || "Финансы API катасы"  
-  );  
-}  
-
-// API түз берген эсептөөлөр  
-const financeData = data.data || data;  
-
-window.__financeAnalysis = financeData;  
-
-console.log("💰 ФИНАНСЫНЫН ТУУРА МААЛЫМАТЫ:", financeData);  
-
-// Каржы карточкаларын жаңыртуу  
-const values = {  
-  income: financeData.income,  
-  logistics: financeData.logistics,  
-  otherExpense: financeData.expense,  
-  totalExpense: financeData.totalExpense,  
-  profit: financeData.profit  
-};  
-
-console.log("Жалпы киреше:", values.income);  
-console.log("Логистика:", values.logistics);  
-console.log("Башка чыгым:", values.otherExpense);  
-console.log("Жалпы чыгым:", values.totalExpense);  
-console.log("Таза пайда:", values.profit);  
-
-return financeData;
-
-} catch (error) {
-
-console.error(  
-  "❌ FINANCE ANALYSIS ERROR:",  
-  error  
-);  
-
-return null;
-
-}
-} 
 
 /************************************************
 📱 PAGE SHOW
@@ -6503,256 +6901,16 @@ document.addEventListener(
       API_URL
     );
 
-   console.log(
-  "================================"
+    console.log(
+      "================================"
+    );
+
+    loadDashboardData();
+
+  }
 );
 
-loadDashboardData();
-
-}
-);
 </script>
 
-<script>
-// ================================================
-// 💰 ОФИСТЕГИ ПОСЫЛКАЛАРДЫН ЖАЛПЫ СУММАСЫ
-// ================================================
-
-function showOfficeSum() {
-  const dashboard = window.__dashboardData || {};
-  const stats = dashboard.stats || {};
-
-  console.log("📊 DASHBOARD DATA:", dashboard);
-  console.log("📦 ОФИСТЕГИ ПОСЫЛКАЛАР:", stats.in_office);
-  console.log("💰 ОФИСТЕГИ ЖАЛПЫ СУММА:", stats.in_office_sum);
-
-  const count = Number(stats.in_office || 0);
-  const sum = Number(stats.in_office_sum || 0);
-
-  alert(
-    "🏢 ОФИСТЕГИ ПОСЫЛКАЛАР\n\n" +
-    "📦 Посылка саны: " +
-    count.toLocaleString("ru-RU") +
-    "\n💰 Жалпы сумма: " +
-    sum.toLocaleString("ru-RU", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }) +
-    " сом"
-  );
-}
-// ================================================
-// 📦 ЖЕТПЕЙ КАЛГАН ТОВАРЛАРДЫ ТЕКШЕРҮҮ
-// ================================================
-
-async function checkMissingPackages() {
-
-const dateInput = document.getElementById("missingDate");
-const message = document.getElementById("missingMessage");
-const results = document.getElementById("missingResults");
-
-const selectedDate = dateInput.value;
-
-if (!selectedDate) {
-  message.innerHTML = `
-    <div class="card" style="color:#c62828">
-      📅 Кытайдан жөнөтүлгөн датаны тандаңыз!
-    </div>
-  `;
-  results.innerHTML = "";
-  return;
-}
-
-message.innerHTML = `
-  <div class="card">
-    ⏳ Маалыматтар текшерилип жатат...
-  </div>
-`;
-
-results.innerHTML = "";
-
-try {
-const url =
-  API_URL +
-  "?action=missing_packages&date=" +
-  encodeURIComponent(selectedDate);
-
-const response = await fetch(url);
-
-if (!response.ok) {
-  throw new Error("Серверден маалымат алуу мүмкүн болгон жок");
-}
-
-const data = await response.json();
-
-if (data.status !== "success") {
-  throw new Error(data.message || "Маалымат табылган жок");
-}
-
-message.innerHTML = `
-  <div class="card">
-
-    <div class="card-title">
-      📊 ПАРТИЯНЫН ЖЫЙЫНТЫГЫ
-    </div>
-
-    <div style="margin-top:15px;line-height:2">
-
-      <div>
-        📅 Жөнөтүлгөн дата:
-        <b>${selectedDate}</b>
-      </div>
-
-      <div>
-        📦 Жалпы жөнөтүлгөн:
-        <b>${data.total_sent}</b>
-      </div>
-
-      <div style="color:#16803d">
-        ✅ Келген товарлар:
-        <b>${data.total_received}</b>
-      </div>
-
-      <div style="color:#c62828;font-size:18px">
-        ❌ Жетпей калган:
-        <b>${data.total_missing}</b>
-      </div>
-
-    </div>
-
-  </div>
-`;
-
-if (!data.missing || data.missing.length === 0) {
-
-  results.innerHTML = `
-    <div class="card" style="text-align:center;padding:25px">
-      <div style="font-size:35px">✅</div>
-      <h3>Бардык товарлар келген!</h3>
-      <p>Бул партиядан жетпей калган товар табылган жок.</p>
-    </div>
-  `;
-
-  return;
-}
-
-let html = `
-  <div class="card">
-
-    <div class="card-title">
-      ❌ ЖЕТПЕЙ КАЛГАН ТОВАРЛАРДЫН ТИЗМЕСИ
-    </div>
-
-    <div class="card-subtitle">
-      Жалпы ${data.missing.length} товар
-    </div>
-
-  </div>
-`;
-
-data.missing.forEach(function(item, index) {
-
-  const track = escapeHtml(String(item.track_code || ""));
-  const clientCode = escapeHtml(String(item.client_code || ""));
-  const clientName = escapeHtml(String(item.client_name || ""));
-  const phone = escapeHtml(String(item.phone || ""));
-  const status = escapeHtml(String(item.status || ""));
-
-  html += `
-    <div class="card" style="margin-bottom:12px">
-
-      <div style="
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        gap:10px;
-        margin-bottom:12px;
-      ">
-
-        <b style="font-size:16px">
-          📦 ${index + 1}. ${track}
-        </b>
-
-        <span style="
-          color:#c62828;
-          background:#ffebee;
-          padding:5px 9px;
-          border-radius:8px;
-          font-size:12px;
-          white-space:nowrap;
-        ">
-          Жеткен жок
-        </span>
-
-      </div>
-
-      <div style="line-height:1.9">
-
-        <div>
-          👤 Кардар:
-          <b>${clientName}</b>
-        </div>
-
-        <div>
-          🆔 Кардардын коду:
-          <b>${clientCode}</b>
-        </div>
-
-        <div>
-          📞 Телефон:
-          <b>${phone || "Көрсөтүлгөн эмес"}</b>
-        </div>
-
-        <div>
-          📋 Азыркы статус:
-          <b>${status || "Белгисиз"}</b>
-        </div>
-
-      </div>
-
-      ${
-        phone
-          ? `<a
-              href="tel:${phone.replace(/[^\d+]/g, "")}"
-              class="btn btn-primary"
-              style="
-                display:block;
-                text-align:center;
-                text-decoration:none;
-                margin-top:12px;
-              "
-            >📞 Кардарга чалуу</a>`
-          : ""
-      }
-
-    </div>
-  `;
-
-});
-
-results.innerHTML = html;
-
-} catch (error) {
-
-message.innerHTML = `
-  <div class="card" style="color:#c62828">
-
-    <h3>❌ Ката чыкты</h3>
-
-    <p>${escapeHtml(String(error.message || error))}</p>
-
-    <p>Интернетти жана сервердин иштешин текшериңиз.</p>
-
-  </div>
-`;
-
-results.innerHTML = "";
-
-console.error("checkMissingPackages error:", error);
-
-}
-
-}</script>
-
 </body>
-</html>     
+</html>  
