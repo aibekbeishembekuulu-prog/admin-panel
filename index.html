@@ -941,14 +941,13 @@ button:disabled{
       <div class="stat-icon">🏢</div>
 
       <div class="stat-label">
-        Офисте
-      </div>
-
-      <div
-        class="stat-value"
-        id="inOffice">
-        —
-      </div>
+  Офисте
+</div><div class="stat-value" id="inOffice">
+  —
+</div><div style="font-size:13px; margin-top:6px; color:#16a34a;">
+  Жалпы сумма:
+  <strong id="inOfficeSum">0 сом</strong>
+</div>
 
     </div>
 
@@ -5472,33 +5471,37 @@ async function loadDashboardData(){
     const stats =
       data.stats || {};
 
+/****************************************
+📊 DASHBOARD
+****************************************/
 
-    /****************************************
-    📊 DASHBOARD
-    ****************************************/
+setStatValue(
+"totalParcels",
+stats.total_parcels
+);
 
-    setStatValue(
-      "totalParcels",
-      stats.total_parcels
-    );
+setStatValue(
+"inOffice",
+stats.in_office
+);
 
-    setStatValue(
-      "inOffice",
-      stats.in_office
-    );
+// 💰 Офистеги посылкалардын жалпы суммасы
+setStatValue(
+"inOfficeSum",
+formatMoney(stats.in_office_sum)
+);
 
-    setStatValue(
-      "issued",
-      stats.issued
-    );
+setStatValue(
+"issued",
+stats.issued
+);
 
-    setStatValue(
-      "totalKg",
-      formatNumber(
-        stats.total_kg
-      ) + " KG"
-    );
-
+setStatValue(
+"totalKg",
+formatNumber(
+stats.total_kg
+) + " KG"
+);
 
     /****************************************
     👥 CLIENTS
