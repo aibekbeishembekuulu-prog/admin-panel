@@ -4982,56 +4982,36 @@ function toNumber(value){
 
 }
 
-
 /************************************************
-💰 FINANCE VALUE HELPERS
+💰 FINANCE REVENUE HELPER
 ************************************************/
 
-/*
-  Dashboard finance'те айрым версияларда
-  киреше income эмес profit болуп келет.
+function getFinanceRevenue(row) {
+if (!row) return 0;
 
-  Ошондуктан:
+const fields = [
+row.income,
+row.payment,
+row.customer_payment,
+row.customerPayment,
+row.revenue,
+row["оплата клиентов"],
+row["оплата_клиентов"]
+];
 
-  1. income
-  2. оплата клиентов
-  3. profit
-
-  тартибинде текшеребиз.
-*/
-
-function getFinanceRevenue(row){
-
-  if(!row){
-    return 0;
-  }
-
-  const income =
-    toNumber(
-      row.income
-    );
-
-  if(income !== 0){
-    return income;
-  }
-
-  const payment =
-    toNumber(
-      row["оплата клиентов"] ??
-      row["оплата_клиентов"] ??
-      row.payment
-    );
-
-  if(payment !== 0){
-    return payment;
-  }
-
-  return toNumber(
-    row.profit
-  );
-
+for (const value of fields) {
+if (
+value !== undefined &&
+value !== null &&
+String(value).trim() !== ""
+) {
+return toNumber(value);
+}
 }
 
+// Киреше талаасы табылбаса, profit'ти киреше деп эсептебейбиз.
+return 0;
+}
 
 /************************************************
 📉 LOGISTICS
