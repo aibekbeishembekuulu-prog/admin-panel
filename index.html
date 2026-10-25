@@ -5036,23 +5036,23 @@ function getFinanceLogistics(row){
 🏠 OTHER EXPENSE
 ************************************************/
 
-function getFinanceOtherExpense(row){
-
-  if(!row){
-    return 0;
-  }
-
-  return toNumber(
-    row.otherExpense ??
-    row.other_expense ??
-    row.other_expenses ??
-    row["башка чыгым"] ??
-    row["башка чыгымдар"]
-  );
-
+function getFinanceOtherExpense(row) {
+if (!row) {
+return 0;
 }
 
-
+return toNumber(
+row.otherExpense ??
+row.other_expense ??
+row.other_expenses ??
+row.expense ??
+row["расход"] ??
+row["F"] ??
+row["башка чыгым"] ??
+row["башка чыгымдар"] ??
+row["пакет жана башка чыгым"]
+);
+}
 /************************************************
 📦 PIECES
 ************************************************/
