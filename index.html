@@ -6125,11 +6125,10 @@ function calculateMonthlyGrowth(data){
 
   parties.forEach(function(row){
 
-    const timestamp =
-      parseCargoDate(
-        row.date_send ||
-        row.date_arrival
-      );
+   const timestamp =
+  parseCargoDate(
+    row.date_arrival
+  );
 
     if(!timestamp){
       return;
@@ -6190,10 +6189,9 @@ function calculateMonthlyGrowth(data){
       normalizeFinanceRow(row);
 
     const timestamp =
-      parseCargoDate(
-        item.date_send ||
-        item.date_arrival
-      );
+  parseCargoDate(
+    item.date_arrival
+  );
 
     if(!timestamp){
       return;
