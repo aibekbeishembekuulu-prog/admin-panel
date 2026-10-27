@@ -2346,7 +2346,170 @@ button:disabled{
   </div>
 
 </section>
+<!-- =====================================================
+     PREMIUM PLAN 360°
+===================================================== -->
 
+<section class="section" id="premiumSection">
+
+  <div class="card">
+
+    <div class="card-head">
+      <div>
+        <div class="card-title">🚀 PREMIUM PLAN 360°</div>
+        <div class="card-subtitle">
+          Tez Kargo — бизнесиңди өнүктүрүү борбору
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-icon">📦</div>
+        <div class="stat-label">Айлык план (кг)</div>
+        <input
+          id="premiumTargetKg"
+          type="number"
+          value="1200"
+          min="1"
+          style="width:100%;margin-top:8px;padding:8px;">
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-label">Пайда планы (сом)</div>
+        <input
+          id="premiumTargetProfit"
+          type="number"
+          value="70000"
+          min="1"
+          style="width:100%;margin-top:8px;padding:8px;">
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-label">Жаңы кардар планы</div>
+        <input
+          id="premiumTargetClients"
+          type="number"
+          value="50"
+          min="1"
+          style="width:100%;margin-top:8px;padding:8px;">
+      </div>
+
+    </div>
+
+    <button
+      class="btn"
+      onclick="loadPremiumPlan()"
+      style="width:100%;margin-top:15px;">
+      📊 Планымды эсептөө
+    </button>
+
+    <div class="stats-grid" style="margin-top:20px;">
+
+      <div class="stat-card">
+        <div class="stat-icon">⚖️</div>
+        <div class="stat-label">Жүк көлөмү</div>
+        <div class="stat-value" id="premiumActualKg">—</div>
+        <div class="card-subtitle">кг</div>
+        <div id="premiumKgProgress">План: —</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">💵</div>
+        <div class="stat-label">Киреше</div>
+        <div class="stat-value" id="premiumIncome">—</div>
+        <div class="card-subtitle">сом</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">📉</div>
+        <div class="stat-label">Чыгым</div>
+        <div class="stat-value" id="premiumExpense">—</div>
+        <div class="card-subtitle">сом</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">💎</div>
+        <div class="stat-label">Таза пайда</div>
+        <div class="stat-value" id="premiumProfit">—</div>
+        <div id="premiumProfitProgress">План: —</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-label">1 кг пайдасы</div>
+        <div class="stat-value" id="premiumProfitKg">—</div>
+        <div class="card-subtitle">сом/кг</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">🤝</div>
+        <div class="stat-label">Кардарлар</div>
+        <div class="stat-value" id="premiumClients">—</div>
+        <div id="premiumClientsProgress">Жаңы кардар планы: —</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <div class="card-title">🎯 Өнүгүү боюнча сунуштар</div>
+
+    <div id="premiumRecommendations" style="margin-top:15px;">
+      Маалымат жүктөлө элек.
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <div class="card-title">✅ Күнүмдүк тапшырмалар</div>
+
+    <div style="margin-top:15px;line-height:2.2;">
+
+      <label>
+        <input type="checkbox" class="premiumTask">
+        Кардарларга жүктөрү тууралуу маалымат берүү
+      </label>
+      <br>
+
+      <label>
+        <input type="checkbox" class="premiumTask">
+        Instagram'га контент жарыялоо
+      </label>
+      <br>
+
+      <label>
+        <input type="checkbox" class="premiumTask">
+        Заказ бербеген кардарлар менен байланышуу
+      </label>
+      <br>
+
+      <label>
+        <input type="checkbox" class="premiumTask">
+        Жаңы кардарларды тартуу
+      </label>
+      <br>
+
+      <label>
+        <input type="checkbox" class="premiumTask">
+        Киреше жана чыгымдарды текшерүү
+      </label>
+
+    </div>
+
+    <div id="premiumTaskProgress" style="margin-top:15px;">
+      Бүгүн аткарылган тапшырмалар: 0/5
+    </div>
+
+  </div>
+
+</section>
 
 </div>
 
@@ -2420,7 +2583,15 @@ button:disabled{
     Клиенттер
 
   </button> 
+<button
+    class="bottom-btn"
+    id="navPremium"
+    onclick="showSection('premium')">
 
+    <span>🚀</span>
+    PREMIUM
+
+</button>
 </nav>
 
 
@@ -2457,6 +2628,7 @@ function showSection(name){
     "statistics",
     "finance",
     "clients"
+   "premium"   
   ];
 
 
