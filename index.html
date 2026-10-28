@@ -2344,14 +2344,105 @@ button:disabled{
   </div>
 
 </section>
+<!-- =====================================================
+     PREMIUM PLAN 360°
+===================================================== -->
 
+<section class="section" id="premiumSection">
+
+  <div class="card">
+
+    <div class="card-head">
+      <div>
+        <div class="card-title">
+          🚀 PREMIUM PLAN 360°
+        </div>
+        <div class="card-subtitle">
+          Tez Kargo бизнесин башкаруу борбору
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-icon">📦</div>
+        <div class="stat-label">Айлык жүк</div>
+        <div class="stat-value" id="premiumCurrentKg">0 кг</div>
+        <div class="card-subtitle">Максат: 1 200 кг</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-label">Таза пайда</div>
+        <div class="stat-value" id="premiumCurrentProfit">0 сом</div>
+        <div class="card-subtitle">Максат: 70 000 сом</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-label">Кардарлар</div>
+        <div class="stat-value" id="premiumCurrentClients">0</div>
+        <div class="card-subtitle">Жалпы катталган</div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:24px;">
+
+      <div class="card-title">
+        📊 Жүк планынын аткарылышы
+      </div>
+
+      <div id="premiumKgProgressText"
+           style="margin:10px 0;">
+        0%
+      </div>
+
+      <div class="progress">
+        <div id="premiumKgBar" style="width:0%;"></div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:24px;">
+
+      <div class="card-title">
+        💰 Пайда планынын аткарылышы
+      </div>
+
+      <div id="premiumProfitProgressText"
+           style="margin:10px 0;">
+        0%
+      </div>
+
+      <div class="progress">
+        <div id="premiumProfitBar" style="width:0%;"></div>
+      </div>
+
+    </div>
+
+    <div class="card" style="margin-top:24px;">
+
+      <div class="card-title">
+        🔮 Айдын аягына прогноз
+      </div>
+
+      <div id="premiumForecast" style="margin-top:12px;">
+        Маалымат эсептелүүдө...
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
 
 </div>
 
 
-
 <!-- =====================================================
-     BOTTOM NAV
+     BOTTOM NAV — PREMIUM PLAN 360°
 ===================================================== -->
 
 <nav class="bottom-nav">
@@ -2360,67 +2451,59 @@ button:disabled{
     class="bottom-btn active"
     id="navDashboard"
     onclick="showSection('dashboard')">
-
     <span>📊</span>
     Башкы
-
   </button>
-
 
   <button
     class="bottom-btn"
     id="navScanner"
     onclick="showSection('scanner')">
-
     <span>📷</span>
     QR
-
   </button>
-
 
   <button
     class="bottom-btn"
     id="navBatches"
     onclick="showSection('batches')">
-
     <span>🚚</span>
     Партия
-
   </button>
-
 
   <button
     class="bottom-btn"
     id="navStatistics"
     onclick="showSection('statistics')">
-
     <span>📈</span>
     Статистика
-
   </button>
-
 
   <button
     class="bottom-btn"
     id="navFinance"
     onclick="showSection('finance')">
-
     <span>💰</span>
     Финансы
-
   </button>
-     <button
+
+  <button
     class="bottom-btn"
     id="navClients"
     onclick="showSection('clients')">
-
     <span>👥</span>
     Клиенттер
+  </button>
 
-  </button> 
+  <button
+    class="bottom-btn"
+    id="navPremium"
+    onclick="showSection('premium')">
+    <span>🚀</span>
+    PREMIUM
+  </button>
 
 </nav>
-
 
 <script>
 
@@ -2532,6 +2615,9 @@ function showSection(name){
   }
 
 }
+ /************************************************
+🔎 FOCUS TRACK
+************************************************/
  /************************************************
 🔎 FOCUS TRACK
 ************************************************/
