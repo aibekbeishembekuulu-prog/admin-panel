@@ -5552,7 +5552,11 @@ async function loadDashboardData(){
 
     const stats =
       data.stats || {};
+/****************************************
+🚀 PREMIUM PLAN 360°
+****************************************/
 
+renderPremiumPlan360(data);
 /****************************************
 📊 DASHBOARD
 ****************************************/
@@ -5702,7 +5706,108 @@ stats.total_kg
 
 }
 
+/************************************************
+🚀 TEZ KARGO — PREMIUM PLAN 360°
+************************************************/
 
+function renderPremiumPlan360(data) {
+
+  data = data || {};
+
+  const stats = data.stats || {};
+  const month = data.month || {};
+
+  // 🎯 Айлык максаттар
+  const KG_TARGET = 1200;
+  const PROFIT_TARGET = 70000;
+
+  // 📦 Айлык жүк көлөмү
+  const monthlyKg = Number(month.kg) || 0;
+
+  // 💰 Айлык таза пайда
+  const monthlyProfit = Number(month.profit) || 0;
+
+  // 👥 Жалпы кардарлар
+  const totalClients = Number(stats.total_clients) || 0;
+
+  // 📊 План аткарылышы
+  const kgProgress = Math.min(
+    100,
+    monthlyKg / KG_TARGET * 100
+  );
+
+  const profitProgress = Math.min(
+    100,
+    monthlyProfit / PROFIT_TARGET * 100
+  );
+
+  // 📦 Жүк көлөмү
+  setStatValue(
+    "premiumKg",
+    formatNumber(monthlyKg) + " KG"
+  );
+
+  // 💰 Таза пайда
+  setStatValue(
+    "premiumProfit",
+    formatMoney(monthlyProfit)
+  );
+
+  // 👥 Кардарлар
+  setStatValue(
+    "premiumClients",
+    totalClients
+  );
+
+  // 📊 Жүк планы
+  setStatValue(
+    "premiumKgProgress",
+    kgProgress.toFixed(1) + "%"
+  );
+
+  // 💰 Пайда планы
+  setStatValue(
+    "premiumProfitProgress",
+    profitProgress.toFixed(1) + "%"
+  );
+
+  // 📊 Жүк прогресс тилкеси
+  const kgBar = document.getElementById(
+    "premiumKgBar"
+  );
+
+  if (kgBar) {
+    kgBar.style.width = kgProgress + "%";
+  }
+
+  // 💰 Пайда прогресс тилкеси
+  const profitBar = document.getElementById(
+    "premiumProfitBar"
+  );
+
+  if (profitBar) {
+    profitBar.style.width = profitProgress + "%";
+  }
+
+  // ✅ Статус
+  const status = document.getElementById(
+    "premiumStatus"
+  );
+
+  if (status) {
+    status.textContent =
+      "✅ PREMIUM PLAN 360°: маалымат жүктөлдү";
+  }
+
+  console.log("PREMIUM PLAN 360°", {
+    monthlyKg: monthlyKg,
+    monthlyProfit: monthlyProfit,
+    totalClients: totalClients,
+    kgProgress: kgProgress,
+    profitProgress: profitProgress
+  });
+
+}
 /************************************************
 🔢 SET STAT
 ************************************************/
