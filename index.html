@@ -5710,133 +5710,167 @@ stats.total_kg
   }
 
 }
-
 /************************************************
 🚀 TEZ KARGO — PREMIUM PLAN 360°
+API маалыматтарын англисче жана орусча ачкычтардан окуйт
 ************************************************/
 function renderPremiumPlan360(data) {
 
-data = data || {};
+  data = data || {};
 
-const stats = data.stats || {};
-const month = data.month || {};
-const goals = data.premium_goals || {};
+  const stats = data.stats || {};
 
-// 🎯 Google Sheets'тен келген максаттар
-const KG_TARGET = Number(goals.kg_goal) || 1200;
-const PROFIT_TARGET = Number(goals.profit_goal) || 70000;
-const CLIENTS_TARGET = Number(goals.clients_goal) || 350;
+  const month =
+    data.month ||
+    data["месяц"] ||
+    {};
 
-// 📊 Чыныгы статистика
-const monthlyKg = Number(month.kg) || 0;
-const monthlyProfit = Number(month.profit) || 0;
-const totalClients = Number(stats.total_clients) || 0;
+  const goals =
+    data.premium_goals ||
+    data.premiumGoals ||
+    {};
 
-// 📈 План аткарылышы
-const kgProgress = Math.min(
-100,
-monthlyKg / KG_TARGET * 100
-);
+  // 🎯 Максаттар
+  const KG_TARGET =
+    Number(goals.kg_goal) || 1200;
 
-const profitProgress = Math.min(
-100,
-monthlyProfit / PROFIT_TARGET * 100
-);
+  const PROFIT_TARGET =
+    Number(goals.profit_goal) || 70000;
 
-// 📦 Айлык жүк
-setStatValue(
-"premiumKg",
-formatNumber(monthlyKg) + " KG"
-);
+  const CLIENTS_TARGET =
+    Number(goals.clients_goal) || 350;
 
-// 💰 Таза пайда
-setStatValue(
-"premiumProfit",
-formatMoney(monthlyProfit)
-);
+  // 📊 API англисче же орусча аталыш колдонсо да окуйт
+  const monthlyKg = Number(
+    month.kg ??
+    month["кг"] ??
+    0
+  ) || 0;
 
-// 👥 Кардарлар
-setStatValue(
-"premiumClients",
-totalClients
-);
+  const monthlyProfit = Number(
+    month.profit ??
+    month["прибыль"] ??
+    0
+  ) || 0;
 
-// 📊 Жүк планы
-setStatValue(
-"premiumKgProgress",
-kgProgress.toFixed(1) + "%"
-);
+  const totalClients = Number(
+    stats.total_clients ??
+    stats.totalClients ??
+    0
+  ) || 0;
 
-// 💰 Пайда планы
-setStatValue(
-"premiumProfitProgress",
-profitProgress.toFixed(1) + "%"
-);
+  // 📈 План аткарылышы
+  const kgProgress = Math.min(
+    100,
+    monthlyKg / KG_TARGET * 100
+  );
 
-// 🎯 Максаттарды көрсөтүүчү элементтер бар болсо жаңыртуу
-setStatValue(
-"premiumKgTarget",
-formatNumber(KG_TARGET) + " KG"
-);
+  const profitProgress = Math.min(
+    100,
+    monthlyProfit / PROFIT_TARGET * 100
+  );
 
-setStatValue(
-"premiumProfitTarget",
-formatMoney(PROFIT_TARGET)
-);
+  const clientsProgress = Math.min(
+    100,
+    totalClients / CLIENTS_TARGET * 100
+  );
 
-setStatValue(
-"premiumClientsTarget",
-formatNumber(CLIENTS_TARGET)
-);
+  // 📦 Айлык жүк
+  setStatValue(
+    "premiumKg",
+    formatNumber(monthlyKg) + " KG"
+  );
 
-// 📊 Жүк прогресс тилкеси
-const kgBar = document.getElementById("premiumKgBar");
+  // 💰 Айлык таза пайда
+  setStatValue(
+    "premiumProfit",
+    formatMoney(monthlyProfit)
+  );
 
-if (kgBar) {
-kgBar.style.width = kgProgress + "%";
-}
+  // 👥 Кардарлар
+  setStatValue(
+    "premiumClients",
+    formatNumber(totalClients)
+  );
 
-// 💰 Пайда прогресс тилкеси
-const profitBar = document.getElementById("premiumProfitBar");
+  // 📊 План аткарылышы
+  setStatValue(
+    "premiumKgProgress",
+    kgProgress.toFixed(1) + "%"
+  );
 
-if (profitBar) {
-profitBar.style.width = profitProgress + "%";
-}
+  setStatValue(
+    "premiumProfitProgress",
+    profitProgress.toFixed(1) + "%"
+  );
 
-// 🔍 Диагностика статусу
-const status = document.getElementById("premiumStatus");
+  setStatValue(
+    "premiumClientsProgress",
+    clientsProgress.toFixed(1) + "%"
+  );
 
-if (status) {
-status.textContent =
-"API: " + data.status +
-" | KG: " + monthlyKg +
-" | Пайда: " + monthlyProfit +
-" | Кардарлар: " + totalClients;
-}
+  // 🎯 Максаттар
+  setStatValue(
+    "premiumKgTarget",
+    formatNumber(KG_TARGET) + " KG"
+  );
 
-console.log("PREMIUM PLAN 360° DIAGNOSTICS", {
-apiStatus: data.status,
-month: month,
-stats: stats,
-goals: goals,
-monthlyKg: monthlyKg,
-monthlyProfit: monthlyProfit,
-totalClients: totalClients,
-kgProgress: kgProgress,
-profitProgress: profitProgress
-});
+  setStatValue(
+    "premiumProfitTarget",
+    formatMoney(PROFIT_TARGET)
+  );
 
-console.log("PREMIUM CHECK:", {
-apiStatus: data.status,
-statsExists: !!data.stats,
-monthExists: !!data.month,
-premiumGoals: data.premium_goals,
-totalClients: data.stats?.total_clients,
-monthKg: data.month?.kg,
-monthProfit: data.month?.profit,
-financeRows: data.finance?.length
-});
+  setStatValue(
+    "premiumClientsTarget",
+    formatNumber(CLIENTS_TARGET)
+  );
 
+  // 📊 Прогресс тилкелери
+  const kgBar =
+    document.getElementById("premiumKgBar");
+
+  if (kgBar) {
+    kgBar.style.width = kgProgress + "%";
+  }
+
+  const profitBar =
+    document.getElementById("premiumProfitBar");
+
+  if (profitBar) {
+    profitBar.style.width = profitProgress + "%";
+  }
+
+  const clientsBar =
+    document.getElementById("premiumClientsBar");
+
+  if (clientsBar) {
+    clientsBar.style.width = clientsProgress + "%";
+  }
+
+  // 🔍 Статус
+  const status =
+    document.getElementById("premiumStatus");
+
+  if (status) {
+    status.textContent =
+      "API: " + (data.status || "ok") +
+      " | KG: " + monthlyKg +
+      " | Пайда: " + monthlyProfit +
+      " | Кардарлар: " + totalClients;
+  }
+
+  console.log("PREMIUM PLAN 360° DIAGNOSTICS", {
+    apiStatus: data.status,
+    month: month,
+    stats: stats,
+    goals: goals,
+    monthlyKg: monthlyKg,
+    monthlyProfit: monthlyProfit,
+    totalClients: totalClients,
+    kgProgress: kgProgress,
+    profitProgress: profitProgress,
+    clientsProgress: clientsProgress
+  });
 }
 /************************************************
 🔢 SET STAT
