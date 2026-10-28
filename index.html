@@ -5826,6 +5826,17 @@ kgProgress: kgProgress,
 profitProgress: profitProgress
 });
 
+console.log("PREMIUM CHECK:", {
+apiStatus: data.status,
+statsExists: !!data.stats,
+monthExists: !!data.month,
+premiumGoals: data.premium_goals,
+totalClients: data.stats?.total_clients,
+monthKg: data.month?.kg,
+monthProfit: data.month?.profit,
+financeRows: data.finance?.length
+});
+
 }
 /************************************************
 🔢 SET STAT
