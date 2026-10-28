@@ -2344,103 +2344,98 @@ button:disabled{
   </div>
 
 </section>
-<!-- =====================================================
-     PREMIUM PLAN 360°
-===================================================== -->
+      
+<!-- =====================================================  
+     PREMIUM PLAN 360°  
+===================================================== --><section class="section" id="premiumSection">  <div class="card"><div class="card-head">    <div>  
+    <div class="card-title">  
+      🚀 PREMIUM PLAN 360°  
+    </div>  
+    <div class="card-subtitle">  
+      Tez Kargo бизнесин башкаруу борбору  
+    </div>  
+  </div>  
+</div>  <div class="stats-grid">    <div class="stat-card">  
+    <div class="stat-icon">📦</div>  
+    <div class="stat-label">Айлык жүк</div>  
+    <div class="stat-value" id="premiumCurrentKg">0 кг</div>  
+    <div class="card-subtitle">Айлык максат</div>  
+  </div>    <div class="stat-card">  
+    <div class="stat-icon">💰</div>  
+    <div class="stat-label">Таза пайда</div>  
+    <div class="stat-value" id="premiumCurrentProfit">0 сом</div>  
+    <div class="card-subtitle">Айлык максат</div>  
+  </div>    <div class="stat-card">  
+    <div class="stat-icon">👥</div>  
+    <div class="stat-label">Кардарлар</div>  
+    <div class="stat-value" id="premiumCurrentClients">0</div>  
+    <div class="card-subtitle">Жалпы катталган</div>  
+  </div>  </div>  <div style="margin-top:24px;">    <div class="card-title">  
+    📊 Жүк планынын аткарылышы  
+  </div>    <div id="premiumKgProgressText" style="margin:10px 0;">  
+    0%  
+  </div>    <div class="progress">  
+    <div id="premiumKgBar" style="width:0%;"></div>  
+  </div>  </div>  <div style="margin-top:24px;">    <div class="card-title">  
+    💰 Пайда планынын аткарылышы  
+  </div>    <div id="premiumProfitProgressText" style="margin:10px 0;">  
+    0%  
+  </div>    <div class="progress">  
+    <div id="premiumProfitBar" style="width:0%;"></div>  
+  </div>  </div>  <!-- 🔮 ПРОГНОЗ -->  <div class="card" style="margin-top:24px;">    <div class="card-title">  
+    🔮 Айдын аягына прогноз  
+  </div>    <div id="premiumForecast" style="margin-top:12px;">  
+    Маалымат эсептелүүдө...  
+  </div>  </div>  <!-- 🎯 МАКСАТТАРДЫ БАШКАРУУ -->  <div class="card" style="margin-top:24px;">    <div class="card-title">  
+    🎯 Айлык максаттарды башкаруу  
+  </div>    <div class="card-subtitle" style="margin-bottom:16px;">  
+    Максаттарды өзгөртүп, Google Sheets'ке сакта  
+  </div>    <label for="premiumGoalKg">  
+    📦 Айлык жүк планы (кг)  
+  </label>  <input
+type="number"
+id="premiumGoalKg"
+value="1200"
+min="1"
+style="width:100%;padding:12px;margin:8px 0 16px;border-radius:10px;border:1px solid #ccc;"
 
-<section class="section" id="premiumSection">
+> 
 
-  <div class="card">
+  <label for="premiumGoalProfit">  
+    💰 Таза пайда планы (сом)  
+  </label>  <input
+type="number"
+id="premiumGoalProfit"
+value="70000"
+min="1"
+style="width:100%;padding:12px;margin:8px 0 16px;border-radius:10px;border:1px solid #ccc;"
 
-    <div class="card-head">
-      <div>
-        <div class="card-title">
-          🚀 PREMIUM PLAN 360°
-        </div>
-        <div class="card-subtitle">
-          Tez Kargo бизнесин башкаруу борбору
-        </div>
-      </div>
-    </div>
+> 
 
-    <div class="stats-grid">
+  <label for="premiumGoalClients">  
+    👥 Кардарлар планы  
+  </label>  <input
+type="number"
+id="premiumGoalClients"
+value="350"
+min="1"
+style="width:100%;padding:12px;margin:8px 0 16px;border-radius:10px;border:1px solid #ccc;"
 
-      <div class="stat-card">
-        <div class="stat-icon">📦</div>
-        <div class="stat-label">Айлык жүк</div>
-        <div class="stat-value" id="premiumCurrentKg">0 кг</div>
-        <div class="card-subtitle">Максат: 1 200 кг</div>
-      </div>
+> 
 
-      <div class="stat-card">
-        <div class="stat-icon">💰</div>
-        <div class="stat-label">Таза пайда</div>
-        <div class="stat-value" id="premiumCurrentProfit">0 сом</div>
-        <div class="card-subtitle">Максат: 70 000 сом</div>
-      </div>
+<button
+type="button"
+onclick="savePremiumGoalsUI()"
+style="width:100%;padding:14px;background:#e5242b;color:white;border:0;border-radius:10px;font-weight:bold;cursor:pointer;"
 
-      <div class="stat-card">
-        <div class="stat-icon">👥</div>
-        <div class="stat-label">Кардарлар</div>
-        <div class="stat-value" id="premiumCurrentClients">0</div>
-        <div class="card-subtitle">Жалпы катталган</div>
-      </div>
+> 
 
-    </div>
+💾 МАКСАТТАРДЫ САКТОО
 
-    <div style="margin-top:24px;">
-
-      <div class="card-title">
-        📊 Жүк планынын аткарылышы
-      </div>
-
-      <div id="premiumKgProgressText"
-           style="margin:10px 0;">
-        0%
-      </div>
-
-      <div class="progress">
-        <div id="premiumKgBar" style="width:0%;"></div>
-      </div>
-
-    </div>
-
-    <div style="margin-top:24px;">
-
-      <div class="card-title">
-        💰 Пайда планынын аткарылышы
-      </div>
-
-      <div id="premiumProfitProgressText"
-           style="margin:10px 0;">
-        0%
-      </div>
-
-      <div class="progress">
-        <div id="premiumProfitBar" style="width:0%;"></div>
-      </div>
-
-    </div>
-
-    <div class="card" style="margin-top:24px;">
-
-      <div class="card-title">
-        🔮 Айдын аягына прогноз
-      </div>
-
-      <div id="premiumForecast" style="margin-top:12px;">
-        Маалымат эсептелүүдө...
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-</div>
-
-
+  </button>    <div  
+    id="premiumGoalsMessage"  
+    style="margin-top:12px;font-size:14px;"  
+  ></div>  </div>    </div></section> 
 <!-- =====================================================
      BOTTOM NAV — PREMIUM PLAN 360°
 ===================================================== -->
@@ -2532,13 +2527,14 @@ let isProcessingQR = false;
 function showSection(name){
 
   const sections = [
-    "dashboard",
-    "scanner",
-    "batches",
-    "statistics",
-    "finance",
-    "clients"
-  ];
+"dashboard",
+"scanner",
+"batches",
+"statistics",
+"finance",
+"clients",
+"premium"
+];
 
 
   sections.forEach(function(section){
@@ -2607,14 +2603,21 @@ function showSection(name){
     loadDashboardData();
   }
 
-
-  /* Clients ачылганда кардарларды жүктөө */
+/* Clients ачылганда кардарларды жүктөө */
 
   if(name === "clients"){
     loadClients();
   }
 
+  /* PREMIUM PLAN 360° ачылганда маалыматтарды жүктөө */
+
+  if(name === "premium"){
+    loadPremiumGoalsUI();
+    loadDashboardData();
+  }
+
 }
+  
  /************************************************
 🔎 FOCUS TRACK
 ************************************************/
@@ -7126,7 +7129,119 @@ document.addEventListener(
 
   }
 );
+/************************************************
+🎯 PREMIUM PLAN 360° — МАКСАТТАРДЫ ЖҮКТӨӨ
+************************************************/
 
+async function loadPremiumGoalsUI(){
+
+  const message = document.getElementById("premiumGoalsMessage");
+
+  try {
+
+    const response = await fetch(
+      API_URL + "?action=get_premium_goals"
+    );
+
+    const result = await response.json();
+
+    if(result.status !== "ok"){
+      throw new Error(result.message || "Максаттарды жүктөө катасы");
+    }
+
+    const goals = result.goals || {};
+
+    document.getElementById("premiumGoalKg").value =
+      goals.kg_goal || 1200;
+
+    document.getElementById("premiumGoalProfit").value =
+      goals.profit_goal || 70000;
+
+    document.getElementById("premiumGoalClients").value =
+      goals.clients_goal || 350;
+
+    if(message){
+      message.style.color = "green";
+      message.textContent = "✅ Максаттар жүктөлдү";
+    }
+
+  } catch(error) {
+
+    console.error("PREMIUM GOALS ERROR:", error);
+
+    if(message){
+      message.style.color = "red";
+      message.textContent = "❌ Жүктөө катасы: " + error.message;
+    }
+
+  }
+}
+
+
+/************************************************
+💾 PREMIUM PLAN 360° — МАКСАТТАРДЫ САКТОО
+************************************************/
+
+async function savePremiumGoalsUI(){
+
+  const kg = Number(document.getElementById("premiumGoalKg").value);
+  const profit = Number(document.getElementById("premiumGoalProfit").value);
+  const clients = Number(document.getElementById("premiumGoalClients").value);
+
+  const message = document.getElementById("premiumGoalsMessage");
+
+  if(
+    !Number.isFinite(kg) || kg <= 0 ||
+    !Number.isFinite(profit) || profit <= 0 ||
+    !Number.isFinite(clients) || clients <= 0
+  ){
+    if(message){
+      message.style.color = "red";
+      message.textContent = "❌ Бардык максаттар 0дөн чоң болушу керек";
+    }
+    return;
+  }
+
+  try {
+
+    if(message){
+      message.style.color = "#b45309";
+      message.textContent = "⏳ Сакталууда...";
+    }
+
+    const params = new URLSearchParams({
+      action: "save_premium_goals",
+      kg_goal: String(kg),
+      profit_goal: String(profit),
+      clients_goal: String(clients)
+    });
+
+    const response = await fetch(API_URL + "?" + params.toString());
+    const result = await response.json();
+
+    if(result.status !== "ok"){
+      throw new Error(result.message || "Сактоо катасы");
+    }
+
+    if(message){
+      message.style.color = "green";
+      message.textContent = "✅ Максаттар сакталды!";
+    }
+
+    await loadPremiumGoalsUI();
+    await loadDashboardData();
+
+  } catch(error) {
+
+    console.error("SAVE PREMIUM GOALS ERROR:", error);
+
+    if(message){
+      message.style.color = "red";
+      message.textContent = "❌ Сактоо катасы: " + error.message;
+    }
+
+  }
+}
 </script>
 
 </body>
