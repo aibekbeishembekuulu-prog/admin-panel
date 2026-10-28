@@ -5714,103 +5714,117 @@ stats.total_kg
 /************************************************
 🚀 TEZ KARGO — PREMIUM PLAN 360°
 ************************************************/
-
 function renderPremiumPlan360(data) {
 
-  data = data || {};
+data = data || {};
 
-  const stats = data.stats || {};
-  const month = data.month || {};
+const stats = data.stats || {};
+const month = data.month || {};
+const goals = data.premium_goals || {};
 
-  // 🎯 Айлык максаттар
-  const KG_TARGET = 1200;
-  const PROFIT_TARGET = 70000;
+// 🎯 Google Sheets'тен келген максаттар
+const KG_TARGET = Number(goals.kg_goal) || 1200;
+const PROFIT_TARGET = Number(goals.profit_goal) || 70000;
+const CLIENTS_TARGET = Number(goals.clients_goal) || 350;
 
-  // 📦 Айлык жүк көлөмү
-  const monthlyKg = Number(month.kg) || 0;
+// 📊 Чыныгы статистика
+const monthlyKg = Number(month.kg) || 0;
+const monthlyProfit = Number(month.profit) || 0;
+const totalClients = Number(stats.total_clients) || 0;
 
-  // 💰 Айлык таза пайда
-  const monthlyProfit = Number(month.profit) || 0;
+// 📈 План аткарылышы
+const kgProgress = Math.min(
+100,
+monthlyKg / KG_TARGET * 100
+);
 
-  // 👥 Жалпы кардарлар
-  const totalClients = Number(stats.total_clients) || 0;
+const profitProgress = Math.min(
+100,
+monthlyProfit / PROFIT_TARGET * 100
+);
 
-  // 📊 План аткарылышы
-  const kgProgress = Math.min(
-    100,
-    monthlyKg / KG_TARGET * 100
-  );
+// 📦 Айлык жүк
+setStatValue(
+"premiumKg",
+formatNumber(monthlyKg) + " KG"
+);
 
-  const profitProgress = Math.min(
-    100,
-    monthlyProfit / PROFIT_TARGET * 100
-  );
+// 💰 Таза пайда
+setStatValue(
+"premiumProfit",
+formatMoney(monthlyProfit)
+);
 
-  // 📦 Жүк көлөмү
-  setStatValue(
-    "premiumKg",
-    formatNumber(monthlyKg) + " KG"
-  );
+// 👥 Кардарлар
+setStatValue(
+"premiumClients",
+totalClients
+);
 
-  // 💰 Таза пайда
-  setStatValue(
-    "premiumProfit",
-    formatMoney(monthlyProfit)
-  );
+// 📊 Жүк планы
+setStatValue(
+"premiumKgProgress",
+kgProgress.toFixed(1) + "%"
+);
 
-  // 👥 Кардарлар
-  setStatValue(
-    "premiumClients",
-    totalClients
-  );
+// 💰 Пайда планы
+setStatValue(
+"premiumProfitProgress",
+profitProgress.toFixed(1) + "%"
+);
 
-  // 📊 Жүк планы
-  setStatValue(
-    "premiumKgProgress",
-    kgProgress.toFixed(1) + "%"
-  );
+// 🎯 Максаттарды көрсөтүүчү элементтер бар болсо жаңыртуу
+setStatValue(
+"premiumKgTarget",
+formatNumber(KG_TARGET) + " KG"
+);
 
-  // 💰 Пайда планы
-  setStatValue(
-    "premiumProfitProgress",
-    profitProgress.toFixed(1) + "%"
-  );
+setStatValue(
+"premiumProfitTarget",
+formatMoney(PROFIT_TARGET)
+);
 
-  // 📊 Жүк прогресс тилкеси
-  const kgBar = document.getElementById(
-    "premiumKgBar"
-  );
+setStatValue(
+"premiumClientsTarget",
+formatNumber(CLIENTS_TARGET)
+);
 
-  if (kgBar) {
-    kgBar.style.width = kgProgress + "%";
-  }
+// 📊 Жүк прогресс тилкеси
+const kgBar = document.getElementById("premiumKgBar");
 
-  // 💰 Пайда прогресс тилкеси
-  const profitBar = document.getElementById(
-    "premiumProfitBar"
-  );
+if (kgBar) {
+kgBar.style.width = kgProgress + "%";
+}
 
-  if (profitBar) {
-    profitBar.style.width = profitProgress + "%";
-  }
+// 💰 Пайда прогресс тилкеси
+const profitBar = document.getElementById("premiumProfitBar");
 
-  // ✅ Статус
-  const status = document.getElementById(
-    "premiumStatus"
-  );
+if (profitBar) {
+profitBar.style.width = profitProgress + "%";
+}
 
-  if (status) {
-    status.textContent =
-      "✅ PREMIUM PLAN 360°: маалымат жүктөлдү";
-  }
+// 🔍 Диагностика статусу
+const status = document.getElementById("premiumStatus");
 
-  console.log("PREMIUM PLAN 360°", {
-    monthlyKg: monthlyKg,
-    monthlyProfit: monthlyProfit,
-    totalClients: totalClients,
-    kgProgress: kgProgress,
-    profitProgress: profitProgress
-  });
+if (status) {
+status.textContent =
+"API: " + data.status +
+" | KG: " + monthlyKg +
+" | Пайда: " + monthlyProfit +
+" | Кардарлар: " + totalClients;
+}
+
+console.log("PREMIUM PLAN 360° DIAGNOSTICS", {
+apiStatus: data.status,
+month: month,
+stats: stats,
+goals: goals,
+monthlyKg: monthlyKg,
+monthlyProfit: monthlyProfit,
+totalClients: totalClients,
+kgProgress: kgProgress,
+profitProgress: profitProgress
+});
 
 }
 /************************************************
