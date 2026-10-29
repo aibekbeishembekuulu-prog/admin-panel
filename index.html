@@ -7138,49 +7138,66 @@ document.addEventListener(
 
 async function loadPremiumGoalsUI(){
 
-  const message = document.getElementById("premiumGoalsMessage");
+const message = document.getElementById("premiumGoalsMessage");
 
-  try {
+try {
 
-    const response = await fetch(
-      API_URL + "?action=get_premium_goals"
-    );
+const response = await fetch(
+  API_URL + "?action=get_premium_goals"
+);
 
-    const result = await response.json();
-
-    if(result.status !== "ok"){
-      throw new Error(result.message || "Максаттарды жүктөө катасы");
-    }
-
-    const goals = result.goals || {};
-
-    document.getElementById("premiumGoalKg").value =
-      goals.kg_goal || 1200;
-
-    document.getElementById("premiumGoalProfit").value =
-      goals.profit_goal || 70000;
-
-    document.getElementById("premiumGoalClients").value =
-      goals.clients_goal || 350;
-
-    if(message){
-      message.style.color = "green";
-      message.textContent = "✅ Максаттар жүктөлдү";
-    }
-
-  } catch(error) {
-
-    console.error("PREMIUM GOALS ERROR:", error);
-
-    if(message){
-      message.style.color = "red";
-      message.textContent = "❌ Жүктөө катасы: " + error.message;
-    }
-
-  }
+if (!response.ok) {
+  throw new Error("HTTP " + response.status);
 }
 
+const result = await response.json();
 
+if (result.status !== "ok") {
+  throw new Error(result.message || "Максаттарды жүктөө катасы");
+}
+
+const goals = result.goals || {};
+
+// Google Sheets'тен алынган максаттарды сактоо
+window.__premiumGoals = {
+  kg_goal: Number(goals.kg_goal) || 1200,
+  profit_goal: Number(goals.profit_goal) || 70000,
+  clients_goal: Number(goals.clients_goal) || 350
+};
+
+// Максаттарды киргизүү талааларына көрсөтүү
+document.getElementById("premiumGoalKg").value =
+  window.__premiumGoals.kg_goal;
+
+document.getElementById("premiumGoalProfit").value =
+  window.__premiumGoals.profit_goal;
+
+document.getElementById("premiumGoalClients").value =
+  window.__premiumGoals.clients_goal;
+
+// Учурдагы Dashboard маалыматтары менен кайра эсептөө
+if (window.__dashboardData) {
+  renderPremiumPlan360(window.__dashboardData);
+}
+
+if (message) {
+  message.style.color = "green";
+  message.textContent = "✅ Максаттар Google Sheets'тен жүктөлдү";
+}
+
+console.log("PREMIUM GOALS:", window.__premiumGoals);
+
+} catch(error) {
+
+console.error("PREMIUM GOALS ERROR:", error);
+
+if (message) {
+  message.style.color = "red";
+  message.textContent = "❌ Жүктөө катасы: " + error.message;
+}
+
+}
+}
 /************************************************
 💾 PREMIUM PLAN 360° — МАКСАТТАРДЫ САКТОО
 ************************************************/
