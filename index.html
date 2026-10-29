@@ -5723,8 +5723,10 @@ data = data || {};
 
 const stats = data.stats || {};
 const month = data.month || {};
-const goals = data.premium_goals || {};
-
+const goals =
+  window.__premiumGoals ||
+  data.premium_goals ||
+  {};
 // 🎯 МАКСАТТАР
 const KG_TARGET = Number(goals.kg_goal) || 1200;
 const PROFIT_TARGET = Number(goals.profit_goal) || 70000;
