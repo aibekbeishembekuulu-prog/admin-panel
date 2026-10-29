@@ -5713,77 +5713,156 @@ stats.total_kg
   }
 
 }
-    /************************************************
-🎯 PREMIUM PLAN 360° — МАКСАТТАРДЫ ЖҮКТӨӨ
+ /************************************************
+🚀 TEZ KARGO — PREMIUM PLAN 360°
+Максаттар + аналитика + автоматтык прогноз
 ************************************************/
+function renderPremiumPlan360(data) {
 
-async function loadPremiumGoalsUI() {
+data = data || {};
 
-  const message =
-    document.getElementById("premiumGoalsMessage");
+const stats = data.stats || {};
+const month = data.month || {};
+const goals = data.premium_goals || {};
 
-  try {
+// 🎯 МАКСАТТАР
+const KG_TARGET = Number(goals.kg_goal) || 1200;
+const PROFIT_TARGET = Number(goals.profit_goal) || 70000;
+const CLIENTS_TARGET = Number(goals.clients_goal) || 350;
 
-    const response = await fetch(
-      API_URL + "?action=get_premium_goals"
-    );
+// 📊 API'ден келген маалыматтар
+const monthlyKg = Number(month.kg) || 0;
+const monthlyProfit = Number(month.profit) || 0;
+const totalClients = Number(stats.total_clients) || 0;
 
-    if (!response.ok) {
-      throw new Error("HTTP " + response.status);
-    }
+// 📈 ПЛАНДЫН АТКАРЫЛЫШЫ
+const kgProgress = Math.min(
+100,
+monthlyKg / KG_TARGET * 100
+);
 
-    const result = await response.json();
+const profitProgress = Math.min(
+100,
+monthlyProfit / PROFIT_TARGET * 100
+);
 
-    if (result.status !== "ok") {
-      throw new Error(
-        result.message || "Максаттарды жүктөө катасы"
-      );
-    }
+const clientsProgress = Math.min(
+100,
+totalClients / CLIENTS_TARGET * 100
+);
 
-    const goals = result.goals || {};
+// 📦 АЙЛЫК ЖҮК
+setStatValue(
+"premiumCurrentKg",
+formatNumber(monthlyKg) + " кг"
+);
 
-    // Максаттарды глобалдык сактоо
-    window.__premiumGoals = {
-      kg_goal: Number(goals.kg_goal) || 1200,
-      profit_goal: Number(goals.profit_goal) || 70000,
-      clients_goal: Number(goals.clients_goal) || 350
-    };
+// 💰 ТАЗА ПАЙДА
+setStatValue(
+"premiumCurrentProfit",
+formatMoney(monthlyProfit)
+);
 
-    // Киргизүү талааларын жаңылоо
-    document.getElementById("premiumGoalKg").value =
-      window.__premiumGoals.kg_goal;
+// 👥 КАРДАРЛАР
+setStatValue(
+"premiumCurrentClients",
+formatNumber(totalClients)
+);
 
-    document.getElementById("premiumGoalProfit").value =
-      window.__premiumGoals.profit_goal;
+// 📊 ЖҮК ПЛАНЫНЫН ПРОЦЕНТИ
+setStatValue(
+"premiumKgProgressText",
+kgProgress.toFixed(1) + "%"
+);
 
-    document.getElementById("premiumGoalClients").value =
-      window.__premiumGoals.clients_goal;
+// 💰 ПАЙДА ПЛАНЫНЫН ПРОЦЕНТИ
+setStatValue(
+"premiumProfitProgressText",
+profitProgress.toFixed(1) + "%"
+);
 
-    // Dashboard маалыматтары бар болсо,
-    // пайыздарды жана прогнозду кайра эсептөө
-    if (window.__dashboardData) {
-      renderPremiumPlan360(window.__dashboardData);
-    }
+// 📈 ЖҮКТҮН PROGRESS BAR
+const kgBar = document.getElementById("premiumKgBar");
 
-    if (message) {
-      message.style.color = "green";
-      message.textContent =
-        "✅ Google Sheets'тен максаттар жүктөлдү";
-    }
+if (kgBar) {
+kgBar.style.width = kgProgress + "%";
+}
 
-  } catch (error) {
+// 📈 ПАЙДАНЫН PROGRESS BAR
+const profitBar = document.getElementById("premiumProfitBar");
 
-    console.error("PREMIUM GOALS ERROR:", error);
+if (profitBar) {
+profitBar.style.width = profitProgress + "%";
+}
 
-    if (message) {
-      message.style.color = "red";
-      message.textContent =
-        "❌ Жүктөө катасы: " + error.message;
-    }
+// 🔮 АВТОМАТТЫК ПРОГНОЗ
+const forecastElement = document.getElementById(
+"premiumForecast"
+);
 
-  }
+if (forecastElement) {
 
-}  
+const now = new Date();  
+
+const currentDay = now.getDate();  
+
+const daysInMonth = new Date(  
+  now.getFullYear(),  
+  now.getMonth() + 1,  
+  0  
+).getDate();  
+
+const daysPassed = Math.max(1, currentDay);  
+
+const forecastKg =  
+  monthlyKg / daysPassed * daysInMonth;  
+
+const forecastProfit =  
+  monthlyProfit / daysPassed * daysInMonth;  
+
+forecastElement.innerHTML = `  
+  <div style="margin-bottom:12px;">  
+    📦 <b>Ай аягындагы жүк прогнозу:</b>  
+    ${formatNumber(forecastKg)} кг  
+  </div>  
+
+  <div style="margin-bottom:12px;">  
+    💰 <b>Ай аягындагы таза пайда прогнозу:</b>  
+    ${formatMoney(forecastProfit)}  
+  </div>  
+
+  <div style="margin-bottom:12px;">  
+    👥 <b>Кардарлар планы:</b>  
+    ${clientsProgress.toFixed(1)}%  
+    (${totalClients} / ${CLIENTS_TARGET})  
+  </div>  
+
+  <div style="margin-bottom:12px;">  
+    📦 <b>Жүк планы:</b>  
+    ${kgProgress.toFixed(1)}%  
+    (${formatNumber(monthlyKg)} / ${KG_TARGET} кг)  
+  </div>  
+
+  <div>  
+    🎯 <b>Пайда планы:</b>  
+    ${profitProgress.toFixed(1)}%  
+    (${formatMoney(monthlyProfit)} / ${formatMoney(PROFIT_TARGET)})  
+  </div>  
+`;
+
+}
+
+console.log("✅ PREMIUM PLAN 360° UPDATED", {
+apiStatus: data.status,
+monthlyKg: monthlyKg,
+monthlyProfit: monthlyProfit,
+totalClients: totalClients,
+kgProgress: kgProgress.toFixed(1) + "%",
+profitProgress: profitProgress.toFixed(1) + "%",
+clientsProgress: clientsProgress.toFixed(1) + "%"
+});
+
+}
 /************************************************
 🔢 SET STAT
 ************************************************/
