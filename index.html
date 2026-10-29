@@ -5713,155 +5713,77 @@ stats.total_kg
   }
 
 }
-/************************************************
-🚀 TEZ KARGO — PREMIUM PLAN 360°
-Максаттар + аналитика + автоматтык прогноз
+    /************************************************
+🎯 PREMIUM PLAN 360° — МАКСАТТАРДЫ ЖҮКТӨӨ
 ************************************************/
-function renderPremiumPlan360(data) {
 
-  data = data || {};
+async function loadPremiumGoalsUI() {
 
-  const stats = data.stats || {};
-  const month = data.month || {};
-  const goals = data.premium_goals || {};
+  const message =
+    document.getElementById("premiumGoalsMessage");
 
-  // 🎯 МАКСАТТАР
-  const KG_TARGET = Number(goals.kg_goal) || 1200;
-  const PROFIT_TARGET = Number(goals.profit_goal) || 70000;
-  const CLIENTS_TARGET = Number(goals.clients_goal) || 350;
+  try {
 
-  // 📊 API'ден келген маалыматтар
-  const monthlyKg = Number(month.kg) || 0;
-  const monthlyProfit = Number(month.profit) || 0;
-  const totalClients = Number(stats.total_clients) || 0;
+    const response = await fetch(
+      API_URL + "?action=get_premium_goals"
+    );
 
-  // 📈 ПЛАНДЫН АТКАРЫЛЫШЫ
-  const kgProgress = Math.min(
-    100,
-    monthlyKg / KG_TARGET * 100
-  );
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status);
+    }
 
-  const profitProgress = Math.min(
-    100,
-    monthlyProfit / PROFIT_TARGET * 100
-  );
+    const result = await response.json();
 
-  const clientsProgress = Math.min(
-    100,
-    totalClients / CLIENTS_TARGET * 100
-  );
+    if (result.status !== "ok") {
+      throw new Error(
+        result.message || "Максаттарды жүктөө катасы"
+      );
+    }
 
-  // 📦 АЙЛЫК ЖҮК
-  setStatValue(
-    "premiumCurrentKg",
-    formatNumber(monthlyKg) + " кг"
-  );
+    const goals = result.goals || {};
 
-  // 💰 ТАЗА ПАЙДА
-  setStatValue(
-    "premiumCurrentProfit",
-    formatMoney(monthlyProfit)
-  );
+    // Максаттарды глобалдык сактоо
+    window.__premiumGoals = {
+      kg_goal: Number(goals.kg_goal) || 1200,
+      profit_goal: Number(goals.profit_goal) || 70000,
+      clients_goal: Number(goals.clients_goal) || 350
+    };
 
-  // 👥 КАРДАРЛАР
-  setStatValue(
-    "premiumCurrentClients",
-    formatNumber(totalClients)
-  );
+    // Киргизүү талааларын жаңылоо
+    document.getElementById("premiumGoalKg").value =
+      window.__premiumGoals.kg_goal;
 
-  // 📊 ЖҮК ПЛАНЫНЫН ПРОЦЕНТИ
-  setStatValue(
-    "premiumKgProgressText",
-    kgProgress.toFixed(1) + "%"
-  );
+    document.getElementById("premiumGoalProfit").value =
+      window.__premiumGoals.profit_goal;
 
-  // 💰 ПАЙДА ПЛАНЫНЫН ПРОЦЕНТИ
-  setStatValue(
-    "premiumProfitProgressText",
-    profitProgress.toFixed(1) + "%"
-  );
+    document.getElementById("premiumGoalClients").value =
+      window.__premiumGoals.clients_goal;
 
-  // 📈 ЖҮКТҮН PROGRESS BAR
-  const kgBar = document.getElementById("premiumKgBar");
+    // Dashboard маалыматтары бар болсо,
+    // пайыздарды жана прогнозду кайра эсептөө
+    if (window.__dashboardData) {
+      renderPremiumPlan360(window.__dashboardData);
+    }
 
-  if (kgBar) {
-    kgBar.style.width = kgProgress + "%";
+    if (message) {
+      message.style.color = "green";
+      message.textContent =
+        "✅ Google Sheets'тен максаттар жүктөлдү";
+    }
+
+  } catch (error) {
+
+    console.error("PREMIUM GOALS ERROR:", error);
+
+    if (message) {
+      message.style.color = "red";
+      message.textContent =
+        "❌ Жүктөө катасы: " + error.message;
+    }
+
   }
 
-  // 📈 ПАЙДАНЫН PROGRESS BAR
-  const profitBar = document.getElementById("premiumProfitBar");
-
-  if (profitBar) {
-    profitBar.style.width = profitProgress + "%";
-  }
-
-  // 🔮 АВТОМАТТЫК ПРОГНОЗ
-  const forecastElement = document.getElementById(
-    "premiumForecast"
-  );
-
-  if (forecastElement) {
-
-    const now = new Date();
-
-    const currentDay = now.getDate();
-
-    const daysInMonth = new Date(
-      now.getFullYear(),
-      now.getMonth() + 1,
-      0
-    ).getDate();
-
-    const daysPassed = Math.max(1, currentDay);
-
-    const forecastKg =
-      monthlyKg / daysPassed * daysInMonth;
-
-    const forecastProfit =
-      monthlyProfit / daysPassed * daysInMonth;
-
-    forecastElement.innerHTML = `
-      <div style="margin-bottom:12px;">
-        📦 <b>Ай аягындагы жүк прогнозу:</b>
-        ${formatNumber(forecastKg)} кг
-      </div>
-
-      <div style="margin-bottom:12px;">
-        💰 <b>Ай аягындагы таза пайда прогнозу:</b>
-        ${formatMoney(forecastProfit)}
-      </div>
-
-      <div style="margin-bottom:12px;">
-        👥 <b>Кардарлар планы:</b>
-        ${clientsProgress.toFixed(1)}%
-        (${totalClients} / ${CLIENTS_TARGET})
-      </div>
-
-      <div style="margin-bottom:12px;">
-        📦 <b>Жүк планы:</b>
-        ${kgProgress.toFixed(1)}%
-        (${formatNumber(monthlyKg)} / ${KG_TARGET} кг)
-      </div>
-
-      <div>
-        🎯 <b>Пайда планы:</b>
-        ${profitProgress.toFixed(1)}%
-        (${formatMoney(monthlyProfit)} / ${formatMoney(PROFIT_TARGET)})
-      </div>
-    `;
-  }
-
-  console.log("✅ PREMIUM PLAN 360° UPDATED", {
-    apiStatus: data.status,
-    monthlyKg: monthlyKg,
-    monthlyProfit: monthlyProfit,
-    totalClients: totalClients,
-    kgProgress: kgProgress.toFixed(1) + "%",
-    profitProgress: profitProgress.toFixed(1) + "%",
-    clientsProgress: clientsProgress.toFixed(1) + "%"
-  });
-
-}
+}  
 /************************************************
 🔢 SET STAT
 ************************************************/
