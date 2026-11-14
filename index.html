@@ -1994,12 +1994,52 @@ button:disabled{
     placeholder="500"
   >
 
+  <button
+    class="btn btn-red"
+    id="addPartyButton"
+    onclick="addNewParty()">
+    ➕ ПАРТИЯ КОШУУ
+  </button>
+
+  <div id="addPartyResult"></div>
+
+</div><!-- КЕЛГЕН ПАРТИЯНЫ КАБЫЛ АЛУУ -->
+
+<div class="card">
+
+  <div class="card-head">
+    <div>
+      <div class="card-title">
+        📥 Келген партияны кабыл алуу
+      </div>
+      <div class="card-subtitle">
+        Кытайдан чыккан партияны тандап, келген маалыматтарын киргизүү
+      </div>
+    </div>
+  </div>
+
+  <label>🚚 Жолго чыккан партияны тандаңыз</label>
+  <select
+    id="pendingPartySelect"
+    class="search-input">
+    <option value="">⏳ Партиялар жүктөлүүдө...</option>
+  </select>
+
+  <label style="display:block;margin-top:12px;">
+    📅 Келген күнү
+  </label>
+  <input
+    type="date"
+    id="receivePartyDate"
+    class="search-input"
+  >
+
   <label style="display:block;margin-top:12px;">
     🚚 Логистика (сом)
   </label>
   <input
     type="number"
-    id="newPartyLogistics"
+    id="receivePartyLogistics"
     class="search-input"
     min="0"
     placeholder="80000"
@@ -2010,7 +2050,7 @@ button:disabled{
   </label>
   <input
     type="number"
-    id="newPartyExpense"
+    id="receivePartyExpense"
     class="search-input"
     min="0"
     placeholder="500"
@@ -2021,7 +2061,7 @@ button:disabled{
   </label>
   <input
     type="number"
-    id="newPartyIncome"
+    id="receivePartyIncome"
     class="search-input"
     min="0"
     placeholder="120000"
@@ -2029,12 +2069,12 @@ button:disabled{
 
   <button
     class="btn btn-red"
-    id="addPartyButton"
-    onclick="addNewParty()">
-    ➕ ПАРТИЯ КОШУУ
+    id="receivePartyButton"
+    onclick="receiveParty()">
+    📥 ПАРТИЯНЫ КАБЫЛ АЛУУ
   </button>
 
-  <div id="addPartyResult"></div>
+  <div id="receivePartyResult"></div>
 
 </div>
 </section>
@@ -3309,7 +3349,7 @@ function selectPeriod(button,type){
 ************************************************/
 
 function loadBatches(){
-
+loadPendingParties();
   fetch(
     API_URL + "?action=dashboard"
   )
@@ -3691,6 +3731,196 @@ if(currentCard){
   });
 
 }
+ /************************************************
+📥 КЕЛЕ ЭЛЕК ПАРТИЯЛАРДЫ ТИЗМЕГЕ ЧЫГАРУУ
+************************************************/
+
+function loadPendingParties(){
+
+  const select = document.getElementById("pendingPartySelect");
+
+  if(!select) return;
+
+  select.innerHTML =
+    '<option value="">⏳ Жүктөлүүдө...</option>';
+
+  fetch(API_URL + "?action=get_pending_parties")
+
+  .then(function(response){
+
+    if(!response.ok){
+      throw new Error("HTTP " + response.status);
+    }
+
+    return response.json();
+
+  })
+
+  .then(function(data){
+
+    if(data.status !== "ok"){
+      throw new Error(data.message || "Партиялар алынган жок");
+    }
+
+    const parties = data.parties || [];
+
+    if(parties.length === 0){
+
+      select.innerHTML =
+        '<option value="">Келе элек партия жок</option>';
+
+      return;
+    }
+
+    let html =
+      '<option value="">Партияны тандаңыз</option>';
+
+    parties.forEach(function(party){
+
+      html += `
+        <option value="${party.row}">
+          ${escapeHtml(party.date)} ·
+          ${Number(party.parcels || 0)} посылка ·
+          ${Number(party.kg || 0)} KG
+        </option>
+      `;
+
+    });
+
+    select.innerHTML = html;
+
+  })
+
+  .catch(function(error){
+
+    console.error("PENDING PARTIES ERROR:", error);
+
+    select.innerHTML =
+      '<option value="">❌ Партияларды жүктөөдө ката</option>';
+
+  });
+
+}  
+ /************************************************
+📥 КЕЛГЕН ПАРТИЯНЫ КАБЫЛ АЛУУ
+************************************************/
+
+function receiveParty(){
+
+  const row = document.getElementById("pendingPartySelect").value;
+  const date = document.getElementById("receivePartyDate").value;
+  const logistics = document.getElementById("receivePartyLogistics").value;
+  const expense = document.getElementById("receivePartyExpense").value;
+  const income = document.getElementById("receivePartyIncome").value;
+
+  const button = document.getElementById("receivePartyButton");
+  const result = document.getElementById("receivePartyResult");
+
+  // Милдеттүү талааларды текшерүү
+  if(!row || !date || logistics === "" || expense === "" || income === ""){
+
+    result.innerHTML = `
+      <div class="status error">
+        ❌ Бардык талааларды толтуруңуз.
+      </div>
+    `;
+
+    return;
+  }
+
+  // Сандарды текшерүү
+  if(
+    !Number.isFinite(Number(logistics)) || Number(logistics) < 0 ||
+    !Number.isFinite(Number(expense)) || Number(expense) < 0 ||
+    !Number.isFinite(Number(income)) || Number(income) < 0
+  ){
+
+    result.innerHTML = `
+      <div class="status error">
+        ❌ Сандарды туура киргизиңиз.
+      </div>
+    `;
+
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "⏳ КАБЫЛ АЛЫНУУДА...";
+
+  result.innerHTML = `
+    <div class="loading">
+      ⏳ Партия кабыл алынууда...
+    </div>
+  `;
+
+  const params = new URLSearchParams({
+
+    action: "receive_party",
+    row: row,
+    date_arrival: date,
+    logistics: logistics,
+    expense: expense,
+    income: income
+
+  });
+
+  fetch(API_URL + "?" + params.toString())
+
+  .then(function(response){
+
+    if(!response.ok){
+      throw new Error("HTTP " + response.status);
+    }
+
+    return response.json();
+
+  })
+
+  .then(function(data){
+
+    if(data.status !== "ok"){
+      throw new Error(data.message || "Партия кабыл алынган жок");
+    }
+
+    result.innerHTML = `
+      <div class="status success">
+        ✅ ${escapeHtml(data.message)}
+      </div>
+    `;
+
+    // Форманы тазалоо
+    document.getElementById("receivePartyDate").value = "";
+    document.getElementById("receivePartyLogistics").value = "";
+    document.getElementById("receivePartyExpense").value = "";
+    document.getElementById("receivePartyIncome").value = "";
+
+    // Маалыматтарды жаңылоо
+    loadPendingParties();
+    loadBatches();
+    loadDashboardData();
+
+  })
+
+  .catch(function(error){
+
+    console.error("RECEIVE PARTY ERROR:", error);
+
+    result.innerHTML = `
+      <div class="status error">
+        ❌ Ката: ${escapeHtml(error.message)}
+      </div>
+    `;
+
+  })
+
+  .finally(function(){
+
+    button.disabled = false;
+    button.textContent = "📥 ПАРТИЯНЫ КАБЫЛ АЛУУ";
+
+  });
+
+}     
 /************************************************
 🚚 ADD NEW PARTY
 ************************************************/
@@ -3700,9 +3930,6 @@ function addNewParty(){
   const date = document.getElementById("newPartyDate").value;
   const parcels = document.getElementById("newPartyParcels").value;
   const kg = document.getElementById("newPartyKg").value;
-  const logistics = document.getElementById("newPartyLogistics").value;
-  const expense = document.getElementById("newPartyExpense").value;
-  const income = document.getElementById("newPartyIncome").value;
 
   const button = document.getElementById("addPartyButton");
   const result = document.getElementById("addPartyResult");
@@ -3724,18 +3951,12 @@ function addNewParty(){
     !Number.isInteger(Number(parcels)) ||
     Number(parcels) < 0 ||
     !Number.isFinite(Number(kg)) ||
-    Number(kg) <= 0 ||
-    !Number.isFinite(Number(logistics || 0)) ||
-    Number(logistics || 0) < 0 ||
-    !Number.isFinite(Number(expense || 0)) ||
-    Number(expense || 0) < 0 ||
-    !Number.isFinite(Number(income || 0)) ||
-    Number(income || 0) < 0
+    Number(kg) <= 0
   ){
 
     result.innerHTML = `
       <div class="status error">
-        ❌ Киргизилген сандарды текшериңиз.
+        ❌ Посылка санын жана салмагын туура киргизиңиз.
       </div>
     `;
 
@@ -3758,10 +3979,7 @@ function addNewParty(){
     action: "add_party",
     date_send: date,
     parcels: parcels,
-    kg: kg,
-    logistics: logistics || 0,
-    expense: expense || 0,
-    income: income || 0
+    kg: kg
 
   });
 
@@ -3770,11 +3988,7 @@ function addNewParty(){
   .then(function(response){
 
     if(!response.ok){
-
-      throw new Error(
-        "HTTP " + response.status
-      );
-
+      throw new Error("HTTP " + response.status);
     }
 
     return response.json();
@@ -3784,14 +3998,11 @@ function addNewParty(){
   .then(function(data){
 
     if(data.status !== "ok"){
-
       throw new Error(
         data.message || "Партия кошулган жок"
       );
-
     }
 
-    // Ийгиликтүү билдирүү
     result.innerHTML = `
       <div class="status success">
         ✅ ${escapeHtml(data.message)}
@@ -3802,9 +4013,6 @@ function addNewParty(){
     document.getElementById("newPartyDate").value = "";
     document.getElementById("newPartyParcels").value = "";
     document.getElementById("newPartyKg").value = "";
-    document.getElementById("newPartyLogistics").value = "";
-    document.getElementById("newPartyExpense").value = "";
-    document.getElementById("newPartyIncome").value = "";
 
     // Маалыматтарды жаңылоо
     loadBatches();
@@ -3814,10 +4022,7 @@ function addNewParty(){
 
   .catch(function(error){
 
-    console.error(
-      "❌ ADD PARTY ERROR:",
-      error
-    );
+    console.error("❌ ADD PARTY ERROR:", error);
 
     result.innerHTML = `
       <div class="status error">
@@ -3835,7 +4040,6 @@ function addNewParty(){
   });
 
 }
-
 /************************************************
 📅 DATE PARSER
 ************************************************/
