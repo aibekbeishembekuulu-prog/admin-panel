@@ -1882,7 +1882,42 @@ button:disabled{
       🔄 МААЛЫМАТТЫ ЖАҢЫЛОО
 
     </button>
+    <!-- ЖОЛДО КЕЛАТКАН ПАРТИЯЛАР -->
 
+<div class="card" style="margin-top:15px;">
+
+  <div class="card-head">
+    <div>
+      <div class="card-title">
+        🚛 Жолдо келе жаткан партиялар
+      </div>
+      <div class="card-subtitle">
+        Азырынча келе элек партиялар
+      </div>
+    </div>
+  </div>
+
+  <div class="total-box">
+    <div class="total-label">
+      ЖОЛДО КЕЛАТКАН ЖАЛПЫ САЛМАК
+    </div>
+
+    <div class="total-value" id="inTransitKg">
+      0 KG
+    </div>
+
+    <div id="inTransitSummary">
+      0 партия · 0 посылка
+    </div>
+  </div>
+
+  <div id="inTransitPartyList">
+    <div class="empty">
+      🚛 Жолдогу партиялар жүктөлүүдө...
+    </div>
+  </div>
+
+</div>
   </div>
 
 
@@ -1914,7 +1949,94 @@ button:disabled{
     </div>
 
   </div>
+<!-- ЖАҢЫ ПАРТИЯ КОШУУ -->
 
+<div class="card">
+
+  <div class="card-head">
+    <div>
+      <div class="card-title">
+        ➕ Жаңы партия кошуу
+      </div>
+      <div class="card-subtitle">
+        Кытайдан чыккан жаңы партияны каттоо
+      </div>
+    </div>
+  </div>
+
+  <label>📅 Жолго чыккан күн</label>
+  <input
+    type="date"
+    id="newPartyDate"
+    class="search-input"
+  >
+
+  <label style="display:block;margin-top:12px;">
+    📦 Посылка саны
+  </label>
+  <input
+    type="number"
+    id="newPartyParcels"
+    class="search-input"
+    min="0"
+    placeholder="100"
+  >
+
+  <label style="display:block;margin-top:12px;">
+    ⚖️ Салмагы (KG)
+  </label>
+  <input
+    type="number"
+    id="newPartyKg"
+    class="search-input"
+    min="0.01"
+    step="0.01"
+    placeholder="500"
+  >
+
+  <label style="display:block;margin-top:12px;">
+    🚚 Логистика (сом)
+  </label>
+  <input
+    type="number"
+    id="newPartyLogistics"
+    class="search-input"
+    min="0"
+    placeholder="80000"
+  >
+
+  <label style="display:block;margin-top:12px;">
+    💸 Кошумча чыгым (сом)
+  </label>
+  <input
+    type="number"
+    id="newPartyExpense"
+    class="search-input"
+    min="0"
+    placeholder="500"
+  >
+
+  <label style="display:block;margin-top:12px;">
+    💰 Кардарлардан түшкөн төлөм (сом)
+  </label>
+  <input
+    type="number"
+    id="newPartyIncome"
+    class="search-input"
+    min="0"
+    placeholder="120000"
+  >
+
+  <button
+    class="btn btn-red"
+    id="addPartyButton"
+    onclick="addNewParty()">
+    ➕ ПАРТИЯ КОШУУ
+  </button>
+
+  <div id="addPartyResult"></div>
+
+</div>
 </section>
 
 
@@ -2608,7 +2730,9 @@ function showSection(name){
   if(name === "clients"){
     loadClients();
   }
-
+  if(name === "batches"){
+  loadBatches();
+}
   /* PREMIUM PLAN 360° ачылганда маалыматтарды жүктөө */
 
   if(name === "premium"){
@@ -3221,7 +3345,67 @@ function loadBatches(){
 
     const parties =
       data.parties || [];
+  // ЖОЛДО КЕЛАТКАН ПАРТИЯЛАР
+const inTransitParties = data.in_transit_parties || [];
+const inTransitTotals = data.in_transit_totals || {};
 
+const kgEl = document.getElementById("inTransitKg");
+
+if (kgEl) {
+  kgEl.textContent =
+    Number(inTransitTotals.kg || 0).toLocaleString("ru-RU") + " KG";
+}
+
+const summaryEl = document.getElementById("inTransitSummary");
+
+if (summaryEl) {
+  summaryEl.textContent =
+    (inTransitTotals.parties || 0) + " партия · " +
+    (inTransitTotals.parcels || 0) + " посылка";
+}
+
+const listEl = document.getElementById("inTransitPartyList");
+
+if (listEl) {
+
+  if (inTransitParties.length === 0) {
+
+    listEl.innerHTML =
+      '<div class="empty">🚛 Азырынча жолдо келе жаткан партия жок.</div>';
+
+  } else {
+
+    let html = "";
+
+    inTransitParties.forEach(function(party) {
+
+      html += `
+        <div class="parcel">
+          <div class="parcel-top">
+            <div class="track">🚛 Партия</div>
+            <span class="badge badge-warning">ЖОЛДО</span>
+          </div>
+
+          <div class="price">
+            📅 Жолго чыккан: <b>${party.date_send || "—"}</b>
+          </div>
+
+          <div class="price">
+            ⚖️ Салмагы: <b>${party.kg || 0} KG</b>
+          </div>
+
+          <div class="price">
+            📦 Посылка: <b>${party.parcels || 0}</b>
+          </div>
+        </div>
+      `;
+
+    });
+
+    listEl.innerHTML = html;
+
+  }
+}
 
     const cards =
       document.querySelectorAll(
@@ -3259,81 +3443,93 @@ function loadBatches(){
         .querySelector(".stat-value")
         .textContent =
           Number(
-            totals.in_transit || 0
+          inTransitTotals.parties || 0  
           );
 
     }
 
+const currentCard =
+  document.getElementById("currentPartyCard");
 
-    const currentCard =
-      document.querySelector(
-        "#batchesSection .parcel"
-      );
+if(currentCard){
 
+  if(current){
 
-    if(currentCard){
+    currentCard.innerHTML = `
 
-      if(current){
+      <div class="parcel-top">
 
-        currentCard.innerHTML = `
+        <div class="track">
+          🚚 Учурдагы партия
+        </div>
 
-          <div class="parcel-top">
+        <span class="badge badge-success">
+          КЕЛДИ
+        </span>
 
-            <div class="track">
-              🚚 Учурдагы партия
-            </div>
+      </div>
 
-            <span class="badge badge-success">
-              ЖОЛДО
-            </span>
+      <div class="price">
+        📅 Жолго чыккан:
+        <b>
+          ${escapeHtml(
+            current.date_send || "—"
+          )}
+        </b>
+      </div>
 
-          </div>
+      <div class="price">
+        📅 Келүү:
+        <b>
+          ${escapeHtml(
+            current.date_arrival || "—"
+          )}
+        </b>
+      </div>
 
+      <div class="price">
+        ⚖️ Салмагы:
+        <b>
+          ${formatNumber(
+            current.kg
+          )} KG
+        </b>
+      </div>
 
-          <div class="price">
-            📅 Жолго чыккан:
-            <b>
-              ${escapeHtml(
-                current.date_send || "—"
-              )}
-            </b>
-          </div>
+      <div class="price">
+        📦 Посылка:
+        <b>
+          ${Number(
+            current.parcels || 0
+          )}
+        </b>
+      </div>
 
+    `;
 
-          <div class="price">
-            📅 Келүү:
-            <b>
-              ${escapeHtml(
-                current.date_arrival || "—"
-              )}
-            </b>
-          </div>
+  } else {
 
+    currentCard.innerHTML = `
 
-          <div class="price">
-            ⚖️ Салмагы:
-            <b>
-              ${formatNumber(
-                current.kg
-              )} KG
-            </b>
-          </div>
+      <div class="parcel-top">
+        <div class="track">
+          🚚 Учурдагы партия
+        </div>
 
+        <span class="badge">
+          ЖОК
+        </span>
+      </div>
 
-          <div class="price">
-            📦 Посылка:
-            <b>
-              ${Number(
-                current.parcels || 0
-              )}
-            </b>
-          </div>
+      <div class="empty">
+        📦 Азырынча келген партия жок.
+      </div>
 
-        `;
+    `;
 
-      }
+  }
 
-    }
+}
 
 
     const container =
@@ -3419,7 +3615,7 @@ function loadBatches(){
 
         html += `
 
-          <div class="parcel">
+          <div class="parcel" id="currentPartyCard">
 
             <div class="parcel-top">
 
@@ -3495,7 +3691,150 @@ function loadBatches(){
   });
 
 }
+/************************************************
+🚚 ADD NEW PARTY
+************************************************/
 
+function addNewParty(){
+
+  const date = document.getElementById("newPartyDate").value;
+  const parcels = document.getElementById("newPartyParcels").value;
+  const kg = document.getElementById("newPartyKg").value;
+  const logistics = document.getElementById("newPartyLogistics").value;
+  const expense = document.getElementById("newPartyExpense").value;
+  const income = document.getElementById("newPartyIncome").value;
+
+  const button = document.getElementById("addPartyButton");
+  const result = document.getElementById("addPartyResult");
+
+  // Милдеттүү талааларды текшерүү
+  if(!date || parcels === "" || !kg){
+
+    result.innerHTML = `
+      <div class="status error">
+        ❌ Жолго чыккан күндү, посылка санын жана салмагын толтуруңуз.
+      </div>
+    `;
+
+    return;
+  }
+
+  // Сандарды текшерүү
+  if(
+    !Number.isInteger(Number(parcels)) ||
+    Number(parcels) < 0 ||
+    !Number.isFinite(Number(kg)) ||
+    Number(kg) <= 0 ||
+    !Number.isFinite(Number(logistics || 0)) ||
+    Number(logistics || 0) < 0 ||
+    !Number.isFinite(Number(expense || 0)) ||
+    Number(expense || 0) < 0 ||
+    !Number.isFinite(Number(income || 0)) ||
+    Number(income || 0) < 0
+  ){
+
+    result.innerHTML = `
+      <div class="status error">
+        ❌ Киргизилген сандарды текшериңиз.
+      </div>
+    `;
+
+    return;
+  }
+
+  // Баскычты убактылуу өчүрүү
+  button.disabled = true;
+  button.textContent = "⏳ КОШУЛУУДА...";
+
+  result.innerHTML = `
+    <div class="loading">
+      ⏳ Партия Google Sheets'ке жазылууда...
+    </div>
+  `;
+
+  // Серверге жөнөтүлүүчү маалыматтар
+  const params = new URLSearchParams({
+
+    action: "add_party",
+    date_send: date,
+    parcels: parcels,
+    kg: kg,
+    logistics: logistics || 0,
+    expense: expense || 0,
+    income: income || 0
+
+  });
+
+  fetch(API_URL + "?" + params.toString())
+
+  .then(function(response){
+
+    if(!response.ok){
+
+      throw new Error(
+        "HTTP " + response.status
+      );
+
+    }
+
+    return response.json();
+
+  })
+
+  .then(function(data){
+
+    if(data.status !== "ok"){
+
+      throw new Error(
+        data.message || "Партия кошулган жок"
+      );
+
+    }
+
+    // Ийгиликтүү билдирүү
+    result.innerHTML = `
+      <div class="status success">
+        ✅ ${escapeHtml(data.message)}
+      </div>
+    `;
+
+    // Форманы тазалоо
+    document.getElementById("newPartyDate").value = "";
+    document.getElementById("newPartyParcels").value = "";
+    document.getElementById("newPartyKg").value = "";
+    document.getElementById("newPartyLogistics").value = "";
+    document.getElementById("newPartyExpense").value = "";
+    document.getElementById("newPartyIncome").value = "";
+
+    // Маалыматтарды жаңылоо
+    loadBatches();
+    loadDashboardData();
+
+  })
+
+  .catch(function(error){
+
+    console.error(
+      "❌ ADD PARTY ERROR:",
+      error
+    );
+
+    result.innerHTML = `
+      <div class="status error">
+        ❌ Ката: ${escapeHtml(error.message)}
+      </div>
+    `;
+
+  })
+
+  .finally(function(){
+
+    button.disabled = false;
+    button.textContent = "➕ ПАРТИЯ КОШУУ";
+
+  });
+
+}
 
 /************************************************
 📅 DATE PARSER
