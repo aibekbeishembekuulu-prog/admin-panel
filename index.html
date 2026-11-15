@@ -3089,7 +3089,44 @@ function previewMailing() {
 
 
 function sendMailing() {
-  alert("Жөнөтүү функциясын кийинки кадамда кошобуз.");
+
+  const pin = document.getElementById("mailingPin").value.trim();
+  const message = document.getElementById("mailingMessage").value.trim();
+  const result = document.getElementById("mailingResult");
+
+  if (!pin || !message) {
+    result.textContent = "PIN-кодду жана билдирүүнү толтуруңуз.";
+    return;
+  }
+
+  result.textContent = "⏳ Тест жөнөтүлүүдө...";
+
+  fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify({
+      action: "test",
+      pin: pin,
+      message: message
+    })
+  })
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(data) {
+
+    if (data.status !== "ok") {
+      throw new Error(data.message || "Жөнөтүү катасы");
+    }
+
+    result.textContent = "✅ " + data.message;
+
+  })
+  .catch(function(error) {
+    result.textContent = "❌ " + error.message;
+  });
 }
 /************************************************
 👥 CLIENT FILTER
