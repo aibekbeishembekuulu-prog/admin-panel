@@ -2558,10 +2558,10 @@ button:disabled{
       👥 Алуучуларды текшерүү
     </button>
 
-    <button
+   <button
   class="bottom-btn"
   onclick="sendMailing()">
-  📤 Өзүмө тест жөнөтүү
+  📤 Бардык кардарларга жөнөтүү
 </button>
     <div
       id="mailingResult"
@@ -3085,8 +3085,6 @@ function previewMailing() {
     result.textContent = "❌ " + error.message;
   });
 }
-
-
 function sendMailing() {
 
   const pin = document.getElementById("mailingPin").value.trim();
@@ -3098,7 +3096,12 @@ function sendMailing() {
     return;
   }
 
-  result.textContent = "⏳ Тест жөнөтүлүүдө...";
+  if (message.length > 4096) {
+    result.textContent = "Билдирүү 4096 белгиден ашпашы керек.";
+    return;
+  }
+
+  result.textContent = "⏳ Алуучулар текшерилүүдө...";
 
   fetch(API_URL, {
     method: "POST",
@@ -3106,24 +3109,74 @@ function sendMailing() {
       "Content-Type": "text/plain;charset=utf-8"
     },
     body: JSON.stringify({
-      action: "test",
-      pin: pin,
-      message: message
+      action: "preview",
+      pin: pin
     })
   })
-  .then(function(response) {
+  .then(response => response.json())
+  .then(data => {
+
+    if (data.status !== "ok") {
+      throw new Error(data.message || "Текшерүү катасы");
+    }
+
+    const total = data.total;
+
+    if (!total) {
+      throw new Error("Telegram ID табылган жок.");
+    }
+
+    const approved = confirm(
+      "⚠️ РАССЫЛМАНЫ ЫРАСТОО\n\n" +
+      "Алуучулар: " + total + "\n\n" +
+      "Ушул билдирүү бардык кардарларга жөнөтүлсүнбү?"
+    );
+
+    if (!approved) {
+      result.textContent = "❎ Жөнөтүү токтотулду.";
+      return;
+    }
+
+    result.textContent = "⏳ " + total + " кардарга жөнөтүлүүдө...";
+
+    return fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        action: "send_all",
+        pin: pin,
+        message: message
+      })
+    });
+  })
+  .then(response => {
+    if (!response) return null;
     return response.json();
   })
-  .then(function(data) {
+  .then(data => {
+
+    if (!data) return;
 
     if (data.status !== "ok") {
       throw new Error(data.message || "Жөнөтүү катасы");
     }
 
-    result.textContent = "✅ " + data.message;
+    result.textContent =
+      "✅ Рассылка аяктады!\n" +
+      "📲 Жалпы: " + data.total + "\n" +
+      "✅ Жетти: " + data.sent + "\n" +
+      "❌ Ката: " + data.failed;
+
+    if (data.errors && data.errors.length) {
+      result.textContent +=
+        "\n\nКата билдирүүлөрү:\n" + data.errors.join("\n");
+    }
 
   })
-  .catch(function(error) {
+  .catch(error => {
+    console.error("MAILING ERROR:", error);
     result.textContent = "❌ " + error.message;
   });
 }
