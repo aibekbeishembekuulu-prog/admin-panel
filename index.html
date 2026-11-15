@@ -3093,18 +3093,35 @@ function previewMailing() {
     result.textContent = "❌ " + error.message;
   });
 }
-function sendMailing() {
-
+ function sendMailing() {
   const pin = document.getElementById("mailingPin").value.trim();
   const message = document.getElementById("mailingMessage").value.trim();
+  const input = document.getElementById("mailingImage");
   const result = document.getElementById("mailingResult");
 
-  if (!pin || !message) {
-    result.textContent = "PIN-кодду жана билдирүүнү толтуруңуз.";
+  const file = input.files && input.files[0];
+
+  if (!pin || (!message && !file)) {
+    result.textContent = "PIN-кодду жана билдирүүнү же сүрөттү киргизиңиз.";
     return;
   }
 
-  if (message.length > 4096) {
+  if (file) {
+    if (message.length > 1024) {
+      result.textContent = "Сүрөттүн тексти 1024 белгиден ашпашы керек.";
+      return;
+    }
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      result.textContent = "JPG, PNG же WEBP сүрөт тандаңыз.";
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      result.textContent = "Сүрөт 10 MB ашпашы керек.";
+      return;
+    }
+  } else if (message.length > 4096) {
     result.textContent = "Билдирүү 4096 белгиден ашпашы керек.";
     return;
   }
@@ -3123,7 +3140,6 @@ function sendMailing() {
   })
   .then(response => response.json())
   .then(data => {
-
     if (data.status !== "ok") {
       throw new Error(data.message || "Текшерүү катасы");
     }
@@ -3136,27 +3152,60 @@ function sendMailing() {
 
     const approved = confirm(
       "⚠️ РАССЫЛМАНЫ ЫРАСТОО\n\n" +
-      "Алуучулар: " + total + "\n\n" +
-      "Ушул билдирүү бардык кардарларга жөнөтүлсүнбү?"
+      "Алуучулар: " + total + "\n" +
+      "Билдирүү түрү: " + (file ? "Сүрөт + текст" : "Текст") +
+      "\n\nБардык кардарларга жөнөтүлсүнбү?"
     );
 
     if (!approved) {
       result.textContent = "❎ Жөнөтүү токтотулду.";
-      return;
+      return null;
     }
 
-    result.textContent = "⏳ " + total + " кардарга жөнөтүлүүдө...";
+    if (file) {
+      result.textContent = "⏳ Сүрөт даярдалууда...";
+
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = function() {
+          const base64 = String(reader.result).split(",")[1];
+
+          resolve({
+            action: "send_all_photo",
+            pin: pin,
+            image: base64,
+            mimeType: file.type,
+            fileName: file.name,
+            message: message
+          });
+        };
+
+        reader.onerror = function() {
+          reject(new Error("Сүрөттү окуу мүмкүн болгон жок."));
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
+
+    return {
+      action: "send_all",
+      pin: pin,
+      message: message
+    };
+  })
+  .then(payload => {
+    if (!payload) return null;
+
+    result.textContent = "⏳ Рассылка жөнөтүлүүдө...";
 
     return fetch(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "text/plain;charset=utf-8"
       },
-      body: JSON.stringify({
-        action: "send_all",
-        pin: pin,
-        message: message
-      })
+      body: JSON.stringify(payload)
     });
   })
   .then(response => {
@@ -3164,7 +3213,6 @@ function sendMailing() {
     return response.json();
   })
   .then(data => {
-
     if (!data) return;
 
     if (data.status !== "ok") {
@@ -3181,106 +3229,11 @@ function sendMailing() {
       result.textContent +=
         "\n\nКата билдирүүлөрү:\n" + data.errors.join("\n");
     }
-
   })
   .catch(error => {
     console.error("MAILING ERROR:", error);
     result.textContent = "❌ " + error.message;
   });
-}
- function previewMailingImage() {
-  const input = document.getElementById("mailingImage");
-  const preview = document.getElementById("mailingImagePreview");
-
-  preview.innerHTML = "";
-
-  if (!input.files || !input.files[0]) return;
-
-  const file = input.files[0];
-
-  if (!file.type.startsWith("image/")) {
-    preview.textContent = "Сүрөт файлын тандаңыз.";
-    input.value = "";
-    return;
-  }
-
-  if (file.size > 10 * 1024 * 1024) {
-    preview.textContent = "Сүрөт 10 MB ашпашы керек.";
-    input.value = "";
-    return;
-  }
-
-  const img = document.createElement("img");
-  img.src = URL.createObjectURL(file);
-  img.style.maxWidth = "100%";
-  img.style.maxHeight = "250px";
-  img.style.borderRadius = "10px";
-
-  preview.appendChild(img);
-} 
- function testMailingPhoto() {
-  const pin = document.getElementById("mailingPin").value.trim();
-  const message = document.getElementById("mailingMessage").value.trim();
-  const input = document.getElementById("mailingImage");
-  const result = document.getElementById("mailingResult");
-
-  if (!pin) {
-    result.textContent = "PIN-кодду киргизиңиз.";
-    return;
-  }
-
-  if (!input.files || !input.files[0]) {
-    result.textContent = "Сүрөт тандаңыз.";
-    return;
-  }
-
-  const file = input.files[0];
-
-  if (message.length > 1024) {
-    result.textContent = "Сүрөттүн тексти 1024 белгиден ашпашы керек.";
-    return;
-  }
-
-  result.textContent = "⏳ Сүрөт тестке даярдалууда...";
-
-  const reader = new FileReader();
-
-  reader.onload = function() {
-    const base64 = String(reader.result).split(",")[1];
-
-    fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify({
-        action: "test_photo",
-        pin: pin,
-        image: base64,
-        mimeType: file.type,
-        fileName: file.name,
-        message: message
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.status !== "ok") {
-        throw new Error(data.message || "Сүрөт жөнөтүү катасы");
-      }
-
-      result.textContent = "✅ Сүрөт Telegram'га тест катары жөнөтүлдү.";
-    })
-    .catch(error => {
-      console.error("PHOTO TEST ERROR:", error);
-      result.textContent = "❌ " + error.message;
-    });
-  };
-
-  reader.onerror = function() {
-    result.textContent = "❌ Сүрөттү окуу мүмкүн болгон жок.";
-  };
-
-  reader.readAsDataURL(file);
 }     
 /************************************************
 👥 CLIENT FILTER
