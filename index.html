@@ -2515,62 +2515,70 @@ button:disabled{
   id="mailingSection">
 
   <div class="card">
-
-    <div class="card-head">
-      <div>
-        <div class="card-title">
-          📢 Telegram рассылка
-        </div>
-
-        <div class="card-subtitle">
-          Кардарларга билдирүү жөнөтүү
-        </div>
-      </div>
+ <div class="card-head">
+  <div>
+    <div class="card-title">
+      📢 Telegram рассылка
     </div>
 
-    <label for="mailingPin" style="display:block; margin-top:15px;">
-      🔐 Администратор PIN-коду
-    </label>
-
-    <input
-      type="password"
-      id="mailingPin"
-      placeholder="PIN-кодду киргизиңиз"
-      autocomplete="off"
-      style="width:100%; margin-top:8px;">
-
-    <textarea
-      id="mailingMessage"
-      placeholder="Билдирүү текстин жазыңыз..."
-      rows="6"
-      style="width:100%; margin-top:15px;">
-    </textarea>
-
-    <div
-      id="mailingRecipients"
-      style="margin-top:15px;">
-      Алуучулар: —
+    <div class="card-subtitle">
+      Кардарларга билдирүү жөнөтүү
     </div>
-
-    <button
-      class="bottom-btn"
-      onclick="previewMailing()">
-      👥 Алуучуларды текшерүү
-    </button>
-
-   <button
-  class="bottom-btn"
-  onclick="sendMailing()">
-  📤 Бардык кардарларга жөнөтүү
-</button>
-    <div
-      id="mailingResult"
-      style="margin-top:15px;">
-    </div>
-
   </div>
+</div>
 
-</section>    
+<label for="mailingPin" style="display:block; margin-top:15px;">
+  🔐 Администратор PIN-коду
+</label>
+
+<input
+  type="password"
+  id="mailingPin"
+  placeholder="PIN-кодду киргизиңиз"
+  autocomplete="off"
+  style="width:100%; margin-top:8px;">
+
+<textarea
+  id="mailingMessage"
+  placeholder="Билдирүү текстин жазыңыз..."
+  rows="6"
+  style="width:100%; margin-top:15px;">
+</textarea>
+
+<!-- 🖼️ СҮРӨТ ТАНДОО -->
+<label style="display:block; margin-top:15px;">
+  🖼️ Сүрөт тандоо
+</label>
+
+<input
+  type="file"
+  id="mailingImage"
+  accept="image/*"
+  onchange="previewMailingImage()"
+  style="width:100%; margin-top:8px;">
+
+<div id="mailingImagePreview" style="margin-top:12px;"></div>
+
+<div id="mailingRecipients" style="margin-top:15px;">
+  Алуучулар: —
+</div>
+
+<button
+  class="bottom-btn"
+  onclick="previewMailing()">
+  👥 Алуучуларды текшерүү
+</button>
+<button
+  class="bottom-btn"
+  onclick="testMailingPhoto()"
+  style="background:#444;">
+  🧪 Сүрөттү өзүмө тест жөнөтүү
+</button>
+
+<div id="mailingResult" style="margin-top:15px;"></div>
+
+</div>
+</section>  
 <!-- =====================================================  
      PREMIUM PLAN 360°  
 ===================================================== --><section class="section" id="premiumSection">  <div class="card"><div class="card-head">    <div>  
@@ -3180,6 +3188,100 @@ function sendMailing() {
     result.textContent = "❌ " + error.message;
   });
 }
+ function previewMailingImage() {
+  const input = document.getElementById("mailingImage");
+  const preview = document.getElementById("mailingImagePreview");
+
+  preview.innerHTML = "";
+
+  if (!input.files || !input.files[0]) return;
+
+  const file = input.files[0];
+
+  if (!file.type.startsWith("image/")) {
+    preview.textContent = "Сүрөт файлын тандаңыз.";
+    input.value = "";
+    return;
+  }
+
+  if (file.size > 10 * 1024 * 1024) {
+    preview.textContent = "Сүрөт 10 MB ашпашы керек.";
+    input.value = "";
+    return;
+  }
+
+  const img = document.createElement("img");
+  img.src = URL.createObjectURL(file);
+  img.style.maxWidth = "100%";
+  img.style.maxHeight = "250px";
+  img.style.borderRadius = "10px";
+
+  preview.appendChild(img);
+} 
+ function testMailingPhoto() {
+  const pin = document.getElementById("mailingPin").value.trim();
+  const message = document.getElementById("mailingMessage").value.trim();
+  const input = document.getElementById("mailingImage");
+  const result = document.getElementById("mailingResult");
+
+  if (!pin) {
+    result.textContent = "PIN-кодду киргизиңиз.";
+    return;
+  }
+
+  if (!input.files || !input.files[0]) {
+    result.textContent = "Сүрөт тандаңыз.";
+    return;
+  }
+
+  const file = input.files[0];
+
+  if (message.length > 1024) {
+    result.textContent = "Сүрөттүн тексти 1024 белгиден ашпашы керек.";
+    return;
+  }
+
+  result.textContent = "⏳ Сүрөт тестке даярдалууда...";
+
+  const reader = new FileReader();
+
+  reader.onload = function() {
+    const base64 = String(reader.result).split(",")[1];
+
+    fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        action: "test_photo",
+        pin: pin,
+        image: base64,
+        mimeType: file.type,
+        fileName: file.name,
+        message: message
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status !== "ok") {
+        throw new Error(data.message || "Сүрөт жөнөтүү катасы");
+      }
+
+      result.textContent = "✅ Сүрөт Telegram'га тест катары жөнөтүлдү.";
+    })
+    .catch(error => {
+      console.error("PHOTO TEST ERROR:", error);
+      result.textContent = "❌ " + error.message;
+    });
+  };
+
+  reader.onerror = function() {
+    result.textContent = "❌ Сүрөттү окуу мүмкүн болгон жок.";
+  };
+
+  reader.readAsDataURL(file);
+}     
 /************************************************
 👥 CLIENT FILTER
 ************************************************/
