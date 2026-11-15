@@ -2506,7 +2506,61 @@ button:disabled{
   </div>
 
 </section>
-      
+<!-- =====================================================
+     📢 TELEGRAM РАССЫЛКА
+===================================================== -->
+
+<section
+  class="section"
+  id="mailingSection">
+
+  <div class="card">
+
+    <div class="card-head">
+      <div>
+        <div class="card-title">
+          📢 Telegram рассылка
+        </div>
+
+        <div class="card-subtitle">
+          Кардарларга билдирүү жөнөтүү
+        </div>
+      </div>
+    </div>
+
+    <textarea
+      id="mailingMessage"
+      placeholder="Билдирүү текстин жазыңыз..."
+      rows="6"
+      style="width:100%; margin-top:15px;">
+    </textarea>
+
+    <div
+      id="mailingRecipients"
+      style="margin-top:15px;">
+      Алуучулар: —
+    </div>
+
+    <button
+      class="bottom-btn"
+      onclick="previewMailing()">
+      👥 Алуучуларды текшерүү
+    </button>
+
+    <button
+      class="bottom-btn"
+      onclick="sendMailing()">
+      📤 Рассылка жөнөтүү
+    </button>
+
+    <div
+      id="mailingResult"
+      style="margin-top:15px;">
+    </div>
+
+  </div>
+
+</section>      
 <!-- =====================================================  
      PREMIUM PLAN 360°  
 ===================================================== --><section class="section" id="premiumSection">  <div class="card"><div class="card-head">    <div>  
@@ -2651,7 +2705,14 @@ style="width:100%;padding:14px;background:#e5242b;color:white;border:0;border-ra
     <span>👥</span>
     Клиенттер
   </button>
-
+ <!-- 📢 РАССЫЛКА -->
+  <button
+    class="bottom-btn"
+    id="navMailing"
+    onclick="showSection('mailing')">
+    <span>📢</span>
+    Рассылка
+  </button>
   <button
     class="bottom-btn"
     id="navPremium"
@@ -2695,7 +2756,8 @@ function showSection(name){
 "statistics",
 "finance",
 "clients",
-"premium"
+'mailing",       
+"premium"       
 ];
 
 
