@@ -3030,7 +3030,32 @@ function loadClients(){
   });
 
 }
+function previewMailing(){
 
+  const clients = window.__clientsData || [];
+
+  const recipients = clients.filter(function(client){
+
+    return client.telegram_id &&
+           String(client.telegram_id).trim() !== "";
+
+  });
+
+  const result = document.getElementById(
+    "mailingRecipients"
+  );
+
+  if(result){
+
+    result.innerHTML =
+      "👥 Бардык кардарлар: " + clients.length +
+      "<br>📲 Telegram ID бар: " + recipients.length +
+      "<br>⚪ Telegram ID жок: " +
+      (clients.length - recipients.length);
+
+  }
+
+}
 
 /************************************************
 👥 CLIENT FILTER
