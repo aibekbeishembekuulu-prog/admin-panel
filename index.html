@@ -2506,7 +2506,7 @@ button:disabled{
   </div>
 
 </section>
-<!-- =====================================================
+  <!-- =====================================================
      📢 TELEGRAM РАССЫЛКА
 ===================================================== -->
 
@@ -2527,6 +2527,17 @@ button:disabled{
         </div>
       </div>
     </div>
+
+    <label for="mailingPin" style="display:block; margin-top:15px;">
+      🔐 Администратор PIN-коду
+    </label>
+
+    <input
+      type="password"
+      id="mailingPin"
+      placeholder="PIN-кодду киргизиңиз"
+      autocomplete="off"
+      style="width:100%; margin-top:8px;">
 
     <textarea
       id="mailingMessage"
@@ -2560,7 +2571,7 @@ button:disabled{
 
   </div>
 
-</section>      
+</section>    
 <!-- =====================================================  
      PREMIUM PLAN 360°  
 ===================================================== --><section class="section" id="premiumSection">  <div class="card"><div class="card-head">    <div>  
@@ -3031,33 +3042,55 @@ console.log("CLIENTS COUNT:", (data.clients || []).length);
   });
 
 }
-function previewMailing(){
+function previewMailing() {
 
-  const clients = window.__clientsData || [];
+  const pin = document.getElementById("mailingPin").value.trim();
+  const result = document.getElementById("mailingResult");
+  const recipients = document.getElementById("mailingRecipients");
 
-  const recipients = clients.filter(function(client){
-
-    return client.telegram_id &&
-           String(client.telegram_id).trim() !== "";
-
-  });
-
-  const result = document.getElementById(
-    "mailingRecipients"
-  );
-
-  if(result){
-
-    result.innerHTML =
-      "👥 Бардык кардарлар: " + clients.length +
-      "<br>📲 Telegram ID бар: " + recipients.length +
-      "<br>⚪ Telegram ID жок: " +
-      (clients.length - recipients.length);
-
+  if (!pin) {
+    result.textContent = "🔐 PIN-кодду киргизиңиз";
+    return;
   }
 
+  result.textContent = "⏳ Текшерилүүдө...";
+
+  fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify({
+      action: "preview",
+      pin: pin
+    })
+  })
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(data) {
+
+    if (data.status !== "ok") {
+      throw new Error(data.message || "Текшерүү катасы");
+    }
+
+    recipients.textContent =
+      "📲 Telegram ID бар уникалдуу алуучулар: " + data.total;
+
+    result.textContent =
+      "✅ PIN-код туура. Сервер менен байланыш бар.";
+
+  })
+  .catch(function(error) {
+    console.error("MAILING PREVIEW ERROR:", error);
+    result.textContent = "❌ " + error.message;
+  });
 }
 
+
+function sendMailing() {
+  alert("Жөнөтүү функциясын кийинки кадамда кошобуз.");
+}
 /************************************************
 👥 CLIENT FILTER
 ************************************************/
