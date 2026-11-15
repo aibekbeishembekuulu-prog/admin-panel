@@ -2934,7 +2934,8 @@ function loadClients(){
 
     window.__clientsData =
       data.clients || [];
-
+    console.log("CLIENTS DATA:", data);
+console.log("CLIENTS COUNT:", (data.clients || []).length);
 
     const stats =
       data.stats || {};
